@@ -22,6 +22,7 @@ from sahighar.db.models import SourceDocument
 from sahighar.db.session import session_scope
 from sahighar.ingest.coverage import set_coverage
 from sahighar.ingest.runner import reparse_all, run_ingest
+from sahighar.privacy import PrivacyKeyMissing, tokenize
 from sahighar.rawstore import LocalRawStore
 from sahighar.scoring.service import refresh
 from sahighar.util import utcnow
@@ -60,6 +61,8 @@ def main(argv: list[str] | None = None) -> int:
     if not folder.is_dir():
         print(f"{folder} is not a folder")
         return 2
+    if not _privacy_key_ok():
+        return 2
     adapter = FileImportAdapter(folder, args.state, args.obtained_on)
     with session_scope() as session:
         summary = run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
@@ -74,6 +77,16 @@ def main(argv: list[str] | None = None) -> int:
     return 1 if summary.failed else 0
 
 
+def _privacy_key_ok() -> bool:
+    """Loading refuses to start without the key, so a personal identifier can never be stored untokenised."""
+    try:
+        tokenize("pan", "AAAAA0000A")
+    except PrivacyKeyMissing as error:
+        print(error)
+        return False
+    return True
+
+
 def _crawl(args) -> int:
     if not args.pincode and not args.all_maharashtra:
         print("choose a scope: --pincode <code> (repeatable) or --all-maharashtra")
@@ -81,13 +94,15 @@ def _crawl(args) -> int:
     if not args.contact:
         print("a contact is required (--contact you@example.com or SAHIGHAR_CONTACT), so the site can reach you if needed")
         return 2
+    if not _privacy_key_ok():
+        return 2
     fetcher = PoliteFetcher(args.contact, args.delay, args.max_requests)
     with session_scope() as session:
         cutoff = utcnow() - timedelta(days=args.refresh_after_days)
         fresh = set(session.scalars(select(SourceDocument.url).where(
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
             SourceDocument.fetched_at >= cutoff,
-            SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints"]))))
+            SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints", "application"]))))
         store = LocalRawStore(Path(args.raw_store))
         index_pages = dict(session.execute(select(SourceDocument.url, SourceDocument.store_key).where(
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",

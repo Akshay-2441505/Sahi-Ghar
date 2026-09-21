@@ -99,7 +99,7 @@ def test_a_bounded_crawl_stops_cleanly_and_says_how_to_continue(monkeypatch, tmp
 def test_a_full_small_crawl_then_a_second_run_skips_what_it_already_has(monkeypatch, tmp_path, capsys, fake_site):
     engine = setup_db(monkeypatch, tmp_path)
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
-    assert "25 requests" in capsys.readouterr().out
+    assert "35 requests" in capsys.readouterr().out
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
     assert "11 requests" in capsys.readouterr().out  # certificates, complaint pages and the complaint index are all reused
     with Session(engine) as session:
@@ -137,7 +137,7 @@ def test_reparse_rebuilds_records_from_stored_pages_without_any_network(monkeypa
 def test_crawl_passes_the_complaint_page_cap_and_reuses_stored_index_pages(monkeypatch, tmp_path, capsys, fake_site):
     setup_db(monkeypatch, tmp_path)
     main([*CRAWL, "--max-requests", "100", "--max-complaint-pages", "1", "--raw-store", str(tmp_path / "raw")])
-    assert "25 requests" in capsys.readouterr().out
+    assert "35 requests" in capsys.readouterr().out
 
 
 # ---- complaint coverage ------------------------------------------------------------------------------------
@@ -183,3 +183,16 @@ def test_an_import_with_a_complaints_table_marks_them_collected_and_one_without_
     write_tables(full)
     main(["import", str(full), "--raw-store", str(tmp_path / "raw")])
     assert complaints_collected(engine) is True
+
+
+def test_crawl_and_import_refuse_to_run_without_the_privacy_key(monkeypatch, tmp_path, capsys, fake_site):
+    setup_db(monkeypatch, tmp_path)
+    monkeypatch.delenv("SAHIGHAR_PII_KEY", raising=False)
+    assert main(CRAWL) == 2
+    assert "SAHIGHAR_PII_KEY" in capsys.readouterr().out
+    assert fake_site == []  # nothing was fetched
+    data = tmp_path / "reply"
+    data.mkdir()
+    write_tables(data)
+    assert main(["import", str(data)]) == 2
+    assert "SAHIGHAR_PII_KEY" in capsys.readouterr().out

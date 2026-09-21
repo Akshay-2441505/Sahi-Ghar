@@ -9,6 +9,8 @@ from sahighar.adapters.maharera_pages import promoter_ref
 from sahighar.adapters.maharera_web import MahaReraWebAdapter
 from sahighar.adapters.polite import BlockedError, BudgetExhausted, FetchError, Fetched
 from sahighar.db.models import Complaint, Project, Promoter
+from sahighar.privacy import tokenize
+from tests.application_samples import COMPANY, application_html
 from sahighar.ingest.runner import run_ingest
 from sahighar.rawstore import LocalRawStore
 
@@ -40,6 +42,8 @@ def site(url: str) -> bytes:
     u, q = urlparse(url), parse_qs(urlparse(url).query)
     if u.path in ("/projects-search-result", "/promoters-search-result"):
         return LIST_PAGE
+    if u.path == "/project-document" and q["type"] == ["DocProjectHSMViewCert"]:
+        return application_html(COMPANY)
     if u.path == "/project-document":
         return CERTS.get((q["id"][0], q["type"][0]), NO_RECORD)
     if u.path == "/promoter-complaint-report":
@@ -82,10 +86,11 @@ def test_discover_seeds_by_pincode_then_completes_each_builder_then_certificates
     assert order[0] == "project_list" and order.count("promoter_list") == 10
     assert order.count("registration_certificate") == 10 and order.count("extension_certificate") == 2
     assert order.count("complaint_list") == 1 and order.count("complaints") == 1
+    assert order.count("application") == 10  # one application per builder
     assert order.index("promoter_list") > 0 and order.index("registration_certificate") > order.index("promoter_list")
     assert order.index("complaint_list") > order.index("extension_certificate")
     assert "project_location=411001" in docs[0].url and all(d.origin == "maharera-web" for d in docs)
-    assert len(fetcher.requested) == 25  # 1 + 10 builders + 10 + 2 certificates + 1 complaint page + 1 detail
+    assert len(fetcher.requested) == 35  # 1 + 10 builders + 10 + 2 certificates + 10 applications + 1 complaint page + 1 detail
 
 
 def test_full_import_builds_projects_dates_and_complaints(session, tmp_path):
@@ -111,7 +116,7 @@ def test_a_second_run_skips_certificates_and_complaint_pages_it_already_has():
     have = {u for u in first.requested if "project-document" in u or "view-data" in u}
     second = FakeFetcher()
     list(adapter(second, is_fresh=lambda url: url in have).discover())
-    assert len(second.requested) == 25 - len(have) == 12
+    assert len(second.requested) == 35 - len(have) == 12
     assert not any("project-document" in u for u in second.requested)
 
 
@@ -163,7 +168,7 @@ def test_a_complete_certificate_saves_the_extension_request():
 
     fetcher = FakeFetcher(route=route)
     list(adapter(fetcher).discover())
-    assert not any("id=15&type=DocProjectExtCert" in u for u in fetcher.requested)
+    assert not any("type=DocProjectExtCert" in u and "id=15&" in u for u in fetcher.requested)
     assert any("id=5&type=DocProjectExtCert" in u for u in fetcher.requested)  # an old-format certificate still needs its extension
 
 
@@ -228,7 +233,7 @@ def test_the_complaint_index_counts_as_collected_only_after_a_complete_scan():
     list(capped.discover())
     assert capped.complaint_index_complete is False
 
-    interrupted = adapter(FakeFetcher(limit=25 - 2))  # budget runs out before the last pages
+    interrupted = adapter(FakeFetcher(limit=35 - 2))  # budget runs out before the last pages
     with pytest.raises(BudgetExhausted):
         list(interrupted.discover())
     assert interrupted.complaint_index_complete is False
@@ -238,3 +243,37 @@ def test_stored_index_pages_count_toward_a_complete_scan():
     reused = adapter(FakeFetcher(), stored=lambda url: complaint_list_html() if "promoter-complaint-report" in url else None)
     list(reused.discover())
     assert reused.complaint_index_complete is True
+
+
+def test_applications_give_promoters_a_pan_token_members_and_a_business_address(session, tmp_path):
+    summary = run_ingest(adapter(FakeFetcher()), session, LocalRawStore(tmp_path))
+    assert summary.failed == 0
+    promoters = session.scalars(select(Promoter)).all()
+    assert {p.pan for p in promoters} == {tokenize("pan", "AAAPA1234A")}
+    assert all(p.registered_address.endswith("411014") and len(p.partners_or_directors) == 2 for p in promoters)
+
+
+def test_the_stored_application_holds_no_personal_identifier(session, tmp_path):
+    from sahighar.db.models import SourceDocument
+    from tests.application_samples import FORBIDDEN
+    store = LocalRawStore(tmp_path)
+    run_ingest(adapter(FakeFetcher()), session, store)
+    stored = [store.get(d.store_key).decode() for d in session.scalars(select(SourceDocument).where(SourceDocument.kind == "application"))]
+    assert len(stored) == 10 and all(len(s) < 5000 for s in stored)  # a small extract, not the 1.6 MB page
+    assert not [s for s in stored for word in FORBIDDEN if word in s]
+
+
+def test_each_builder_gets_one_application_from_its_latest_project():
+    fetcher = FakeFetcher()
+    list(adapter(fetcher).discover())
+    applications = [u for u in fetcher.requested if "DocProjectHSMViewCert" in u]
+    assert len(applications) == 10 and len(set(applications)) == 10
+
+
+def test_an_application_that_cannot_be_read_is_skipped_and_reported_not_fatal():
+    def route(url):
+        return b"<div>No Record Found</div>" if "DocProjectHSMViewCert" in url else site(url)
+
+    fetcher = FakeFetcher(route=route)
+    docs = list(adapter(fetcher).discover())
+    assert kinds(docs).count("application") == 0

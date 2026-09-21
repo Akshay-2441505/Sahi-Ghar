@@ -10,10 +10,12 @@ PoliteFetcher, which stops the crawl on any refusal or CAPTCHA. A crawl runs in 
      is read once, about 540 pages, and reused), then the complaint page of each builder in scope.
 Each fetched page is one RawDoc, so every number links to the stored page it came from.
 """
+import json
 from math import ceil
 from typing import Callable, Iterable
 from urllib.parse import parse_qs, quote, urlparse
 
+from sahighar.adapters.application import extract_application_from_html, parse_application
 from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
 from sahighar.adapters.maharera_pages import (
     ProjectCard, parse_certificate, parse_complaint_detail, parse_complaint_list, parse_project_list, promoter_ref,
@@ -104,6 +106,28 @@ class MahaReraWebAdapter:
             return None
         return self._optional_doc(url, kind)
 
+    def _application(self, card: ProjectCard, ref: str, name: str) -> RawDoc | None:
+        """The builder's registration application, reduced at once to a small extract with identifiers tokenised.
+
+        The document also holds bank, phone, email and Aadhaar details and is about 1.6 MB, so the raw page is never
+        stored: the extract is (see adapters/application.py)."""
+        url = certificate_url(card.cert_id, "DocProjectHSMViewCert")
+        if self.is_fresh(url):
+            return None
+        try:
+            fetched = self.fetcher.get(url)
+            extract = extract_application_from_html(fetched.data.decode("utf-8", errors="replace"))
+        except FetchError as error:
+            self.skipped.append(f"{url}: {error}")
+            return None
+        except ValueError as error:  # unreadable layout: report it, keep crawling
+            self.skipped.append(f"{url}: {error}")
+            return None
+        if extract is None:
+            return None
+        extract |= {"promoter_ref": ref, "promoter_name": name, "reg_no": card.reg_no}
+        return RawDoc(self.origin, "application", url, utcnow(), "application/json", json.dumps(extract, sort_keys=True).encode())
+
     @staticmethod
     def _is_complete(doc: RawDoc) -> bool:
         try:
@@ -150,6 +174,14 @@ class MahaReraWebAdapter:
                 extension = self._certificate(card.ext_cert_id, "DocProjectExtCert", "extension_certificate")
                 if extension:
                     yield extension
+        latest: dict[str, ProjectCard] = {}  # one application per builder: its most recently registered project
+        for card in cards.values():
+            ref = promoter_ref(card.promoter_name)
+            if card.cert_id and (ref not in latest or int(card.cert_id) > int(latest[ref].cert_id)):
+                latest[ref] = card
+        for ref, card in sorted(latest.items()):
+            if doc := self._application(card, ref, promoters.get(ref) or card.promoter_name):
+                yield doc
         yield from self._complaint_index()
         for ref in promoters:
             for promoter_id in self._complaint_ids.get(ref, []):
@@ -175,6 +207,8 @@ class MahaReraWebAdapter:
                 return ParsedRecords()
             extended = cert.current_end if cert.current_end and (cert.original_end is None or cert.current_end > cert.original_end) else None
             return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end, extended_end=extended)])
+        if doc.kind == "application":
+            return parse_application(json.loads(text))
         if doc.kind == "complaint_list":
             return ParsedRecords()  # kept as evidence of which promoter page to fetch
         if doc.kind == "complaints":
