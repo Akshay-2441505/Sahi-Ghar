@@ -65,3 +65,19 @@ def test_parse_builds_a_promoter_record_from_tokens_only():
     assert promoter.pan == tokenize("pan", "AAAPA1234A")
     assert promoter.partners_or_directors == [tokenize("pan", "BBBPB1234B"), tokenize("pan", "CCCPC1234C")]
     assert promoter.registered_address.endswith("411014")
+
+
+def test_llp_application_reads_the_organization_type_and_every_partner_in_both_tables():
+    from tests.application_samples import FORBIDDEN_LLP, LLP
+    a = extract_application(LLP)
+    assert a["org_type"] == "Others" and a["pan"] == tokenize("pan", "AAAPA1234A")
+    assert a["members"] == [tokenize("pan", p) for p in ("BBBPB1234B", "CCCPC1234C", "EEEPE1234E")]  # de-duplicated, in order
+    assert a["past_projects"] == [] and a["address"].endswith("411001")
+    assert not [w for w in FORBIDDEN_LLP if w in json.dumps(a)]
+
+
+def test_a_masked_pan_is_never_tokenised():
+    from tests.application_samples import MASKED
+    a = extract_application(MASKED)
+    assert a["pan"] is None and a["members"] == []  # xxxxxx234A cannot identify anyone
+    assert a["org_type"] == "Company" and a["address"] is not None  # the rest is still useful

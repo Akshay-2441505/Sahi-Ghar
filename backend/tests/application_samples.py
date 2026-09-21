@@ -173,3 +173,32 @@ def application_html(text: str) -> bytes:
     """What the site's document endpoint returns: HTML wrapping the PDF as base64."""
     encoded = base64.b64encode(make_pdf(text)).decode()
     return f'<div id="setDataDocument"><object data=data:application/pdf;base64,{encoded} type=application/pdf></object></div>'.encode()
+
+
+# An LLP: a different member table header, the partner list in a second table further down, organization type "Others".
+LLP = """MAHA-RERA Application
+General Information
+Past Experience Details
+Other Organization Type Member Information
+Name Member Type PAN No. VIEW
+Asha Rao Individual BBBPB1234B View
+Information Type Other Than Individual
+Application Number REA50000000002
+Total Amount Paid by User 1000.00 Name Acme LLP PAN Number AAAPA1234A
+Organization Type Others Description For Other Type
+Do you have any Past Experience ? No
+Block Number 5 Building Name Acme Chambers
+Street Name Main Road Locality Camp
+Division Pune District Pune
+Taluka Haveli Village CAMP
+Pin Code 411001
+Name of Contact Person Asha Rao Designation of Contact Person Designated Partner
+Vikram Sethi Individual CCCPC1234C View
+Meena Kulkarni Others EEEPE1234E View
+Asha Rao Individual BBBPB1234B View
+"""
+
+# Newer applications show PANs masked (only the last characters): they identify nobody, so they must never become tokens.
+MASKED = COMPANY.replace("PAN Number AAAPA1234A", "PAN Number xxxxxx234A").replace("BBBPB1234B", "xxxxxx234B").replace("CCCPC1234C", "xxxxxx234C")
+
+FORBIDDEN_LLP = ("AAAPA1234A", "BBBPB1234B", "CCCPC1234C", "EEEPE1234E", "Vikram Sethi", "Meena Kulkarni", "Asha Rao")

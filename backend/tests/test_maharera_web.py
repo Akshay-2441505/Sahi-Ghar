@@ -1,3 +1,4 @@
+import json
 from datetime import date
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -277,3 +278,37 @@ def test_an_application_that_cannot_be_read_is_skipped_and_reported_not_fatal():
     fetcher = FakeFetcher(route=route)
     docs = list(adapter(fetcher).discover())
     assert kinds(docs).count("application") == 0
+
+
+def _cards(*cert_ids):
+    from sahighar.adapters.maharera_pages import ProjectCard
+    return [ProjectCard(f"P5{i}", "Proj", "ACME BUILDERS", "Pune", "411001", None, str(i), None) for i in cert_ids]
+
+
+def test_the_oldest_application_is_tried_first_and_a_masked_pan_moves_on_to_the_next():
+    from tests.application_samples import MASKED
+    fetched = []
+
+    def route(url):
+        fetched.append(url)
+        return application_html(MASKED if "id=3&" in url else COMPANY)  # the oldest project's application is masked
+
+    adapter_ = adapter(FakeFetcher(route=route))
+    doc = adapter_._application(sorted(_cards(30, 3, 11), key=lambda c: int(c.cert_id)), "n:acme builders", "ACME BUILDERS")
+    assert [u.split("id=")[1].split("&")[0] for u in fetched] == ["3", "11"]  # oldest first; stops at the first usable PAN
+    assert json.loads(doc.data)["pan"] == tokenize("pan", "AAAPA1234A") and "id=11&" in doc.url
+
+
+def test_when_every_candidate_is_masked_the_last_readable_extract_is_kept():
+    from tests.application_samples import MASKED
+    adapter_ = adapter(FakeFetcher(route=lambda url: application_html(MASKED)))
+    doc = adapter_._application(_cards(3, 11, 30, 40), "n:acme builders", "ACME BUILDERS")
+    assert json.loads(doc.data)["pan"] is None and json.loads(doc.data)["address"]
+    assert adapter_.fetcher.requests == 3  # at most three tries per builder
+
+
+def test_a_builder_with_an_application_already_stored_is_not_fetched_again():
+    fetcher = FakeFetcher()
+    adapter_ = adapter(fetcher, is_fresh=lambda url: "id=3&" in url)
+    assert adapter_._application(_cards(3, 11), "n:acme builders", "ACME BUILDERS") is None
+    assert fetcher.requested == []

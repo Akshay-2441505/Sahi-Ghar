@@ -70,8 +70,11 @@ def extract_application(text: str) -> dict:
     individual = info.group(1) == "Individual"
     pan = re.search(rf"PAN Number ({_PAN})", flat)
     org = re.search(r"Total Amount Paid by User [\d.,]+ Name (.+?) PAN Number", flat)
-    org_type = re.search(r"Organization Type (.+?) Description", flat)
-    members = re.search(r"Member Name Designation PAN No\. VIEW (.*?) Information Type", flat)
+    org_type = re.search(r"PAN Number \S+ Organization Type (.+?) (?:Description|Do you)", flat)  # not the menu label of the same name
+    # Members appear in rows ending "<PAN> View"; LLPs list their partners in a second table further down. Some older
+    # applications end the row with "<PAN>" alone inside the first table, so that table is read too.
+    first_table = re.search(r"Member Name Designation PAN No\. VIEW (.*?) Information Type", flat)
+    member_pans = list(dict.fromkeys(re.findall(rf"({_PAN}) View", flat) + (re.findall(_PAN, first_table.group(1)) if first_table else [])))
     status = re.search(rf"Project Status (.+?) Proposed Date of Completion ({_DMY})(?: Revised Proposed Date of Completion ({_DMY}))?", flat)
     litigation = re.search(r"Litigations related to the project \? (Yes|No)", flat)
     return {
@@ -79,7 +82,7 @@ def extract_application(text: str) -> dict:
         "org_name": None if individual or not org else org.group(1).strip(),
         "org_type": None if individual or not org_type else org_type.group(1).strip(),
         "pan": tokenize("pan", pan.group(1)) if pan else None,
-        "members": [tokenize("pan", p) for p in re.findall(_PAN, members.group(1))] if members and not individual else [],
+        "members": [] if individual else [tokenize("pan", p) for p in member_pans],  # masked PANs (xxxxxx1234) never match _PAN
         "address": None if individual else _address(flat),  # an individual's address is a home address: never kept
         "past_projects": _past_projects(flat),
         "project_status": status.group(1).strip() if status else None,

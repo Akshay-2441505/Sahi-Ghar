@@ -106,25 +106,34 @@ class MahaReraWebAdapter:
             return None
         return self._optional_doc(url, kind)
 
-    def _application(self, card: ProjectCard, ref: str, name: str) -> RawDoc | None:
+    application_tries = 3  # applications fetched per builder while looking for one whose PAN is not masked
+
+    def _application(self, cards: list[ProjectCard], ref: str, name: str) -> RawDoc | None:
         """The builder's registration application, reduced at once to a small extract with identifiers tokenised.
 
-        The document also holds bank, phone, email and Aadhaar details and is about 1.6 MB, so the raw page is never
-        stored: the extract is (see adapters/application.py)."""
-        url = certificate_url(card.cert_id, "DocProjectHSMViewCert")
-        if self.is_fresh(url):
+        Oldest project first: newer applications show PANs masked (xxxxxx1234), which identify nobody, so up to
+        `application_tries` are tried until one has a usable PAN (else the last readable one is kept). The document also
+        holds bank, phone, email and Aadhaar details and is about 1.6 MB, so the raw page is never stored: the extract
+        is (see adapters/application.py). `cards` must be sorted oldest first."""
+        candidates = cards[:self.application_tries]
+        urls = [certificate_url(c.cert_id, "DocProjectHSMViewCert") for c in candidates]
+        if any(self.is_fresh(u) for u in urls):
+            return None  # this builder's application is already stored
+        best = None
+        for card, url in zip(candidates, urls):
+            try:
+                extract = extract_application_from_html(self.fetcher.get(url).data.decode("utf-8", errors="replace"))
+            except (FetchError, ValueError) as error:  # not found, or an unreadable layout: report it, keep crawling
+                self.skipped.append(f"{url}: {error}")
+                continue
+            if extract is None:
+                continue
+            best = (extract, url, card)
+            if extract["pan"]:
+                break
+        if best is None:
             return None
-        try:
-            fetched = self.fetcher.get(url)
-            extract = extract_application_from_html(fetched.data.decode("utf-8", errors="replace"))
-        except FetchError as error:
-            self.skipped.append(f"{url}: {error}")
-            return None
-        except ValueError as error:  # unreadable layout: report it, keep crawling
-            self.skipped.append(f"{url}: {error}")
-            return None
-        if extract is None:
-            return None
+        extract, url, card = best
         extract |= {"promoter_ref": ref, "promoter_name": name, "reg_no": card.reg_no}
         return RawDoc(self.origin, "application", url, utcnow(), "application/json", json.dumps(extract, sort_keys=True).encode())
 
@@ -174,13 +183,13 @@ class MahaReraWebAdapter:
                 extension = self._certificate(card.ext_cert_id, "DocProjectExtCert", "extension_certificate")
                 if extension:
                     yield extension
-        latest: dict[str, ProjectCard] = {}  # one application per builder: its most recently registered project
+        by_builder: dict[str, list[ProjectCard]] = {}  # one application per builder, oldest project first
         for card in cards.values():
-            ref = promoter_ref(card.promoter_name)
-            if card.cert_id and (ref not in latest or int(card.cert_id) > int(latest[ref].cert_id)):
-                latest[ref] = card
-        for ref, card in sorted(latest.items()):
-            if doc := self._application(card, ref, promoters.get(ref) or card.promoter_name):
+            if card.cert_id:
+                by_builder.setdefault(promoter_ref(card.promoter_name), []).append(card)
+        for ref, builder_cards in sorted(by_builder.items()):
+            builder_cards.sort(key=lambda c: int(c.cert_id))
+            if doc := self._application(builder_cards, ref, promoters.get(ref) or builder_cards[0].promoter_name):
                 yield doc
         yield from self._complaint_index()
         for ref in promoters:
