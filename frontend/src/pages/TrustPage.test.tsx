@@ -10,7 +10,7 @@ const data: ProjectPayload = {
   score_computed_at: '2026-09-01T00:00:00',
   score: {
     overall: 25,
-    schedule: { available: true, reason: null, score: 50, extended: 1, not_extended: 1, within_registration: 0, unknown: 0, median_months_extended: 12 },
+    schedule: { available: true, reason: null, score: 50, extended: 1, not_extended: 1, covid_only: 0, within_registration: 0, unknown: 0, median_months_extended: 12 },
     complaints: { available: true, reason: null, score: 0, total: 2, pending: 1, order_issued: 1, order_not_executed: 1, unresolved: 2, project_count: 2 },
     declared: { available: true, reason: null, score: 33, total: 3, on_or_before: 1, later: 2, median_months_later: 23.65 },
     progress: { available: false, reason: 'not_yet_available', score: null },
@@ -19,9 +19,9 @@ const data: ProjectPayload = {
   group_basis: null,
   schedule: [
     { project_id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', registration_end_date: '2022-01-01', extended_end_date: null,
-      outcome: 'not_extended', months_extended: null, source_document_id: 1 },
+      outcome: 'not_extended', months_extended: null, covid_months: null, source_document_id: 1 },
     { project_id: 2, name: 'Shree Gardens', rera_reg_no: 'MH-2', registration_end_date: '2022-01-01', extended_end_date: '2023-01-01',
-      outcome: 'extended', months_extended: 12, source_document_id: 2 },
+      outcome: 'extended', months_extended: 12, covid_months: null, source_document_id: 2 },
   ],
   complaints: [
     { complaint_ref: 'C1', status: 'Hearing Scheduled', stage: 'pending', non_execution_applied: false,
@@ -140,6 +140,20 @@ describe('TrustPageView', () => {
     const rows = within(declared).getAllByRole('row').slice(1)
     expect(rows).toHaveLength(2)
     for (const row of rows) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
+  })
+
+  it('separates COVID-19 relief from the builder’s own extensions', () => {
+    const covid = { ...data,
+      score: { ...data.score!, schedule: { ...data.score!.schedule, covid_only: 1 } },
+      schedule: [
+        { ...data.schedule[1], months_extended: 84, covid_months: 12 },
+        { ...data.schedule[0], project_id: 3, outcome: 'covid_only' as const, months_extended: null, covid_months: 6 },
+      ] }
+    render(<TrustPageView data={covid} />)
+    const schedule = screen.getByRole('region', { name: 'Registration schedule' })
+    expect(within(schedule).getByText('Registration extended by 84 months, plus 12 months of COVID-19 relief')).toBeInTheDocument()
+    expect(within(schedule).getByText('Extended only under COVID-19 relief (6 months)')).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Score breakdown' })).getByText(/1 only under COVID-19 relief \(not counted against the builder\)/)).toBeInTheDocument()
   })
 
   it('says so when no past projects were declared', () => {

@@ -100,6 +100,17 @@ def test_a_thin_project_update_adds_dates_and_keeps_the_name_and_promoter(sessio
     assert project.promoter_id == session.scalar(select(Promoter.id))
 
 
+def test_extension_history_is_stored_and_a_later_certificate_without_one_keeps_it(session, tmp_path):
+    store = LocalRawStore(tmp_path)
+    history = [{"label": "Covid Extension -2", "revised_end": "2021-03-30"}]
+    intro = {"promoters": [{"ref": "P1", "name": "Shree Realty LLP"}],
+             "projects": [{"reg_no": "R1", "promoter_ref": "P1", "name": "Heights", "extension_history": history}]}
+    thin = {"projects": [{"reg_no": "R1", "promoter_ref": None, "name": None, "extended_end": "2023-01-01"}]}
+    run_ingest(FakeAdapter({"u1": intro}), session, store)
+    run_ingest(FakeAdapter({"u2": thin}), session, store)
+    assert session.scalar(select(Project)).extension_history == history
+
+
 def test_a_thin_project_update_for_an_unknown_project_fails_its_document(session, tmp_path):
     thin = {"projects": [{"reg_no": "R9", "promoter_ref": None, "name": None, "registration_end": "2022-01-01"}]}
     summary = run_ingest(FakeAdapter({"u1": thin}), session, LocalRawStore(tmp_path), max_failure_rate=1.0)

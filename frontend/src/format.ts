@@ -16,10 +16,13 @@ export function formatMonthYear(year: number | null, month: number | null): stri
   return month ? `${MONTHS[month - 1]} ${year}` : String(year)
 }
 
-export function outcomeText(item: Pick<ScheduleItem, 'outcome' | 'months_extended'>): string {
+export function outcomeText(item: Pick<ScheduleItem, 'outcome' | 'months_extended' | 'covid_months'>): string {
   switch (item.outcome) {
     case 'extended':
-      return `Registration extended by ${item.months_extended} months`
+      return `Registration extended by ${item.months_extended} months` +
+        (item.covid_months ? `, plus ${item.covid_months} months of COVID-19 relief` : '')
+    case 'covid_only':
+      return `Extended only under COVID-19 relief (${item.covid_months} months)`
     case 'not_extended':
       return 'Original end date passed; no extension on record'
     case 'within_registration':

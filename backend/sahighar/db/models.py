@@ -71,6 +71,7 @@ class Project(Base):
     carpet_area_range: Mapped[str | None]
     registration_end_date: Mapped[date | None]  # end of the original registration validity
     extended_end_date: Mapped[date | None]  # only when an extension certificate exists
+    extension_history: Mapped[list | None] = mapped_column(Json)  # [{"label", "revised_end"}] as published (newer certificates)
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
 

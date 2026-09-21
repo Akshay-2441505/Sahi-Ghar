@@ -22,8 +22,8 @@ describe('formatMonthYear', () => {
 
 describe('outcomeText', () => {
   it('states the schedule against the original end date in neutral words', () => {
-    expect(outcomeText({ outcome: 'extended', months_extended: 12 })).toBe('Registration extended by 12 months')
-    expect(outcomeText({ outcome: 'not_extended', months_extended: null })).toBe('Original end date passed; no extension on record')
-    expect(outcomeText({ outcome: 'unknown', months_extended: null })).toBe('No end date in the filing')
+    expect(outcomeText({ outcome: 'extended', months_extended: 12, covid_months: null })).toBe('Registration extended by 12 months')
+    expect(outcomeText({ outcome: 'not_extended', months_extended: null, covid_months: null })).toBe('Original end date passed; no extension on record')
+    expect(outcomeText({ outcome: 'unknown', months_extended: null, covid_months: null })).toBe('No end date in the filing')
   })
 })

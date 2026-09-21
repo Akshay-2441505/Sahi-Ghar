@@ -4,8 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot, SourceDocument
-from sahighar.scoring.service import distinct_declared
-from sahighar.scoring.v1 import ProjectFacts, classify
+from sahighar.scoring.service import distinct_declared, project_facts
+from sahighar.scoring.v1 import DAYS_PER_MONTH, classify
 
 
 def trust_payload(session: Session, promoter: Promoter) -> dict:
@@ -31,11 +31,14 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
 
     schedule = []
     for p in session.scalars(select(Project).where(Project.promoter_id.in_(confirmed_ids)).order_by(Project.id)):
-        outcome, months_extended = classify(ProjectFacts(p.registration_end_date, p.extended_end_date), scored_on)
+        facts = project_facts(p)
+        outcome, months_extended = classify(facts, scored_on)
         schedule.append({
             "project_id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no,
             "registration_end_date": p.registration_end_date, "extended_end_date": p.extended_end_date,
-            "outcome": outcome, "months_extended": months_extended, "source_document_id": p.source_document_id,
+            "outcome": outcome, "months_extended": months_extended,
+            "covid_months": round(facts.covid_days / DAYS_PER_MONTH, 1) or None,  # COVID-19 relief inside the extension
+            "source_document_id": p.source_document_id,
         })
     complaints = [
         {"complaint_ref": c.complaint_ref, "project_id": c.project_id, "status": c.status, "stage": c.stage,

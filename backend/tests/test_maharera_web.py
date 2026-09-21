@@ -194,6 +194,7 @@ def test_a_new_format_certificate_sets_both_dates(session, tmp_path):
     assert (parsed.projects[0].reg_no, parsed.projects[0].registration_end, parsed.projects[0].extended_end) == (
         "P52100001400", date(2019, 12, 31), date(2027, 12, 31))
     assert card is not None
+    assert [(e["label"], e["revised_end"]) for e in parsed.projects[0].extension_history][1] == ("Covid Extension -2", "2021-03-30")
 
 
 def test_stored_complaint_pages_are_reused_instead_of_fetched_again():

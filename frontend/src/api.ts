@@ -8,6 +8,7 @@ export type Score = {
     score: number | null
     extended: number
     not_extended: number
+    covid_only: number
     within_registration: number
     unknown: number
     median_months_extended: number | null
@@ -49,8 +50,9 @@ export type ScheduleItem = {
   rera_reg_no: string
   registration_end_date: string | null
   extended_end_date: string | null
-  outcome: 'extended' | 'not_extended' | 'within_registration' | 'unknown'
+  outcome: 'extended' | 'covid_only' | 'not_extended' | 'within_registration' | 'unknown'
   months_extended: number | null
+  covid_months: number | null
   source_document_id: number
 }
 

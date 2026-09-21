@@ -33,6 +33,7 @@ class ProjectRec:
     carpet_area_range: str | None = None
     registration_end: date | None = None  # end of the original registration validity
     extended_end: date | None = None  # new end date, only if an extension certificate exists
+    extension_history: list[dict] | None = None  # [{"label", "revised_end"}] as published, newer certificates only
 
 
 @dataclass

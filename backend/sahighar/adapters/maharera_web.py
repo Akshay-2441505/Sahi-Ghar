@@ -216,7 +216,9 @@ class MahaReraWebAdapter:
             if cert is None:  # "No Record Found", or a JSON error where the PDF should be
                 return ParsedRecords()
             extended = cert.current_end if cert.current_end and (cert.original_end is None or cert.current_end > cert.original_end) else None
-            return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end, extended_end=extended)])
+            history = [{"label": label, "revised_end": revised.isoformat()} for label, revised in cert.extensions] or None
+            return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end,
+                                                      extended_end=extended, extension_history=history)])
         if doc.kind == "application":
             return parse_application(json.loads(text))
         if doc.kind == "complaint_list":

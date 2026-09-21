@@ -7,7 +7,7 @@ import base64
 import html as htmllib
 import io
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime
 
 from pypdf import PdfReader
@@ -138,6 +138,7 @@ class Certificate:
     original_end: date | None  # end of the ORIGINAL registration validity, when the document says so
     current_end: date | None  # end of the registration as of this document (the extended date, if extended)
     complete: bool  # True for the newer format, which carries the whole extension history in one document
+    extensions: list[tuple[str, date]] = field(default_factory=list)  # (label as published, revised end date), in order
 
 
 def _date(text: str) -> date:
@@ -169,7 +170,9 @@ def parse_certificate(html: str) -> Certificate | None:
     if original:
         if not ending:
             raise ValueError(f"certificate for {reg.group(0)} states an original date but no validity end")
-        return Certificate(reg.group(0), _date(original.group(1)), _date(ending.group(1)), True)
+        history = re.findall(rf"^\s*((?:[A-Za-z]+ )*Extension\s*-\s*\d+)\s+{_D}\s+{_D}", text, re.M)
+        return Certificate(reg.group(0), _date(original.group(1)), _date(ending.group(1)), True,
+                           [(label, _date(revised)) for label, _approved, revised in history])
     if "EXTENSION OF REGISTRATION" in text.upper() and until:
         return Certificate(reg.group(0), None, _date(until.group(1)), False)
     if ending:

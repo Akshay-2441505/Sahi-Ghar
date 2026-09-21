@@ -13,7 +13,7 @@ function Section({ title, score, children }: { title: string; score: number | nu
 /** The overall number is only ever rendered below, and as a summary of, the three sections. */
 export function ScoreBreakdown({ score }: { score: Score }) {
   const { schedule, complaints, declared, progress } = score
-  const evaluated = schedule.extended + schedule.not_extended
+  const evaluated = schedule.extended + schedule.covid_only + schedule.not_extended
   return (
     <section aria-label="Score breakdown">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -21,6 +21,7 @@ export function ScoreBreakdown({ score }: { score: Score }) {
           {schedule.available
             ? `${schedule.extended} of ${evaluated} projects had their registration extended` +
               (schedule.median_months_extended !== null ? ` (median ${Math.round(schedule.median_months_extended * 10) / 10} months)` : '') +
+              (schedule.covid_only ? `; ${schedule.covid_only} only under COVID-19 relief (not counted against the builder)` : '') +
               `; ${schedule.not_extended} passed the original end date with no extension on record.`
             : 'Not enough history to summarise (at least 2 projects past their original end date or extended are needed).'}
         </Section>

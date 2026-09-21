@@ -7,8 +7,12 @@ from sqlalchemy.orm import Session
 
 from sahighar.db.models import Complaint, Coverage, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot
 from sahighar.resolve.grouping import rebuild_groups
-from sahighar.scoring.v1 import ComplaintFacts, DeclaredFacts, ProjectFacts, score
+from sahighar.scoring.v1 import ComplaintFacts, DeclaredFacts, ProjectFacts, covid_days, score
 from sahighar.util import utcnow
+
+
+def project_facts(p: Project) -> ProjectFacts:
+    return ProjectFacts(p.registration_end_date, p.extended_end_date, covid_days(p.extension_history, p.registration_end_date))
 
 
 def distinct_declared(rows: list[PastProject]) -> list[PastProject]:
@@ -43,7 +47,7 @@ def compute_scores(session: Session, today: date) -> int:
         cs = [c for pid in promoter_ids for c in complaints[pid]]
         ds = distinct_declared([d for pid in promoter_ids for d in declared[pid]])
         breakdown = score(
-            [ProjectFacts(p.registration_end_date, p.extended_end_date) for p in ps],
+            [project_facts(p) for p in ps],
             [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
             complaints_known=complaints_collected or bool(cs),  # complaint rows exist only if that builder's page was fetched
             declared=[DeclaredFacts(d.original_proposed_date, d.actual_completion_date) for d in ds],

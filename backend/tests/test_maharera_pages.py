@@ -73,6 +73,15 @@ def test_newer_format_certificate_has_the_original_and_current_dates_in_one_docu
         "P52100001400", date(2019, 12, 31), date(2027, 12, 31), True)
 
 
+def test_newer_format_certificate_lists_each_extension_with_its_label():
+    cert = parse_certificate(fixture("cert_new_format.html"))
+    assert cert.extensions == [
+        ("Extension-1", date(2020, 12, 30)), ("Covid Extension -2", date(2021, 3, 30)),
+        ("Covid Extension -3", date(2021, 6, 30)), ("Covid Extension -4", date(2021, 12, 30)),
+        ("Extension-5", date(2027, 12, 31))]
+    assert parse_certificate(fixture("cert_reg_5.html")).extensions == []  # older formats carry no history
+
+
 def test_a_response_without_a_certificate_is_not_an_error():
     assert parse_certificate("<div>No Record Found</div>") is None
 

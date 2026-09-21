@@ -73,6 +73,35 @@ def test_nothing_known_at_all_is_not_enough_data():
     assert score([P(date(2027, 1, 1), None)], [], TODAY, complaints_known=False)["overall"] is None
 
 
+HISTORY = [{"label": "Extension-1", "revised_end": "2020-12-30"}, {"label": "Covid Extension -2", "revised_end": "2021-03-30"},
+           {"label": "Covid Extension -3", "revised_end": "2021-06-30"}, {"label": "Covid Extension -4", "revised_end": "2021-12-30"},
+           {"label": "Extension-5", "revised_end": "2027-12-31"}]
+
+
+def test_covid_relief_days_are_only_the_steps_labelled_covid():
+    from sahighar.scoring.v1 import covid_days
+    assert covid_days(HISTORY, date(2019, 12, 31)) == 90 + 92 + 183
+    assert covid_days(None, date(2019, 12, 31)) == 0 and covid_days([], date(2019, 12, 31)) == 0
+    assert covid_days(HISTORY, None) == 0  # no original date, no way to measure the steps
+
+
+def test_own_extension_months_leave_out_covid_relief():
+    facts = P(date(2019, 12, 31), date(2027, 12, 31), covid_days=365)
+    assert classify(facts, TODAY) == ("extended", 84.0)  # 96 months in all, 12 of them COVID relief
+
+
+def test_an_extension_that_is_only_covid_relief_is_its_own_outcome():
+    assert classify(P(date(2020, 12, 31), date(2021, 6, 30), covid_days=181), TODAY) == ("covid_only", None)
+
+
+def test_covid_only_counts_on_the_no_own_extension_side_of_the_schedule_score():
+    projects = [P(date(2022, 1, 1), None), P(date(2020, 12, 31), date(2021, 6, 30), covid_days=181),
+                P(date(2019, 12, 31), date(2027, 12, 31), covid_days=365)]
+    s = score(projects, [], TODAY, complaints_known=False)["schedule"]
+    assert (s["not_extended"], s["covid_only"], s["extended"], s["score"]) == (1, 1, 1, 67)
+    assert s["median_months_extended"] == 84.0
+
+
 def test_declared_delivery_counts_on_or_before_the_proposed_date_and_measures_the_rest():
     from sahighar.scoring.v1 import DeclaredFacts as D
     declared = [D(date(2015, 3, 10), date(2015, 1, 10)), D(date(2013, 11, 30), date(2015, 4, 27)), D(date(2014, 8, 20), date(2014, 8, 20)),

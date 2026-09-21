@@ -17,6 +17,24 @@ DAYS_PER_MONTH = 30.4375
 class ProjectFacts:
     registration_end: date | None  # end of the original registration validity
     extended_end: date | None  # new end date, only if an extension certificate exists
+    covid_days: int = 0  # days of the extension granted under COVID-19 relief (see covid_days())
+
+
+def covid_days(history: list[dict] | None, original_end: date | None) -> int:
+    """Days of extension the certificate labels "Covid Extension", walking its steps from the original end date.
+
+    Only certificates that list their extensions carry this; without a history (or an original date to measure
+    from) nothing is separated out and 0 is returned."""
+    if not history or original_end is None:
+        return 0
+    total, previous = 0, original_end
+    for step in history:
+        revised = date.fromisoformat(step["revised_end"])
+        if revised > previous:
+            if "covid" in step["label"].lower():
+                total += (revised - previous).days
+            previous = revised
+    return total
 
 
 @dataclass(frozen=True)
@@ -40,14 +58,16 @@ def _months(days: int) -> float:
 
 
 def classify(p: ProjectFacts, today: date) -> tuple[str, float | None]:
-    """Return (outcome, months_extended). Outcome: extended | not_extended | within_registration | unknown.
+    """Return (outcome, months_extended). Outcome: extended | covid_only | not_extended | within_registration | unknown.
 
-    Measured against the ORIGINAL registration end date: an extension never hides in the numbers.
+    Measured against the ORIGINAL registration end date: an extension never hides in the numbers. Days granted under
+    COVID-19 relief are left out of months_extended; an extension that is nothing but COVID-19 relief is "covid_only".
     """
     if p.registration_end is None:
         return "unknown", None
     if p.extended_end is not None and p.extended_end > p.registration_end:
-        return "extended", _months((p.extended_end - p.registration_end).days)
+        own_days = (p.extended_end - p.registration_end).days - p.covid_days
+        return ("extended", _months(own_days)) if own_days > 0 else ("covid_only", None)
     if p.registration_end < today:
         return "not_extended", None
     return "within_registration", None
@@ -59,15 +79,16 @@ def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today:
     unavailable ("not_collected"), because an empty list would otherwise read as a clean record."""
     outcomes = [classify(p, today) for p in projects]
     counts = Counter(outcome for outcome, _ in outcomes)
-    evaluated = counts["extended"] + counts["not_extended"]
+    evaluated = counts["extended"] + counts["covid_only"] + counts["not_extended"]
     months = [m for outcome, m in outcomes if outcome == "extended"]
     schedule_ok = evaluated >= MIN_EVALUATED_PROJECTS
     schedule = {
         "available": schedule_ok,
         "reason": None if schedule_ok else "insufficient_history",
-        "score": round(100 * counts["not_extended"] / evaluated) if schedule_ok else None,
+        "score": round(100 * (counts["not_extended"] + counts["covid_only"]) / evaluated) if schedule_ok else None,
         "extended": counts["extended"],
         "not_extended": counts["not_extended"],
+        "covid_only": counts["covid_only"],
         "within_registration": counts["within_registration"],
         "unknown": counts["unknown"],
         "median_months_extended": median(months) if months else None,

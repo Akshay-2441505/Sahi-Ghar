@@ -58,7 +58,7 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
             {"promoter_id": _promoter_id(session, state, j.promoter_ref) if j.promoter_ref else None, "name": j.name,
              "city": j.city, "locality": j.locality, "configurations": j.configurations,
              "carpet_area_range": j.carpet_area_range, "registration_end_date": j.registration_end,
-             "extended_end_date": j.extended_end, "source_document_id": sd_id},
+             "extended_end_date": j.extended_end, "extension_history": j.extension_history, "source_document_id": sd_id},
             keep_existing_if_none=True,  # later documents add or change values; they never blank them
         )
     for pp in parsed.past_projects:
