@@ -25,7 +25,7 @@ Decision history: first "official data only", then (2026-09-21, later the same d
 | `--max-list-pages N` | Trial cap on pages read per pincode (10 projects per page). |
 | `--max-promoter-pages N` | Cap on pages per builder's portfolio (default 20). A capped portfolio gives a partial record for that builder. |
 | `--max-complaint-pages N` | Trial cap on the complaint index (about 540 pages exist). Without it, the whole index is read once and reused. |
-| `--refresh-after-days N` | Certificates and complaint pages fetched within N days (default 90) are reused, not fetched again. |
+| `--refresh-after-days N` | Certificates, applications, complaint pages **and list pages** fetched within N days (default 90) are reused, not fetched again. This is what makes a resumed run skip the ~1,000 list pages it already has. Use a small N for a full refresh. |
 | `--raw-store DIR` | Where fetched pages are kept (default `./raw_store`). |
 
 After a crawl: `uv run python -m sahighar.cli reparse --origin maharera-web` re-runs the parsers over stored pages (no network).
@@ -34,6 +34,7 @@ Exit code: 0 finished or stopped at its budget, 1 some page failed to parse (nam
 
 ## What a crawl does, in order
 
+0. **Two notice lists** MahaRERA publishes, one request each: projects **kept in abeyance** ("Due to Lapse of Completion Date": bank accounts frozen, promoter barred from selling until compliant; about 4,200 projects) and **NCLT projects** (about 330, with registration status). Fetched every run because they change.
 1. **Project lists** for your pincodes (10 projects per page). Gives registration number, name, promoter name, district.
 2. **Each builder's whole portfolio**, through the promoter search, because a builder's record only means something with all their projects.
 3. **Certificates** for every project: the registration certificate, and the extension certificate only when the project has one and the first document does not already carry the extension history. They supply the original and the extended end dates.
@@ -52,7 +53,11 @@ Also gets, from the application: each builder's **declared past projects** (orig
 
 Also gets, from newer certificates, the **extension history** (each extension labelled as published, e.g. "Covid Extension -2"). Days granted under COVID-19 relief are shown apart and are not counted against the builder in the schedule score: a project extended only under COVID-19 relief counts with those that needed no extension of their own. Older certificates carry no history, so for those nothing can be separated.
 
-Still **not** available from open pages: quarterly progress reports, and the registration status changes that happen after the application (revoked, lapsed). The status lists on the main site (revoked, suspended, NCLT projects) are the next thing to test.
+Also gets, from the two notice lists, **regulator notices** about projects (kept in abeyance; NCLT). They carry a registration number and a promoter **name** (no promoter id), so a builder's notices are found by project number or by name. They are shown on the trust page beside the score with a source link, are never averaged into it, and **the overall score is withheld while any notice exists**.
+
+**Survivorship bias found (2026-09-21):** projects on the abeyance list appear to be **missing from the site's public project search** (two listed projects returned nothing when searched by name, while a known project was found by the same query). In the trial data 53 of 67 notices named projects our search-based crawl never returned. So schedule figures leave out a builder's worst projects; the notices are how they are recovered. Names are matched only by normalised text, so a common builder name can pick up another company's notice: the page says "matched to this builder by name only".
+
+Still **not** available from open pages: quarterly progress reports. The list of projects whose registration was **revoked or void ab initio** (`/projects-registration-revoked-initio-void`, about 90 projects, paged, order PDFs) has no registration number, only names, and is not read yet.
 
 ## Privacy
 
