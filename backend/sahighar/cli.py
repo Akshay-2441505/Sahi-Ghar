@@ -1,21 +1,29 @@
-"""Import a folder of data files (CSV/Excel) from an authority and re-score everything.
+"""Load data and re-score everything.
 
+  Files from an authority (CSV/Excel):
     DATABASE_URL=... uv run python -m sahighar.cli import <folder> --obtained-on 2026-11-05
+  MahaRERA's public pages, politely and in bounded runs:
+    DATABASE_URL=... uv run python -m sahighar.cli crawl --contact you@example.com --pincode 411001
 
-Exit code: 0 all files loaded, 1 some file failed (named below, with the reason; the rest still loaded), 2 bad usage.
+Exit code: 0 finished (or stopped at its request budget: run again to continue), 1 some document failed to parse,
+2 bad usage, 3 the site blocked the crawler (stop; do not retry for a while).
 """
 import argparse
-from datetime import date
+import os
+from datetime import date, timedelta
 from pathlib import Path
 
 from sqlalchemy import select
 
 from sahighar.adapters.file_import import FileImportAdapter
+from sahighar.adapters.maharera_web import MahaReraWebAdapter
+from sahighar.adapters.polite import BlockedError, BudgetExhausted, PoliteFetcher
 from sahighar.db.models import SourceDocument
 from sahighar.db.session import session_scope
 from sahighar.ingest.runner import run_ingest
 from sahighar.rawstore import LocalRawStore
 from sahighar.scoring.service import refresh
+from sahighar.util import utcnow
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -26,7 +34,20 @@ def main(argv: list[str] | None = None) -> int:
     imp.add_argument("--obtained-on", type=date.fromisoformat, help="date you received the files, YYYY-MM-DD (default: file dates)")
     imp.add_argument("--state", default="MH", choices=["MH", "KA", "TG"])
     imp.add_argument("--raw-store", default="raw_store", help="where original files are kept (default: ./raw_store)")
+    crawl = sub.add_parser("crawl", help="read MahaRERA's public pages politely (bounded, resumable)")
+    crawl.add_argument("--contact", default=os.environ.get("SAHIGHAR_CONTACT"),
+                       help="email or URL put in the User-Agent so the site can reach you (or set SAHIGHAR_CONTACT)")
+    crawl.add_argument("--pincode", action="append", default=[], help="seed the crawl with this pincode (repeatable)")
+    crawl.add_argument("--all-maharashtra", action="store_true", help="seed with every project in Maharashtra (thousands of requests)")
+    crawl.add_argument("--max-requests", type=int, default=300, help="stop after this many requests (default 300)")
+    crawl.add_argument("--delay", type=float, default=3.0, help="seconds between requests (default 3, do not go lower)")
+    crawl.add_argument("--max-list-pages", type=int, help="cap list pages per pincode (trial runs)")
+    crawl.add_argument("--max-promoter-pages", type=int, default=20, help="cap pages per builder's portfolio (default 20)")
+    crawl.add_argument("--refresh-after-days", type=int, default=90, help="skip certificates and complaint pages fetched within this many days")
+    crawl.add_argument("--raw-store", default="raw_store", help="where fetched pages are kept (default: ./raw_store)")
     args = parser.parse_args(argv)
+    if args.command == "crawl":
+        return _crawl(args)
 
     folder = Path(args.folder)
     if not folder.is_dir():
@@ -41,6 +62,44 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  FAILED {doc.url.removeprefix('file:')}: {doc.parse_error}")
         print(f"{refresh(session)} promoter groups scored")
     return 1 if summary.failed else 0
+
+
+def _crawl(args) -> int:
+    if not args.pincode and not args.all_maharashtra:
+        print("choose a scope: --pincode <code> (repeatable) or --all-maharashtra")
+        return 2
+    if not args.contact:
+        print("a contact is required (--contact you@example.com or SAHIGHAR_CONTACT), so the site can reach you if needed")
+        return 2
+    fetcher = PoliteFetcher(args.contact, args.delay, args.max_requests)
+    with session_scope() as session:
+        cutoff = utcnow() - timedelta(days=args.refresh_after_days)
+        fresh = set(session.scalars(select(SourceDocument.url).where(
+            SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
+            SourceDocument.fetched_at >= cutoff,
+            SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints"]))))
+        adapter = MahaReraWebAdapter(fetcher, args.pincode or None, fresh.__contains__,
+                                     args.max_list_pages, args.max_promoter_pages)
+        stopped = None
+        try:
+            run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+        except BudgetExhausted:
+            stopped = "budget"
+        except BlockedError as error:
+            stopped = f"blocked: {error}"
+        print(f"{fetcher.requests} requests")
+        if stopped == "budget":
+            print(f"stopped at the request budget ({args.max_requests}). Everything fetched is saved; run the same command again to continue.")
+        elif stopped:
+            print(f"BLOCKED: {stopped.removeprefix('blocked: ')}. Stopped for good. Do not retry for at least a day, and do not try to get around it.")
+        for note in adapter.skipped:
+            print(f"  skipped {note}")
+        failed = session.scalars(select(SourceDocument).where(
+            SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")).all()
+        for doc in failed:
+            print(f"  FAILED {doc.url}: {doc.parse_error}")
+        print(f"{refresh(session)} promoter groups scored")
+    return 3 if stopped and stopped != "budget" else (1 if failed else 0)
 
 
 if __name__ == "__main__":

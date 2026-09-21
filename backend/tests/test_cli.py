@@ -49,3 +49,69 @@ def test_a_missing_folder_is_a_clear_error(monkeypatch, tmp_path, capsys):
     setup_db(monkeypatch, tmp_path)
     assert main(["import", str(tmp_path / "nope")]) == 2
     assert "not a folder" in capsys.readouterr().out
+
+
+# ---- crawl -------------------------------------------------------------------------------------------------
+
+import pytest
+
+from sahighar.adapters.polite import BlockedError
+from tests.test_maharera_web import FakeFetcher
+
+
+@pytest.fixture
+def fake_site(monkeypatch):
+    """Replace the real fetcher with the fake site; returns the fetchers created so tests can inspect them."""
+    made = []
+
+    def factory(contact, delay, max_requests):
+        made.append(FakeFetcher(limit=max_requests))
+        made[-1].contact = contact
+        return made[-1]
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", factory)
+    return made
+
+
+CRAWL = ["crawl", "--contact", "me@example.test", "--pincode", "411001", "--max-list-pages", "1", "--max-promoter-pages", "1"]
+
+
+def test_crawl_needs_an_explicit_scope_and_a_contact(monkeypatch, tmp_path, capsys, fake_site):
+    setup_db(monkeypatch, tmp_path)
+    monkeypatch.delenv("SAHIGHAR_CONTACT", raising=False)
+    assert main(["crawl", "--contact", "me@example.test"]) == 2
+    assert "--pincode" in capsys.readouterr().out
+    assert main(["crawl", "--pincode", "411001"]) == 2
+    assert "contact" in capsys.readouterr().out
+    assert fake_site == []  # nothing was fetched
+
+
+def test_a_bounded_crawl_stops_cleanly_and_says_how_to_continue(monkeypatch, tmp_path, capsys, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+    code = main([*CRAWL, "--max-requests", "5", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 0 and "request budget" in out and "run the same command again" in out
+    assert fake_site[0].contact == "me@example.test"
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(Project)) == 10
+
+
+def test_a_full_small_crawl_then_a_second_run_skips_what_it_already_has(monkeypatch, tmp_path, capsys, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+    assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
+    assert "34 requests" in capsys.readouterr().out
+    assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
+    assert "21 requests" in capsys.readouterr().out
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(Project)) == 10
+
+
+def test_a_block_ends_the_crawl_with_a_clear_message_and_exit_code_3(monkeypatch, tmp_path, capsys):
+    engine = setup_db(monkeypatch, tmp_path)
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", lambda contact, delay, max_requests: FakeFetcher(
+        fail=lambda url: BlockedError("HTTP 429") if "project-document" in url else None))
+    code = main([*CRAWL, "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 3 and "BLOCKED" in out and "do not retry" in out.lower() and "HTTP 429" in out
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(Project)) == 10  # what was fetched before is kept

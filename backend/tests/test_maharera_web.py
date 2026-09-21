@@ -53,6 +53,10 @@ class FakeFetcher:
     def __init__(self, route=site, limit=None, fail=None):
         self.route, self.limit, self.fail, self.requested = route, limit, fail or (lambda url: None), []
 
+    @property
+    def requests(self):
+        return len(self.requested)
+
     def get(self, url):
         if self.limit is not None and len(self.requested) >= self.limit:
             raise BudgetExhausted("limit")
