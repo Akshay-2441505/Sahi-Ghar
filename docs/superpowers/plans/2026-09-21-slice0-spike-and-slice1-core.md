@@ -26,6 +26,7 @@ Every task's requirements implicitly include these (copied from the spec).
 - Wording is neutral and stays within what RERA data says: no verdicts, no ads, no "featured" builders.
 - All `DateTime` columns store naive UTC (`sahighar.util.utcnow`).
 - Dev API port is **8010** (8000 is used by another project on this machine); the frontend calls `/api/...` and the Vite dev proxy strips `/api`.
+- **No GitHub repo, remote or push is created by the agent.** The user supplies a repo at the end of the project; anything that needs GitHub (Actions runs, the weekly ingest workflow) is queued until then.
 - Commit messages end with `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>` when Claude makes the commit.
 
 ## Environment notes
@@ -40,7 +41,6 @@ Every task's requirements implicitly include these (copied from the spec).
 ```
 spike/                          THROWAWAY (Tasks 1-4): probe.py, test_probe.py, samples/
 docs/spikes/2026-09-maharera-access.md      the spike report (Tasks 2-5)
-.github/workflows/spike-reachability.yml    (Task 3)
 backend/
   pyproject.toml
   alembic.ini, alembic/                     migrations (Task 8)
@@ -63,13 +63,13 @@ frontend/
 
 ## Plan B (written after the spike, NOT in this plan)
 
-The MahaRERA adapter (parsers + fixtures from `spike/samples/`), the weekly ingest workflow, the S3-compatible `RawStore`, deployment (Neon/Render/Vercel/R2), and the three-builder manual cross-check. They depend on the spike's chosen data-access path and field lists, so writing them now would target an unverified source.
+The MahaRERA adapter (parsers + fixtures from `spike/samples/`), the weekly ingest workflow (written locally, activated only once the user supplies a GitHub repo), the runner-reachability check (Task 3 Step 3), the S3-compatible `RawStore`, deployment (Neon/Render/Vercel/R2), and the three-builder manual cross-check. They depend on the spike's chosen data-access path and field lists, so writing them now would target an unverified source.
 
 ---
 
 ## Part 1 — Slice 0: Access spike
 
-Throwaway investigation. Output is a report and a decision, not shipped code. Tasks 2-4 are research tasks (evidence gathering), so their steps are commands and observations rather than red/green tests.
+Throwaway investigation. Output is a report and a decision, not shipped code. Tasks 2-4 are research tasks (evidence gathering; Task 3 only records a deferral), so their steps are commands and observations rather than red/green tests.
 
 ### Task 1: Spike probe tool
 
@@ -265,23 +265,30 @@ git add docs/spikes spike/samples
 git commit -m "spike: MahaRERA access findings"
 ```
 
-### Task 3: GitHub Actions runner reachability
+### Task 3: Runner reachability (deferred until the user supplies a GitHub repo)
+
+The user will provide the GitHub repo once the project is done. **Do not create a repo, add a remote, or push anything.** Until then question 6 cannot be answered, so this task only records that fact; the real check is queued for the end (Step 3).
 
 **Files:**
-- Create: `.github/workflows/spike-reachability.yml`
 - Modify: `docs/spikes/2026-09-maharera-access.md` (question 6)
 
 **Interfaces:**
-- Consumes: `spike/probe.py`.
-- Produces: an answer to question 6, and the runner decision that Task 5 records.
+- Produces: question 6 recorded as deferred, so Task 5 can mark Path A "conditional on the runner check" and the scheduled runner as undecided.
 
-- [ ] **Step 1: Ask the user before publishing anything**
+- [ ] **Step 1: Record question 6 as deferred**
 
-Creating a GitHub repo publishes this project's source to a third party. Ask the user: create a **private** repo? Under which account? If they decline, mark question 6 "not determined: no GitHub remote" and skip to Task 4; Task 5 then records the runner as undecided.
+In the report, replace row 6's `(see Task 3)` with: `Not determined: deferred until the user supplies a GitHub repo (they will provide it at the end of the project). Risk: Indian government sites sometimes block cloud/datacenter IPs, so a laptop-reachable page may still fail from a GitHub runner.`
 
-- [ ] **Step 2: Write the workflow**
+- [ ] **Step 2: Commit**
 
-Create `.github/workflows/spike-reachability.yml`:
+```bash
+git add docs/spikes
+git commit -m "spike: defer GitHub runner reachability until a repo exists"
+```
+
+- [ ] **Step 3: Queued for the end: run the check once the user provides the repo**
+
+Not part of the spike now. When the user hands over a GitHub repo and asks to wire it up, add this workflow as `.github/workflows/spike-reachability.yml`, commit and push it to **their** repo (confirm with them first), set the repository variable `SPIKE_CONTACT` to the contact string from Task 1, then run it with `gh workflow run spike-reachability.yml`, `gh run watch`, `gh run view --log`:
 
 ```yaml
 name: spike-reachability
@@ -302,31 +309,7 @@ jobs:
           https://maharera.maharashtra.gov.in/promoter-complaint-report
 ```
 
-- [ ] **Step 3: Push and run it**
-
-After the user agrees (Step 1). Commit the workflow first (only committed files are pushed):
-
-```bash
-git add .github && git commit -m "spike: add reachability workflow"
-gh repo create sahi-ghar --private --source . --push
-gh variable set SPIKE_CONTACT --body "<the contact string from Task 1>"
-gh workflow run spike-reachability.yml
-gh run watch
-gh run view --log
-```
-
-Expected: the log shows one dict per URL. Note for each: `status` (a 403/timeout/connection error means the runner is likely blocked) and `mentions_captcha`.
-
-- [ ] **Step 4: Record question 6**
-
-In the report fill row 6: reachable / blocked / different from laptop, with the run URL as evidence. If blocked, list the fallback runner options to weigh in Task 5 (self-hosted runner on this machine; a small always-on VM; run the weekly job locally).
-
-- [ ] **Step 5: Commit and push**
-
-```bash
-git add .github docs/spikes
-git commit -m "spike: GitHub runner reachability result"
-```
+A `403`, timeout or connection error in the log means the runner is likely blocked. Then update row 6 and the Decision's scheduled-runner line, and weigh fallbacks: a self-hosted runner on this machine, a small always-on VM, or running the weekly job locally.
 
 ### Task 4: Karnataka, Telangana and rera-india
 
@@ -373,7 +356,7 @@ git commit -m "spike: Karnataka/Telangana shallow check and rera-india review"
 - [ ] **Step 1: Apply the spec's decision rule**
 
 For each of project data, promoter data and complaint data choose exactly one:
-- **Path A** — reachable without a CAPTCHA, terms do not prohibit automated access, and works from a GitHub Actions runner (or a documented alternative runner).
+- **Path A** — reachable without a CAPTCHA and terms do not prohibit automated access. Runner reachability (Task 3) is deferred, so mark Path A as "conditional on the runner check" and name the fallback runner (this machine, or a small VM) if that check later fails.
 - **Path B** — official data or assisted import: official downloads, the Unified RERA Portal, an RTI or data request to MahaRERA, or a human-assisted import tool that ingests files the user obtains manually.
 - **Mixed** — Path A for open pages, Path B for gated ones.
 
@@ -387,7 +370,7 @@ Replace the "Decision" placeholder with:
 - Project data: Path A | Path B | Mixed  (pick one; cite the table row)
 - Promoter data: (same)
 - Complaint data: (same)
-- Scheduled runner: GitHub Actions | (alternative and why)
+- Scheduled runner: undecided until the runner check runs (Task 3 Step 3) | (or the alternative chosen and why)
 - Rationale: 2-3 sentences citing rows 1-8
 - Consequences for the Plan B adapter: which fields exist for grouping (PAN, address, partners/directors, past-experience disclosure) and scoring (original/revised/actual dates, completion status), and which are missing
 ```
@@ -2735,7 +2718,7 @@ git commit -m "docs: add README and demo seed; visual pass"
 
 | Spec section | Covered by |
 |---|---|
-| §3 Slice 0 spike (questions 1-9, shallow K/T check, decision rule) | Tasks 1-5 |
+| §3 Slice 0 spike (questions 1-9, shallow K/T check, decision rule) | Tasks 1-5; question 6 (runner) deferred until a repo exists |
 | §4 adapter interface, raw store (local impl) | Tasks 6, 9 |
 | §4 S3-compatible raw store | Plan B (deployment) |
 | §5 data model, idempotent upserts, raw-first | Tasks 7, 8, 9 |
