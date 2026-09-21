@@ -214,3 +214,27 @@ def test_a_promoter_list_stored_under_the_old_parameter_name_still_parses():
     old = "https://maharera.maharashtra.gov.in/promoters-search-result?promoter_name=Vascon%20Engineers%20Ltd&page=1&op="
     parsed = adapter(FakeFetcher()).parse(RawDoc("maharera-web", "promoter_list", old, utcnow(), "text/html", LIST_PAGE))
     assert parsed.projects == []  # that page was unfiltered, so none of its cards belong to the asked-for builder
+
+
+def test_the_complaint_index_counts_as_collected_only_after_a_complete_scan():
+    complete = adapter(FakeFetcher())
+    list(complete.discover())
+    assert complete.complaint_index_complete is True  # the fake index is one page, and it was read
+
+    def live(url):
+        return (FIXTURES / "complaint_list_live.html").read_bytes() if urlparse(url).path == "/promoter-complaint-report" else site(url)
+
+    capped = adapter(FakeFetcher(route=live), max_complaint_pages=3)  # the real index has 539 pages
+    list(capped.discover())
+    assert capped.complaint_index_complete is False
+
+    interrupted = adapter(FakeFetcher(limit=25 - 2))  # budget runs out before the last pages
+    with pytest.raises(BudgetExhausted):
+        list(interrupted.discover())
+    assert interrupted.complaint_index_complete is False
+
+
+def test_stored_index_pages_count_toward_a_complete_scan():
+    reused = adapter(FakeFetcher(), stored=lambda url: complaint_list_html() if "promoter-complaint-report" in url else None)
+    list(reused.discover())
+    assert reused.complaint_index_complete is True

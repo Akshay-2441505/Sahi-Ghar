@@ -13,13 +13,14 @@ import os
 from datetime import date, timedelta
 from pathlib import Path
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from sahighar.adapters.file_import import FileImportAdapter
 from sahighar.adapters.maharera_web import MahaReraWebAdapter
 from sahighar.adapters.polite import BlockedError, BudgetExhausted, PoliteFetcher
 from sahighar.db.models import SourceDocument
 from sahighar.db.session import session_scope
+from sahighar.ingest.coverage import set_coverage
 from sahighar.ingest.runner import reparse_all, run_ingest
 from sahighar.rawstore import LocalRawStore
 from sahighar.scoring.service import refresh
@@ -62,6 +63,9 @@ def main(argv: list[str] | None = None) -> int:
     adapter = FileImportAdapter(folder, args.state, args.obtained_on)
     with session_scope() as session:
         summary = run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+        if session.scalar(select(func.count()).select_from(SourceDocument).where(
+                SourceDocument.origin == adapter.origin, SourceDocument.kind == "complaints", SourceDocument.parse_status == "ok")):
+            set_coverage(session, "complaints", True)  # a complaints table means complaints were collected for everyone in it
         print(f"{summary.ok} files imported, {summary.failed} failed")
         for doc in session.scalars(select(SourceDocument).where(
                 SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")):
@@ -98,6 +102,8 @@ def _crawl(args) -> int:
             stopped = "budget"
         except BlockedError as error:
             stopped = f"blocked: {error}"
+        if adapter.complaint_index_complete:  # only a complete scan lets "no complaints found" mean anything
+            set_coverage(session, "complaints", True)
         print(f"{fetcher.requests} requests")
         if stopped == "budget":
             print(f"stopped at the request budget ({args.max_requests}). Everything fetched is saved; run the same command again to continue.")

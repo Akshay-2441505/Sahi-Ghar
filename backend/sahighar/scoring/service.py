@@ -4,7 +4,7 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from sahighar.db.models import Complaint, GroupMembership, Project, Promoter, ScoreSnapshot
+from sahighar.db.models import Complaint, Coverage, GroupMembership, Project, Promoter, ScoreSnapshot
 from sahighar.resolve.grouping import rebuild_groups
 from sahighar.scoring.v1 import ComplaintFacts, ProjectFacts, score
 from sahighar.util import utcnow
@@ -23,6 +23,7 @@ def compute_scores(session: Session, today: date) -> int:
     for m in session.scalars(select(GroupMembership).where(GroupMembership.link_type == "filing_confirmed")):
         members[m.group_id].append(m.promoter_id)
 
+    complaints_collected = bool(session.scalar(select(Coverage.complete).where(Coverage.key == "complaints")))
     now = utcnow()
     for group_id, promoter_ids in members.items():
         ps = [p for pid in promoter_ids for p in projects[pid]]
@@ -30,6 +31,7 @@ def compute_scores(session: Session, today: date) -> int:
         breakdown = score(
             [ProjectFacts(p.registration_end_date, p.extended_end_date) for p in ps],
             [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
+            complaints_known=complaints_collected or bool(cs),  # complaint rows exist only if that builder's page was fetched
         )
         sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs)}
         session.add(ScoreSnapshot(group_id=group_id, computed_at=now, breakdown=breakdown,

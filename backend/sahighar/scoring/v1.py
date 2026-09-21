@@ -43,7 +43,9 @@ def classify(p: ProjectFacts, today: date) -> tuple[str, float | None]:
     return "within_registration", None
 
 
-def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date) -> dict:
+def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date, complaints_known: bool = True) -> dict:
+    """complaints_known: False when complaints were never collected for this builder. Then the complaint section is
+    unavailable ("not_collected"), because an empty list would otherwise read as a clean record."""
     outcomes = [classify(p, today) for p in projects]
     counts = Counter(outcome for outcome, _ in outcomes)
     evaluated = counts["extended"] + counts["not_extended"]
@@ -62,10 +64,11 @@ def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today:
 
     n = len(projects)
     unresolved = sum(c.stage == "pending" or c.non_execution_applied for c in complaints)
+    complaints_ok = complaints_known and n > 0
     complaint_summary = {
-        "available": n > 0,
-        "reason": None if n > 0 else "no_projects",
-        "score": round(100 * max(0.0, 1 - unresolved / n)) if n > 0 else None,
+        "available": complaints_ok,
+        "reason": None if complaints_ok else ("not_collected" if not complaints_known else "no_projects"),
+        "score": round(100 * max(0.0, 1 - unresolved / n)) if complaints_ok else None,
         "total": len(complaints),
         "pending": sum(c.stage == "pending" for c in complaints),
         "order_issued": sum(c.stage == "order_issued" for c in complaints),

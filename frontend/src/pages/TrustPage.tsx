@@ -53,7 +53,11 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
       <section aria-label="Complaints">
         <h2 className="text-lg font-semibold text-stone-900">Complaints</h2>
         {data.complaints.length === 0 ? (
-          <p className="text-sm text-stone-600">No complaints on record for this promoter.</p>
+          <p className="text-sm text-stone-600">
+            {data.score?.complaints.reason === 'not_collected'
+              ? 'Complaints have not been collected for this data set, so nothing can be said about them. This is not the same as having none.'
+              : 'No complaints on record for this promoter.'}
+          </p>
         ) : (
           <div className="mt-2 overflow-x-auto">
           <table className="w-full min-w-[40rem] text-left text-sm">

@@ -29,7 +29,9 @@ export function ScoreBreakdown({ score }: { score: Score }) {
             ? `${complaints.total} on record: ${complaints.pending} hearing pending, ${complaints.order_issued} order issued; ` +
               `${complaints.order_not_executed} with a request to enforce an order that was not complied with. ` +
               `${complaints.unresolved} unresolved across ${complaints.project_count} registered projects.`
-            : 'No registered projects on record.'}
+            : complaints.reason === 'not_collected'
+              ? 'Not collected for this data set yet. A missing complaint list here does not mean the builder has none.'
+              : 'No registered projects on record.'}
         </Section>
         <Section title="Progress vs promise" score={progress.score}>
           Not yet available. Quarterly progress reports are not included in this version.

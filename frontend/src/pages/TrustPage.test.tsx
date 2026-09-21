@@ -94,6 +94,18 @@ describe('TrustPageView', () => {
     expect(within(schedule).queryByText(/Phase 2/)).not.toBeInTheDocument()
   })
 
+  it('never presents complaints that were not collected as a clean record', () => {
+    const c = data.score!.complaints
+    const uncollected = { ...data, complaints: [], score: { ...data.score!, overall: 50,
+      complaints: { ...c, available: false, score: null, reason: 'not_collected', total: 0, pending: 0, order_issued: 0, order_not_executed: 0, unresolved: 0 } } }
+    render(<TrustPageView data={uncollected} />)
+    expect(screen.queryByText(/No complaints on record/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/0 on record/)).not.toBeInTheDocument()
+    const complaints = screen.getByRole('region', { name: 'Complaints' })
+    expect(within(complaints).getByText(/not been collected/)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Score breakdown' })).getByText(/Not collected for this data set/)).toBeInTheDocument()
+  })
+
   it('says so when there is not enough data instead of showing a number', () => {
     const empty = { ...data, score: { ...data.score!, overall: null,
       schedule: { ...data.score!.schedule, available: false, score: null, reason: 'insufficient_history' } } }

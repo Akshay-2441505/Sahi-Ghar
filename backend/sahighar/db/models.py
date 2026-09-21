@@ -91,6 +91,20 @@ class Complaint(Base):
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
 
+class Coverage(Base):
+    """Whether a kind of data was actually collected, so that "none found" is never confused with "not looked".
+
+    key "complaints": complete = the complaint records of every builder were collected (a full crawl of the
+    complaint index, or a complaints table from an authority). Without it, a builder with no complaint rows
+    has unknown complaints, not clean ones.
+    """
+    __tablename__ = "coverage"
+
+    key: Mapped[str] = mapped_column(primary_key=True)
+    complete: Mapped[bool]
+    updated_at: Mapped[datetime]
+
+
 class ScoreSnapshot(Base):
     __tablename__ = "score_snapshot"
 

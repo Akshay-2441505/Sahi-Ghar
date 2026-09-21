@@ -59,3 +59,15 @@ def test_insufficient_history_still_scores_complaints():
 def test_no_projects_means_not_enough_data():
     s = score([], [], TODAY)
     assert s["overall"] is None and s["complaints"]["reason"] == "no_projects"
+
+
+def test_complaints_not_collected_is_unknown_never_clean():
+    projects = [P(date(2022, 1, 1), None), P(date(2022, 1, 1), date(2023, 1, 1))]
+    s = score(projects, [], TODAY, complaints_known=False)
+    assert s["complaints"]["available"] is False and s["complaints"]["reason"] == "not_collected"
+    assert s["complaints"]["score"] is None
+    assert s["overall"] == s["schedule"]["score"]  # the overall uses only what is actually known
+
+
+def test_nothing_known_at_all_is_not_enough_data():
+    assert score([P(date(2027, 1, 1), None)], [], TODAY, complaints_known=False)["overall"] is None

@@ -69,6 +69,7 @@ class MahaReraWebAdapter:
         self.max_complaint_pages = max_complaint_pages
         self.skipped: list[str] = []  # pages that could not be fetched (not found, server error); reported by the CLI
         self._complaint_ids: dict[str, list[str]] = {}
+        self.complaint_index_complete = False  # True once the WHOLE complaint index has been read (or reused)
 
     def _doc(self, url: str, kind: str) -> RawDoc:
         fetched = self.fetcher.get(url)
@@ -114,7 +115,8 @@ class MahaReraWebAdapter:
     def _complaint_index(self):
         """Yield the complaint report pages (from the site, or reused from storage) and remember each promoter's ids."""
         ids: dict[str, list[str]] = {}
-        page, pages = 1, 1
+        page, pages, full = 1, 1, 1
+        self.complaint_index_complete = False
         while page <= pages:
             url = complaint_list_page_url(page)
             data = self.stored(url)
@@ -126,11 +128,11 @@ class MahaReraWebAdapter:
             for row in parsed.rows:
                 ids.setdefault(promoter_ref(row.name), []).append(row.promoter_id)
             if page == 1:
-                pages = ceil(parsed.total / 10) if parsed.total else 1
-                if self.max_complaint_pages:
-                    pages = min(pages, self.max_complaint_pages)
+                full = ceil(parsed.total / 10) if parsed.total else 1
+                pages = min(full, self.max_complaint_pages) if self.max_complaint_pages else full
             page += 1
         self._complaint_ids = ids
+        self.complaint_index_complete = pages == full  # False if capped; an interrupted scan never reaches this line
 
     def discover(self) -> Iterable[RawDoc]:
         cards: dict[str, ProjectCard] = {}

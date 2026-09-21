@@ -138,3 +138,48 @@ def test_crawl_passes_the_complaint_page_cap_and_reuses_stored_index_pages(monke
     setup_db(monkeypatch, tmp_path)
     main([*CRAWL, "--max-requests", "100", "--max-complaint-pages", "1", "--raw-store", str(tmp_path / "raw")])
     assert "25 requests" in capsys.readouterr().out
+
+
+# ---- complaint coverage ------------------------------------------------------------------------------------
+
+from sahighar.db.models import Coverage
+
+
+def complaints_collected(engine):
+    with Session(engine) as session:
+        row = session.get(Coverage, "complaints")
+        return bool(row and row.complete)
+
+
+def test_a_full_crawl_marks_complaints_collected(monkeypatch, tmp_path, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+    assert complaints_collected(engine) is False
+    main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")])
+    assert complaints_collected(engine) is True
+
+
+def test_a_capped_crawl_does_not(monkeypatch, tmp_path, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+
+    def live(url):
+        from urllib.parse import urlparse
+        from tests.test_maharera_web import FIXTURES, site
+        return (FIXTURES / "complaint_list_live.html").read_bytes() if urlparse(url).path == "/promoter-complaint-report" else site(url)
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", lambda contact, delay, max_requests: FakeFetcher(route=live, limit=max_requests))
+    main([*CRAWL, "--max-requests", "100", "--max-complaint-pages", "2", "--raw-store", str(tmp_path / "raw")])
+    assert complaints_collected(engine) is False
+
+
+def test_an_import_with_a_complaints_table_marks_them_collected_and_one_without_does_not(monkeypatch, tmp_path):
+    engine = setup_db(monkeypatch, tmp_path)
+    without = tmp_path / "without"
+    without.mkdir()
+    (without / "projects.csv").write_text(PROJECTS, encoding="utf-8")
+    main(["import", str(without), "--raw-store", str(tmp_path / "raw")])
+    assert complaints_collected(engine) is False
+    full = tmp_path / "full"
+    full.mkdir()
+    write_tables(full)
+    main(["import", str(full), "--raw-store", str(tmp_path / "raw")])
+    assert complaints_collected(engine) is True
