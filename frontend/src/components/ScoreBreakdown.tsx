@@ -20,7 +20,7 @@ export function ScoreBreakdown({ score }: { score: Score }) {
         <Section title="Registration schedule" score={schedule.score}>
           {schedule.available
             ? `${schedule.extended} of ${evaluated} projects had their registration extended` +
-              (schedule.median_months_extended !== null ? ` (median ${schedule.median_months_extended} months)` : '') +
+              (schedule.median_months_extended !== null ? ` (median ${Math.round(schedule.median_months_extended * 10) / 10} months)` : '') +
               `; ${schedule.not_extended} passed the original end date with no extension on record.`
             : 'Not enough history to summarise (at least 2 projects past their original end date or extended are needed).'}
         </Section>
