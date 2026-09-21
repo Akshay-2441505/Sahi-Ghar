@@ -1,0 +1,4147 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<html lang="kn" translate="no" class="notranslate">
+
+<head >
+<meta name="google-site-verification" content="xPj3x9LtOkfce6ZFLqQ8b2tMa-qjhgtkvVoI26VsZQI" />
+<link rel="shortcut icon" href="/resources/images/reralogo.ico">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="x-content-type-options" content="nosniff">
+	<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'"> -->
+	 <!-- <meta http-equiv="X-Frame-Options" content="deny"> -->
+	 <meta http-equiv="X-XSS-Protection" content="1">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- <meta name="robots" content="noindex" /> -->
+<meta name="google" content="notranslate">
+<title>Complaints on promoter</title>
+	
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.js" 
+integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+	
+<link rel="stylesheet" href="/resources/css/style2.css">
+
+
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/resources/css/style.css?rr=78889" rel="stylesheet"/>
+<link href="/resources/css/font-awesome.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="/resources/css/datatable/jquery.dataTables.css">
+<link href="/resources/css/dashboard.css" rel="stylesheet"/>
+
+<script src="/resources/js/jquery.min.js"></script>
+<script src="/resources/js/bootstrap.min.js"></script>
+<script src="/resources/js/jquery.ticker.js?xzx=099"></script>
+<script src="/resources/js/site.js"></script>
+<script src="/resources/js/common.js"></script> 
+<script src="/resources/js/commdropdown.js"></script> 
+<script src="/resources/js/tripleencoding.js"></script>  
+<script src="/resources/js/validation.js"></script>  
+<script src="/resources/js/raphael-min.js"></script> 
+<script src="/resources/js/morris.min.js"></script>  
+<script type="text/javascript" language="javascript" src="/resources/js/jquery.dataTables.js"></script>
+<script src="/resources/js/DatePicker/jquery.datepick.js"></script>
+<link href="/resources/js/DatePicker/flora.datepick.css" rel="stylesheet"/>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css">
+<script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>  
+
+<script>
+function disableBackButton()
+{
+window.history.forward();
+}
+
+if(top!=self){
+    top.location.replace(document.location);
+    document.location='';
+}
+
+_ctxpath='/';
+
+
+	 if (!navigator.onLine) 
+{ 
+	document.body.innerHTML = 'Loading...'; 
+	window.location = 'ErrorPage.html'; 
+} 
+	 
+	 jQuery(document).ready(function(){
+		  jQuery(function() {
+		        jQuery(this).bind("contextmenu", function(event) {
+		            event.preventDefault();
+		            alert('Due to security reason, Right click is not allowed!!')
+		        });
+		    });
+		});
+	 
+	window.oncontextmenu = function () {
+	    return false;
+	}
+	
+	$(document).keydown(function (event) {
+	    if (event.keyCode == 123) {
+	    	alert('Due to security reason, This function has been disabled!!')
+	        return false;
+	    }
+	    else if ((event.ctrlKey && event.shiftKey && event.keyCode == 73) || (event.ctrlKey && event.shiftKey && event.keyCode == 74) || (event.ctrlKey && event.keyCode == 85) || (event.ctrlKey && event.shiftKey && event.keyCode == 85) || (event.ctrlKey && event.shiftKey && event.keyCode == 67)
+	    		|| (event.metaKey && event.altKey && event.keyCode == 73) || (event.metaKey && event.altKey && event.keyCode == 74) || (event.metaKey && event.altKey && event.keyCode == 85) || (event.metaKey && event.altKey && event.keyCode == 67)) {
+	    	alert('Due to security reason, This function has been disabled!!')
+	    	return false;
+	    }
+	});
+	
+	$(window).load(function() {
+		// Animate loader off screen
+		$("#loader").fadeOut("slow");;
+	});
+
+	jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+	    "date-uk-pre": function ( a ) {
+	        var ukDatea = a.split('/');
+	        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+	    },
+
+	    "date-uk-asc": function ( a, b ) {
+	        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+	    },
+
+	    "date-uk-desc": function ( a, b ) {
+	        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+	    }
+	    } ); 
+</script>
+<style>
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+}
+
+footer {
+	background-color: #3948B1 !important;
+}
+
+.btn-style {
+background-color: #3948B1 !important;
+}
+
+.theme-clr {
+color: #3948B1 !important;
+}
+
+.orange {
+    background-color: #3948B1 !important;
+}
+
+.inner_wrapper h1 span {
+    color: #3948B1 !important;
+}
+#loader {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(255,255,255,0.7);
+    //background: url(/resources/images/reralogo.png) center;
+    z-index:9999;
+}
+
+@-webkit-keyframes spin {
+	0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loader::after {
+       content:'';
+    display:block;
+    position:absolute;
+    border: 12px solid #f3f3f3;
+    left:48%;top:40%;
+    width:100px;height:100px;
+    border-style:solid;
+    border-color:#3948B1;
+    border-top-color:transparent;
+    
+    //background: url(/resources/images/reralogo.png) center; 
+    border-width: 12px;
+    border-radius:50%;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+
+</style>
+</head>
+
+ 
+<body onload="disableBackButton()">
+		<!--loader-->
+		<div id="loader"></div>
+		
+		<header id="header">
+			
+
+
+
+
+
+
+<a href="/home" style="float: left;background: #3948B1;color:white;margin-bottom: 0;padding-right: 10px;padding-left: 10px;font-weight: bold;border: #aecbd9 1px solid;" class="officialclass">ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರದ ಅಧಿಕೃತ ಜಾಲತಾಣ</a>
+
+             <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="suare-icons a-plus icon-plus clsButton "
+						id="btnFontIncrease"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ+</span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="round-icons a-normal icon-normal clsButton "
+						id="bntFontNormal"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ&nbsp;</span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="round-icons a-minus icon-minus clsButton "
+						id="bntFontDecrease"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ- </span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="acceblity"><a href="#"><span
+							class="accebilility_icon disabbil">ಆ </span> </a></li>
+				</ul>
+				
+			
+     	
+     		<a style="float: right;background: #3948B1;color:white;padding-right: 10px;font-weight: bold;border-bottom: #aecbd9 1px solid;" href="/changeLanguage?language=en">&nbsp;English &nbsp;</a>
+     	
+     	
+    
+	
+
+  <nav style="background-color: #3948b1 !important;border-radius: 0px;border: 0;"
+    class="target navbar navbar-expand-lg navbar-dark sticky-top bg-primary">
+    <div class="container">
+
+    </div>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="main_nav">
+      <ul class="navbar-nav">
+
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"> <a class="nav-link" href="/home" style="color: #aecbd9; font-weight: bold;">ಮುಖಪುಟ</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;"> ರೇರ ವಿವರಗಳು</a>
+          <ul class="dropdown-menu">
+
+            <li><a class="dropdown-item2" href="/aboutUs">ರೇರ ವಿವರಗಳು</a></li>
+            <li><a class="dropdown-item2" href="/orgStructurePage">ಸಂಸ್ಥೆಯ ಫಲಕ</a></li>
+            <li><a class="dropdown-item2" href="/mediaGallery">ರೇರ ಚಿತ್ರಗಳು</a></li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಕೆ-ಆರ್‌ಇಎಟಿ</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item2" href="/aboutKREAT">ಕೆ-ಆರ್‌ಇಎಟಿ ವಿವರಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/objectiveKREAT">ಉದ್ದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/organisationChartKREAT">ಸಂಸ್ಥೆಯ ಫಲಕ</a></li>
+			<li><a class="dropdown-item2" href="/filingAppeal">ಮೇಲ್ಮನವಿಯನ್ನು ಸಲ್ಲಿಸು</a></li>
+			<li><a class="dropdown-item2" href="/enforcementOfTribunal">ನ್ಯಾಯ ಮಂಡಳಿಯ ಜಾರಿ</a></li>
+			<li><a class="dropdown-item2" href="/regulationsKREAT">ನಿಯಮಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/workingHoursKREAT">ಕೆಲಸದ ಸಮಯ</a></li>
+			<li><a class="dropdown-item2" href="/contactKREAT">ಸಂಪರ್ಕಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/tribunalDailyCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewHearingList">ದೈನಂದಿನ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/tribunalDisposedList">ತೀರ್ಪುಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/notificationsKREAT">ಸಾರ್ವಜನಿಕ ಪ್ರಕಟಣೆ</a></li>
+			<li><a class="dropdown-item2" href="/resources/notifications/KREAT_Notification3.pdf" target="_blank">ಕೆ-ಆರ್‌ಇಎಟಿ ಶುಲ್ಕ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ನೋಂದಣಿ</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/initProjectRegistration">ಯೋಜನೆಯ ನೋಂದಣಿ</a></li>
+			<li><a class="dropdown-item2" href="/initAgentRegistration">ಏಜೆಂಟ್ ನೋಂದಣಿ</a></li> 
+			<li><a class="dropdown-item2" href="/complaintHome">ದೂರು ನೋಂದಣಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForExtensionPage">ಯೋಜನೆಯ ವಿಸ್ತರಣೆಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/changeRequestPage">ಬದಲಾವಣೆ ವಿನಂತಿಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/changeRequestAgentPage">Apply for Agent Change Request</a></li>
+			<li><a class="dropdown-item2" href="/postRegLoginPage">ಪೋಸ್ಟ್ ನೋಂದಣಿ ಮತ್ತು ತ್ರೈಮಾಸಿಕ ನವೀಕರಣ</a></li>
+			<li><a class="dropdown-item2" href="/reratransfer/applyForTransferofRights">ಹಕ್ಕುಗಳ ವರ್ಗಾವಣೆ</a></li>
+			
+			<li><a class="dropdown-item2" href="/applyForModificationPage">ಯೋಜನೆಯ ಮಾರ್ಪಾಡುಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForCompletionPage">ಯೋಜನೆ ಪೂರ್ಣಗೊಳಿಸುವಿಕೆಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForAgentRenewal">ಏಜೆಂಟ್ ನವೀಕರಣಕ್ಕಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForAnnualReport">ವಾರ್ಷಿಕ ಲೆಕ್ಕಪರಿಶೋಧನೆ ವರದಿಯನ್ನು ಸಲ್ಲಿಸಿ</a></li>
+			
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಸೇವೆಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/viewAllProjects">ಯೋಜನೆಯ ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllAgents">ಏಜೆಂಟ್ ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllComplaints">ದೂರು ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllComplaintDetails">Complaints Under Process</a></li>
+			<li><a class="dropdown-item2" href="/viewAllJudgements">Search Orders</a></li>
+			<li><a class="dropdown-item2" href="/viewAllInterimOrders">ಮಧ್ಯಂತರ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewAllProjectOrders">ಪ್ರಾಧಿಕಾರದ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewAllAOorders">Orders of Adjudicating Officer</a></li>
+			<li><a class="dropdown-item2" href="/viewAllLokAdalatComplaints">ಲೋಕ ಅದಾಲತ್ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewRenewalProjects">ಯೋಜನೆಯ ವಿಸ್ತರಣೆ ಸ್ಥಿತಿ</a><li>
+			
+			<li><a class="dropdown-item2" href="/pendingPaymentPage">ಆನ್‌ಲೈನ್ ಪಾವತಿ ಸ್ಥಿತಿ</a></li>
+			
+			<li><a class="dropdown-item2" href="/applyForCertifiedCopy">ದೃಢೀಕೃತ ಪ್ರತಿಯನ್ನು ಪಡೆಯಲು ಮನವಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewRevenueRecoveryList">ಭೂಕಂದಾಯ ವಸೂಲಾತಿ ಪ್ರಮಾಣ ಪತ್ರ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/rtiPage">ಮಾಹಿತಿ ಹಕ್ಕು ಕಾಯ್ದೆ</a></li>
+			<li><a class="dropdown-item2" href="/projectDailyCauseList">ಯೋಜನೆಯ ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/agentDailyCauseList">ಏಜೆಂಟ್ ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+	   		
+	   		
+	   		
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ದೂರುಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/dailyCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ ( ನ್ಯಾಯ ನಿರ್ಣಯಾಧಿಕಾರಿ )</a></li>
+            <li><a class="dropdown-item2" href="/audjudicatingDailyOrderList">ದೈನಂದಿನ ಆದೇಶಗಳು ( ನ್ಯಾಯ ನಿರ್ಣಯಾಧಿಕಾರಿ )</a></li>
+            <li><a class="dropdown-item2" href="/authorityCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ ( ಪ್ರಾಧಿಕಾರ )</a></li>
+            <li><a class="dropdown-item2" href="/authorityDailyOrderList">ದೈನಂದಿನ ಆದೇಶಗಳು ( ಪ್ರಾಧಿಕಾರ )</a></li>
+			<li><a class="dropdown-item2" href="/promoterComplaintReport">ಪ್ರವರ್ತಕವಾರು ದೂರುಗಳ ವರದಿ</a></li>
+			<li><a class="dropdown-item2" href="/projectComplaintReport">ಯೋಜನವಾರು ದೂರುಗಳ ವರದಿ</a></li>
+			<li><a class="dropdown-item2" href="/complaintRealizationList">ಫಿರ್ಯಾದುಗಳಲ್ಲಿ ವಸೂಲಾದ ಪ್ರಕರಣ ಪಟ್ಟಿ</a></li>
+          </ul>
+        </li>
+
+         <li class="nav-item"> <a class="nav-link" href="/helpdeskLoginPage" style="color: #aecbd9; font-weight: bold;">ಸಹಾಯವಾಣಿ</a>
+        </li>
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ನೋಂದಾಯಿಸದ ಯೋಜನೆಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/unregProjectList">ತನಿಖೆಯ ಅಡಿಯಲ್ಲಿ ಯೋಜನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/reportRegForm">ನೋಂದಾಯಿಸದ ಯೋಜನೆಗಳನ್ನು ವರದಿ ಮಾಡಿ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಪ್ರಕಟಣೆ </a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/circularPage">ಸುತ್ತೋಲೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/notificationPage">ಸಾರ್ವಜನಿಕ ಪ್ರಕಟಣೆ</a></li>
+			<li><a class="dropdown-item2" href="/tenderPage">ಟೆಂಡರ್ ಪ್ರಕಟಣೆ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಸಹಾಯ </a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/downloadPage">ಡೌನ್ಲೋಡ್ಗಳು</a></li>
+			
+			<li><a class="dropdown-item2" href="/resources/staticpage/FAQ.pdf" target="_blank">ರೇರಾ ಕಾಯ್ದೆಯ ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/resources/staticpage/KARNATKA_FAQs.pdf" target="_blank">ರೇರಾ ನಿಯಮಗಳ ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/resources/downloads/RERA_FAQ.pdf" target="_blank">ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"> <a class="nav-link" href="/contactUsPage" style="color: #aecbd9; font-weight: bold;">ಸಂಪರ್ಕಿಸಿ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಲಾಗ್ ಇನ್</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/authorityLoginPage">ಅಧಿಕಾರಿಗಳ ಲಾಗಿನ್</a></li>
+            
+            <li><a class="dropdown-item2" href="/rerauser/loginPage">ಟೆಂಪ್ ಲಾಗಿನ್</a></li>
+            <li><a class="dropdown-item2" href="/publicDomainLoginPage">ಸಾರ್ವಜನಿಕರ ಲಾಗಿನ್</a></li>
+            <li><a class="dropdown-item2" href="/complaintHome">ದೂರು ಲಾಗಿನ್</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div> <!-- navbar-collapse.// -->
+  </nav>
+<div class="target">
+
+
+
+
+
+
+
+<div class="row" style="flex-wrap: nowrap;margin: auto">
+<div class="col-md-3" style="background: linear-gradient(to right, #3948B1 0%, #AECBD9 100%, #AECBD9 100%) repeat scroll 0 0;">
+<img src="/resources/images/GOK.png" title="ಕರ್ನಾಟಕ ಸರ್ಕಾರ" style="float: left;" height="70px">
+<img src="/resources/images/cm2026.jpeg" alt="Hon'ble Chief Minister" title="ಮಾನ್ಯ ಮುಖ್ಯಮಂತ್ರಿಗಳು" style="border-radius: 200%;float: left;margin-right: 5px;" height="70" width="70"/>
+<span style="font-weight: bold;float: left;text-align: left;margin-top: 3%;color: white;font-size: 12px!important;" class="aboutRera">ಶ್ರೀ ಡಿ.ಕೆ. ಶಿವಕುಮಾರ್<br><small>ಮಾನ್ಯ ಮುಖ್ಯಮಂತ್ರಿಗಳು</small></span>
+</div>
+<div class="col-md-6 top-center-title1"  style="flex:auto;">
+       ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರ <br>ಕರ್ನಾಟಕ ಸರ್ಕಾರ
+</div>
+<div class="col-md-3" style="background: linear-gradient(to left, #3948B1 0%, #AECBD9 100%, #AECBD9 100%) repeat scroll 0 0;margin-left: auto;">
+<img src="/resources/images/logos.png" title="ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರ" alt="" height="70px" style="float: right;">
+<img src="/resources/images/hm2023.jpg" alt="Hon'ble Housing Minister" title="ಮಾನ್ಯ ವಸತಿ ಸಚಿವರು" style="border-radius: 200%;float: right;margin-left: 5px;" height="70" width="70"/>
+<span class="aboutRera" style="font-weight: bold;float:right;text-align: right;margin-top: 3%;color:white;">ಶ್ರೀ ಬಿ.ಝಡ್. ಜಮೀರ್<br>ಅಹಮದ್ ಖಾನ್<br><small>ಮಾನ್ಯ ವಸತಿ ಸಚಿವರು</small></span>
+</div>
+</div> 
+</div>
+
+
+
+		<button onclick="topFunction()" id="myBtn" title="Go to top">
+		<i class="fa fa-chevron-circle-up fa-2x" aria-hidden="true"></i>
+	</button>
+	<button type="button" id="myBot" value="bottom" onclick="gobottom();">
+		<i class="fa fa-chevron-circle-down fa-2x" aria-hidden="true"></i>
+	</button>
+	</div>
+	
+	<style>
+#myBtn {
+	display: none;
+	position: fixed;
+	bottom: 40px;
+	right: 60px;
+	z-index: 99;
+	border: none;
+	outline: none;
+	background-color: #3948B1;
+	color: white;
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 10px;
+	width: 40px;
+}
+
+#myBot {
+	position: fixed;
+	bottom: 40px;
+	right: 10px;
+	z-index: 99;
+	border: none;
+	outline: none;
+	background-color: #3948B1;
+	color: white;
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 10px;
+	width: 40px;
+}
+</style>
+			
+	<script>
+		// When the user scrolls down 20px from the top of the document, show the button
+		window.onscroll = function() {
+			scrollFunction();
+			scrollFunctionBtm()
+		};
+	
+		function scrollFunction() {
+			if (document.body.scrollTop > 20
+					|| document.documentElement.scrollTop > 20) {
+				document.getElementById("myBtn").style.display = "block";
+			} else {
+				document.getElementById("myBtn").style.display = "none";
+			}
+		}
+	
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+	
+		function scrollFunctionBtm() {
+			if (document.body.scrollTop > document.body.scrollHeight - 750
+					|| document.documentElement.scrollTop > document.body.scrollHeight - 750) {
+				document.getElementById("myBot").style.display = "none";
+			} else {
+				document.getElementById("myBot").style.display = "block";
+			}
+		}
+
+		function gobottom() {
+			console.log("scrollHeight" + document.body.scrollHeight)
+			console.log("scrollTop" + document.body.scrollTop)
+			window.scrollTo(0, document.body.scrollHeight);
+		}
+	</script>
+		</header>
+	
+		<section id="sidemenu">
+			
+		</section>
+			
+		<section id="site-content">
+			
+
+
+
+
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+                <link href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+<style>
+#complaintList {
+text-transform: uppercase;
+}
+</style>
+<script>
+$(document).ready(function() {
+	var table=$('#complaintList').DataTable( {
+    	"order": [[2,"desc"]],
+    	"pagingType": "full_numbers",
+        dom: 'Bfrtip',
+        lengthMenu : [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ] ],
+        buttons: [
+        	{ extend: 'pageLength'},
+            { extend: 'excel',text: 'Export Into Excel', title: 'List Of All Complaints'},
+            { extend: 'pdf',orientation: 'landscape',pageSize: 'LEGAL',text: 'Export Into PDF', title: 'List Of All Complaints'},
+            { extend: 'print',orientation: 'landscape',pageSize: 'LEGAL', title: 'List Of All Complaints'},
+            { extend: 'copy'}
+        ]
+    } );
+	table.on( 'order.dt search.dt', function () {
+		table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+} );
+</script>
+
+<div class="breadcrumb">Home / Promoter Wise Complaint List</div>
+
+
+<!--News Ticker-->
+<div class="container">
+
+<!--main container start here-->
+<div class="Main_containner">
+
+<!--Inner wrapper stsrt here-->
+<div class="inner_wrapper tsklist">
+
+
+
+<h1>Complaints on promoter <span>List</span></h1>
+<div class="drop_shadow"></div>
+	<div class="clearfix"></div>
+<h1>Total Complaints : 13289</h1>
+<h1>Total Promoters : 2018</h1>
+<div class="table-responsive">
+				
+				
+				<table class="table table-bordered" id="complaintList">
+        <thead>
+            <tr>
+            <th>S.NO</th>
+                <th>PROMOTER NAME</th>
+                <th>NO OF COMPLAINTS</th>
+                <th>COMPLAINT LIST</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        
+         
+            <tr>
+             	<td></td>
+                <td>	SHRIRAM PROPERTIES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=okNvPWxTQ8l5UxjN066RAi61dZ51bfPfpZqiSd7McAInfGDPntG1oBc1ZHGnNelo">	SHRIRAM PROPERTIES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> B.G. Ajaya Kumr       Late B.G. Jayanna</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PawTu6noUQRTnbe1jdiED2dk1396RW%2BkJJZpA1J2opYQdonm5YXoK%2BvAv5EDMllf"> B.G. Ajaya Kumr       Late B.G. Jayanna</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> DEEPAKK KUMAR</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=apfpm5zLo9bKDGpJqM2IBg%3D%3D"> DEEPAKK KUMAR</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> ISHTIKA HOMES PRIVATE LIMITED</td>
+                <td>23</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ALwNxgBeJFvfISH6LkssVMOOxqKWQ%2BYOY%2BGT4Ek%2FHZ4%3D"> ISHTIKA HOMES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> ITALIX LIVING SPACES PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=E9kvvqO3CsRRJ7Zr%2BEkk8BaihcE2D4fZtI4pbQTia1M%3D"> ITALIX LIVING SPACES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> M/s Vsan Infastructure Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=MdSTUqm8t5%2BBFkmOJnSWgSaPAkkftGpQRcmu8RhOoxw%3D"> M/s Vsan Infastructure Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> M/s. Bennett Coleman & Co. Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TFp5u6DzT4rjC7O66aCvwm05dyoBVmYUviXoEKxRLBQ%3D"> M/s. Bennett Coleman & Co. Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> M/s. State Excise Multi-Purpose Co-operative Society Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=flHl%2FazPPBmnoubbq3gvVvkI5Kkgy4HQff2gHU3PQaKrohtlwRfupXaHEZn6%2FADKjWhC2UGk6qz6UolR57A1fg%3D%3D"> M/s. State Excise Multi-Purpose Co-operative Society Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> M/s.Sherif constructions</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=UtZNjgVHjdByqdYYjPsgzCcpX45Xk%2FyfkiQkLFcPZd4%3D"> M/s.Sherif constructions</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> PRESTIGE ESTATES PROJECTS LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=sY5o5ml8IDECu7SPKOgcyTaq9j8l0LeYuq8MhlbEOJI%3D"> PRESTIGE ESTATES PROJECTS LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> Primus Lifespaces Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fa4xGVMXQGHPqeB4GHqy1P7G%2B7KwkTQlWwKK7drdTk8%3D"> Primus Lifespaces Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> Roopa Infra Projects (India) Pvt.Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=0GUJwjirfX6XpR%2Bw4kZzv2YjKS5rdVRlSZmN5rGuH7qIHACPiFA%2BY4Yazf9DVhCj"> Roopa Infra Projects (India) Pvt.Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td> VSAN Infrastructure PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=idFKYeMK%2FngG7VzySYzHfqY4UcVF5q9CeR9oKR31EPs%3D"> VSAN Infrastructure PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>'Blue Waters 'by SJR Prime Corporation</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dHpvXGfIMilQNYZ0mJNod78a7TSIqQvselV%2Ft6CAHuGx8O41XQu7t6%2BqV2sSQtwA">'Blue Waters 'by SJR Prime Corporation</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>'M/s. Platinum City</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=xXxopGyo7b50HtYpayUOHZ5jOPpNpODDPSgSURa7GKE%3D">'M/s. Platinum City</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>. OZONE URBANA INFRA DEVELOPERS PVT., LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=nE0GdrA5d23vukq1%2FKik0hkTd4EO0DHyTjLy%2FknABGldvmSfEYsh2NlEQid%2FDHTp">. OZONE URBANA INFRA DEVELOPERS PVT., LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>.Shree Krishna Developers and promoters</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TRMWOsoNChrNNjCr3Z3%2B4L%2Fw4P9Ngd9C%2BbilMn0XkncoGpMVbjnt8YsQDkK7VUl0">.Shree Krishna Developers and promoters</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1) M/s T R BUILDERS & DEVELOPERS  2) Sri. Vijay Anand Kumar 3)Smt. Karpagam Anand Kumar</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HJmIMJsoek1bAQAAhbSGYlHs6Aszw5yZDOjczx%2BSVJuajPBmohAQ8f3dG1v%2FeS9mOO2aGQzVc8MMHA2ymIZ2xVbQrWpjrsrHq0AH1Q58gTb3451Dy6YQ%2B99LSd9yHfh2">1) M/s T R BUILDERS & DEVELOPERS  2) Sri. Vijay Anand Kumar 3)Smt. Karpagam Anand Kumar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1) M/s T R BUILDERS & DEVELOPERS 2)Sri. Vijay Anand Kumar 3)Smt. Karpagam Anand Kumar</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HJmIMJsoek1bAQAAhbSGYlHs6Aszw5yZDOjczx%2BSVJtxXE2AyfyxlpyKmuUQY%2F8S1uWfRaz7l6luQ8J0MPxuINpwbFeo%2FEMuAMUScsbb3sfF2%2FYxgKfySF6sHIgQvfGL">1) M/s T R BUILDERS & DEVELOPERS 2)Sri. Vijay Anand Kumar 3)Smt. Karpagam Anand Kumar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1) TR builders & developers 2) Sri Vijay Anand Kumar 3) Smt Karpagam Anand Kumar</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hz8NJI2uyh3bkYSr6WL20fcO%2F4KhfuaeFbSlJDUNQO0zknZ3DsMgy9eE1BC1L3tJM6BsFXoewMbwtkrMX7yfFiIj1LpI8or4l9v%2BM4%2BarxVx5qA0BBEyJDK8XUq86hmU">1) TR builders & developers 2) Sri Vijay Anand Kumar 3) Smt Karpagam Anand Kumar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1)COLUMBIA INFRA HOLDINGS .2)Gopamma .3)Muniratnamma.4)Venkatesh.5)Mamatha.6)Krishna.7)Ramakrishnan.8)Gowramma.9)Shridhar.10)NArayanswamy.11)Yeshoda.12)srikant.13)Supriya</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=b5tQHwSzWO8vbiuVFzivA9XZgkur6yXxmMUbKh7X6yQ8sWqLhsws7FAYnBGW9oTCBo0IUSw%2FQokNagRPqELszPizMTYIB3kHIZlesyDGmFRucobsOsmqa%2FHrgLSw7wc7c0OfuuAcqdGBk22Nos13Q9I23Cn4DqEnYd4B3eBOmuqh7BF7nZLSGbAX8GsHQu%2B8tCM4NMWGWrUtLxJOj6zNtp4YbumZL7I8ECpLvwN1Y50%3D">1)COLUMBIA INFRA HOLDINGS .2)Gopamma .3)Muniratnamma.4)Venkatesh.5)Mamatha.6)Krishna.7)Ramakrishnan.8)Gowramma.9)Shridhar.10)NArayanswamy.11)Yeshoda.12)srikant.13)Supriya</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1.	M/s Akshaya Builders, Developers & Promoters </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6seCPOrwPy38QPTDgBjGUx8dvfi93lMH4koo%2F4NZU%2FAyoqpCFDNcBrSjiYHGaucyceagNAQRMiQyvF1KvOoZlA%3D%3D">1.	M/s Akshaya Builders, Developers & Promoters </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1.	M/s. Expat Projects Bangalore Holdings Pvt. Ltd. 2.	M/s. Expat Projects & Development Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LkM5DXWoIRY%2F6SgFheLVGFSjDl2fprqIyMO6CD3d66She6R76uYoLc3aF5B%2FQT10Ugev1orT%2Ftkx%2F%2BURBzO%2FE7p7mFWiq3nxvojCJn098Gh1WQJdO0%2Fh%2FwtnPhz4AwJTAtSHQLKp37WrpansqZr7OA%3D%3D">1.	M/s. Expat Projects Bangalore Holdings Pvt. Ltd. 2.	M/s. Expat Projects & Development Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1.	M/s. State Excise Multipurpose Cooperative Society Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dyriobYuqyW1GT0D6Uz%2FBtn5B9xxQp9F30aB7F7ceSy3CeveTIb7EXxgxMJmtKJ4BtOY2YsmlheebTEGUb13jw%3D%3D">1.	M/s. State Excise Multipurpose Cooperative Society Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1. Crystal Constructions and Developers.hash Piraji Kachole 4. Mr. Mahendra Gajraj Biass..2  s mentioned on Sale Deed</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6exfDJBqETt3%2BKcxZfvLxixQ7bomXTwVn6dOTSz2M6go8qhVyq5F7Jh044N6aLnQh0T2LousAQlCiKgQ9f6rjUmjmCVCY9EzphYVEjngW1Dn%2FRRKni64uRUnqBGfbgF%2FaXl2RO8kiTFj5zQQ9jsqhauDtkxMRs1B1%2B8j1F4pDs0%3D">1. Crystal Constructions and Developers.hash Piraji Kachole 4. Mr. Mahendra Gajraj Biass..2  s mentioned on Sale Deed</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1. Mr.Ziaulla Sheriff 2. MR. YUNUS ZIA,</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lgem0Az1zzWoO4ccbZVVI%2B8CVxwXQMtee83OcidOwjp1qkT8RY2BIMrzPilin%2FDN">1. Mr.Ziaulla Sheriff 2. MR. YUNUS ZIA,</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>1.S A Properties (First Builder) 2.Liquath Ali Javed(Land Owner) 3.Mohammed Ali Khalid(Land Owner)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NGcL0cdUQzh8pEyk8%2FUj4XnqIflmLGTO3vo91ekyrZ5bGHMnglGvhlZZk5qU%2F75cszg%2FwfYiWPcj%2B4TakW1is%2F%2B5wmEGJR2z6DXjrWbzZvzGszHHD%2FwGGXA2SqVyNNcCMtsCTuasf%2FhZTO2HYQRzDw%3D%3D">1.S A Properties (First Builder) 2.Liquath Ali Javed(Land Owner) 3.Mohammed Ali Khalid(Land Owner)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>21st CASTLE VENTURES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1OoYtD%2F57C1z6wdIfLZQvNgiJ9sDrxzTZJO%2BneH0Lc1f6QzrOyuyIPPKuVgNvfmL">21st CASTLE VENTURES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>21st Castle Ventures Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Gbu8ZGEw3IOyHcBFxqXRj%2ByCzJYvy3mr970rh4vXNVQ%3D">21st Castle Ventures Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>21st castle pvt ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zUdFRyZvRG1%2FfDBvMPR6TGBcyoC%2BAlJdP9pzv8ixnP8%3D">21st castle pvt ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>5 Elements</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=xbIAZdfOjcZ%2BkDcnSYNFYQ%3D%3D">5 Elements</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>: M/s. Bennett Coleman & Co. Ltd </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mn1NjzKTG8D8YHJGUlcYxafb4H7k5bWGIMcBxy1%2FJkKiel2ujs7YONka%2FOJ88z%2FJ">: M/s. Bennett Coleman & Co. Ltd </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>A B IBRAHIM</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=3BV5nqHc23aj5HDxYIUdgg%3D%3D">A B IBRAHIM</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>A Lavanya</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vBTJpnK9KvvBqCZMl%2FDzYQ%3D%3D">A Lavanya</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AAKRISH INFRASTRUCTURE PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mCN8T5Pjq7khz5fg64Ul86Bo4xuXuSmj%2FkemxiQIBHw%3D">AAKRISH INFRASTRUCTURE PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AAKRUTHI PROPERTIES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hlH%2FkSErUAD70SYoDbZMuhlimikqN1ekjXvB94tjl84%3D">AAKRUTHI PROPERTIES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AANVI INFRASTRUCTURE</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=nwsC3xqo0a0jFA21PkWWKm6Eg0PxDF3lWMlT%2FP2W5g4%3D">AANVI INFRASTRUCTURE</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AAPTHA VENTURES</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Rud1sSTzO2QPTSzMErK7XQ%3D%3D">AAPTHA VENTURES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AASHIRWAD INFRA DEVELOPERS</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=5rKYUFubjRlk2RBry6cTWFYxVWCEqcjFO3lREQrWMh4%3D">AASHIRWAD INFRA DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AASHISH DEVELOPER AND BUILDERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=AIrci84UT5kV0HzkPEoep9HnC%2FV%2BPvYD2YUcTuzSkMo%3D">AASHISH DEVELOPER AND BUILDERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AB Properties</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hKDNrKaSRLfd8SBZzjMLzQ%3D%3D">AB Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ABAN DEVELOPERS PRIVATE LIMITED</td>
+                <td>13</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uwVcpQR0DV0lMcP3nt8acFOjQyNWpnRWpkflXZuVyRs%3D">ABAN DEVELOPERS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ABHI DEVELOPERS </td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tkyR2dhlTgYyFAMvSuyrSnHmoDQEETIkMrxdSrzqGZQ%3D">ABHI DEVELOPERS </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ABHIGNA CONSTRUCTIONS</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=CoFq5Q7GIm5MuEng5japiVkCSaH2RST%2FLbbvofX4ICg%3D">ABHIGNA CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ABHISHEK K.C</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gnZORq3IthsLKqV6FP4aPQ%3D%3D">ABHISHEK K.C</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ABS  Builders and Developers</td>
+                <td>9</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=5dYtkzMyW0S%2B1bulcF1zzSLF1fOCuT7i4iEA76R6nSk%3D">ABS  Builders and Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ACE REALTY VENTURES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JXyFkoLljZ9YmtBkUX5xiQJxRc7VYQbAt2l8%2BowKz84%3D">ACE REALTY VENTURES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADARSH CONSTRUCTIONS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hn%2F9aECD2QgM6nAFYPjUkxswetKxifkyvOWtkt%2Bl78I%3D">ADARSH CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADARSH HAVEN PRIVATE LIMITED</td>
+                <td>36</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ThrZf42%2FnO3TX1pLAbzjJDJh1i6QTH0oJVQg0VOIc9Y%3D">ADARSH HAVEN PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADDRESS MAKER LIFE SPACES PVT LTD</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=d%2F6UxqV32MO4GzvUeDySRJTJsjH6qnFz9JGGnDAQ5MbWXo4%2FOAXAN8GjGbSGqJ5j">ADDRESS MAKER LIFE SPACES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADHISHREE VENTURES INDIA PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1BIbSmGvK62now0kQXCZDRiWhiu5TpOIPqkmMvsj8GBx5qA0BBEyJDK8XUq86hmU">ADHISHREE VENTURES INDIA PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADHVAYTHA DEVELOPERS</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Kuts%2FdvUhWzio3SWIZiT%2FFdaBeuRtxz%2Bit%2F5hgHKbPQ%3D">ADHVAYTHA DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADI DEVELOPERS</td>
+                <td>30</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ePtVKClmuxCeuWt0Np7urg%3D%3D">ADI DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADISESH PROJECTS</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=IM7P90cmT9KkGAhdLR3tHnHmoDQEETIkMrxdSrzqGZQ%3D">ADISESH PROJECTS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADITI TROPICA</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RjoZcbHbFZjO5xsM%2FDXetw%3D%3D">ADITI TROPICA</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ADITRRI BUILDERS AND DEVELOPERS</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Z4Iv2bOtHEXgR%2FGWNlyxHp0Ue7zlywYiMBHDEe5V5z8%3D">ADITRRI BUILDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AFFINITY PROJECTS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=w2CLBTzZHakqf5bPjqA7NIJOZpul51rBTT7fdYUl8VQ%3D">AFFINITY PROJECTS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AGSER BUILDTECH PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=opxJiEy6ckOF8ABkGp%2F9olOjQyNWpnRWpkflXZuVyRs%3D">AGSER BUILDTECH PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AHAM VENTURES LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=k0AE6QbXgFS%2FcHvKJyqv4yiz17uxAL7oZV5oAcV6J%2FE%3D">AHAM VENTURES LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AJMEAR HOUSING CORPORATION</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4p9KMRLqvhzVDZMID2CXOsXRgHPXf9CaD0n2phI3psE%3D">AJMEAR HOUSING CORPORATION</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AJMERA HOUSING CORPORATION (BANGALORE) </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hhWGZ223CHyU3xuRX7fBfkd6%2FbjUQJ%2BN%2BMOpRzlPFLsVTctkCJKwjq9cOjP4ndO6">AJMERA HOUSING CORPORATION (BANGALORE) </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AJMERA HOUSING CORPORATION BANGALORE </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hhWGZ223CHyU3xuRX7fBftPijDBOUIZ8RsCCcLTyvjgw7DgCyEVgUTlU2ceyWos%2F">AJMERA HOUSING CORPORATION BANGALORE </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AK MAXX PROPERTIES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=azc%2B9fAf7ZQFQ3XnX7m2tlogb1V3YYA72GZI0UVElCU%3D">AK MAXX PROPERTIES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AK MAXX PROPERTIES LTD and Aastha Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=azc%2B9fAf7ZQFQ3XnX7m2tqo0IsxLkbgRQE3Z%2B4xr%2BYt7BVYKtj6YUVPVGhQlQd9E">AK MAXX PROPERTIES LTD and Aastha Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKARSHA REALTY PRIVATE LIMITED</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wI8Eu1CjN%2FCwEUupX0aKE8OOxqKWQ%2BYOY%2BGT4Ek%2FHZ4%3D">AKARSHA REALTY PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKHIL CONSTRUCTIONS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JuRt3Krwml0fxIA%2FiH7zqEamIdFJzLu6vmTyHbr45e0%3D">AKHIL CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKSHAYA BUILDERS AND DEVELOPERS</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zS7LPWxUkcE81q8X%2FTH%2BLZ0Ue7zlywYiMBHDEe5V5z8%3D">AKSHAYA BUILDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKSHAYA BUILDERS AND DEVELOPERS,AKSHAYA BUIDERS AND DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zS7LPWxUkcE81q8X%2FTH%2BLaZ%2FN3TBD5ME4rzBECVVclI%2FHBrfXjdLnR9ZpRcbZqeBDsAaJY6KM%2FPUzt%2FhReg1Cw%3D%3D">AKSHAYA BUILDERS AND DEVELOPERS,AKSHAYA BUIDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKSHAYA INFRA</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=095%2B8oo%2B3uct%2FKaWNVgB8Q%3D%3D">AKSHAYA INFRA</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AKSHYA BUILDERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KnFgnMI%2FJUP2we9f9So3cQ%3D%3D">AKSHYA BUILDERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ALAJI BUILDERS AND DEVELOPERS / Srinivasa Murthy.T V</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BO41dIbbpfUW836MTW3Mc2Vk90bBwSWG%2B2gmIhEHGL%2Fs9KvsyL9RmmAdHk9HK7c2cTBao0xgA7VNKa%2Fii5Oorg%3D%3D">ALAJI BUILDERS AND DEVELOPERS / Srinivasa Murthy.T V</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ALLAM INFINITE INDIA PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7KnCa6hgUgr%2BR6bLUvOlfHZAHFnNum5NphK2Q9ykxfA%3D">ALLAM INFINITE INDIA PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ALLEGRO MAHABALESHWARA VENTURES LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XZfk6QI%2BeuObZtR3IuZwcAyozw3mY8aWm86DRQhbIYFor7aYpoEo28RvPDtZqKAh">ALLEGRO MAHABALESHWARA VENTURES LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ALN Buildtech</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=OO4i09JH%2FvuCzf8rUACf2w%3D%3D">ALN Buildtech</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ALPINE HOUSING DEVELOPMENT CORPORATION LIMITED</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=3FgWUjeGshvN5afdR5whgtH8QhLzZICx7jNeZxaa403IBK0BkgIXX62yXVh%2FaC7m">ALPINE HOUSING DEVELOPMENT CORPORATION LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AMIGOESTELLA INDIA LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zndka8vDBEhBDDCzVVbc%2BR2ZgLtcP2Bfrn1YaqnCSt8%3D">AMIGOESTELLA INDIA LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AMOGH DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=UmtVYpF2DYOPwTsj9y3lE3HmoDQEETIkMrxdSrzqGZQ%3D">AMOGH DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AMR Housing development corporation</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KiiQkz0fkJsQCZeVM8jcEKQ5Kdwy2YVjr4ACuR9bdTkVnCviHXxn9LRnWDcdIeHk">AMR Housing development corporation</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ANIL JHA</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Ig10zwtGzEPKyxCvs%2FOtTw%3D%3D">ANIL JHA</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ANISH PROJECTS DEVELOPERS  PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=I1QdedY6vBVnOoIOLLHO6TDs3iKMK5BSgY2Ak0YTlhBiNlbHYKRu2OqzS6syo1BC">ANISH PROJECTS DEVELOPERS  PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ANISH PROJECTS DEVELOPERS (I) PVT</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=I1QdedY6vBVnOoIOLLHO6YQmvIiAReXHYUhTHdXZrr%2BcGYfJ8VjLDvwfSd92SzRd">ANISH PROJECTS DEVELOPERS (I) PVT</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>APG Intelli Homes Private Limited</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PqXGggNIwM1ixuLG4H8%2B2rr3D8c4ovT8sy4tM1s%2Fg8sfQmLbVuHYUnWdo%2Flqzrai">APG Intelli Homes Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>APG Lifestyle Homes Private Limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=VwR1N6RbCdeM9RUHRjH5ulT3mGBI1%2B8%2B3PRgORuWHD85SSg9tGu00VVOhzr4%2BFFc">APG Lifestyle Homes Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>APG PREMIUM RESIDENTIAL PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RnQscL9wf4PPtqV6nkLlPxC5ca%2BPFiVdj%2BXgOp%2F8bceYpHVDWPoQ3YlPepDiNWtZ">APG PREMIUM RESIDENTIAL PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATT ALCHEMY ESSENCE LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=WriN2YbzsrH3BTW0bXzI2mS31eXWbw6b98wNjD3jtrI%3D">ARATT ALCHEMY ESSENCE LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATT CITY TOWERS LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vaohgTgi7xf1MrAbvjyQ%2FE%2F6s%2B8GkT%2B8%2BwX3MmOPANM%3D">ARATT CITY TOWERS LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATT CITYSCAPES PROJECT LLP</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=slgo1nhbLat5YlE0SS%2FAC9S1pueeEQGJujEs7sRfLOI%3D">ARATT CITYSCAPES PROJECT LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATT GRAND TOWN</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=CvFXo%2FMt6gEyZ7f%2BisQjOnHmoDQEETIkMrxdSrzqGZQ%3D">ARATT GRAND TOWN</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATT ROLLING WHITES</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=X%2BjtNd5KkY6AjqbMYY8cWAqDweXqDxlD4%2BwVj%2Bwy6dA%3D">ARATT ROLLING WHITES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARATTUKULAM DEVELOPERS LLP</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jDgqZ1BkZ4Z2YT0DqVLHSWgoRtWVO0CWCIneLUlcFlY%3D">ARATTUKULAM DEVELOPERS LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARMY WELFARE HOUSING ORGANIZATION</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=CuubW86eBJFB50VCUL6cvRoWDbRySIXnIASRzIest4FLBElXTqOEPkHWT8abnc8V">ARMY WELFARE HOUSING ORGANIZATION</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARSIS DEVELOPERS PVT LTD </td>
+                <td>18</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mq6QoLEqWHu%2BA973ts7O%2FxYGd%2FUE65c%2B1uaLb8ngNDk%3D">ARSIS DEVELOPERS PVT LTD </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARTHA REAL ESTATE CORPORATION LIMITED</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=F27YD%2B3uBGBUyDafWxI%2B6FZch%2FJUwz9tW%2BDoiT9GwlExTdx8jV7XujVFWpKB2Gcj">ARTHA REAL ESTATE CORPORATION LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARV Infrastructres</td>
+                <td>23</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=16ZdDi3%2FkuXSruK0kZwXkqffRypMbja%2FakcSrFbbrSY%3D">ARV Infrastructres</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARYA GRUHA PRIVATE LIMITED</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=i96D3KRLsiUBC7f3ohjt8NZQUdjjIFq7y9qdk4OKTlc%3D">ARYA GRUHA PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ARYAN HOMETEC PVT LTD</td>
+                <td>83</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=VqSWl%2Bm1rG5ipSyglslmLwqeeDXpbCSi020wfKeWZi0%3D">ARYAN HOMETEC PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ASHRAYA BUILDERS & PROMOTERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HcTsT%2Fah4LzGtvUMACSs8VqWz0M9CSdPoMVovAcPcOk%3D">ASHRAYA BUILDERS & PROMOTERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ASR CONSTRUCTIONS</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ZHaRm91H1eh2oKb9PAzUroJOZpul51rBTT7fdYUl8VQ%3D">ASR CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ASRITHA'S GROUP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=sLFnKtRDOyEi9XlbOf6lpw%3D%3D">ASRITHA'S GROUP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ASSET HABITAT, MYSORE</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gjoiethDhWdDvodw1PxJsLA6kyWTuujtgNOts9DW3VM%3D">ASSET HABITAT, MYSORE</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ASSETZ BUILDWELL LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9DtpinC4aN%2Fjjlj2z%2Bv06YHwfE0jvADGjpvkazpLHM8%3D">ASSETZ BUILDWELL LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ATCO Projects Private Limited </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=18xlu69zLsaikcbKLJYWWUhhebr3xEhl20v6wzN95uo%3D">ATCO Projects Private Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ATZ Properties</td>
+                <td>39</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fJp%2BE8EIjpV5I4A9zhzvvQ%3D%3D">ATZ Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>AUK SURAKSHA PROPERTIES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NDxacmMBmHrtKjGcq42SFtjkZVYiFZgrlzrhxggtk8A%3D">AUK SURAKSHA PROPERTIES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aakruti Properties and Constructions</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6UhkUYWXOfUnYo3T6q45YlRcdcoMqovk1zDDo%2FCqHck5AUz76yeQkpS6tunX8s0t">Aakruti Properties and Constructions</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aashritha Properties </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=0bRn%2FWdr1r9Hm5Jzf7dM4YAxfIw2hOjd2PzqlAtJkGU%3D">Aashritha Properties </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aastha Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=oq%2BgvDYeTmWz39NSbggr0f4Smn7axRQB4xIH8FshcHw%3D">Aastha Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Abdeali  F Magar</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=kyxFggLRq33eLJ7STfYhH3HmoDQEETIkMrxdSrzqGZQ%3D">Abdeali  F Magar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Adarsh Developers</td>
+                <td>9</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=e%2FIWuLMDIgcAjFwOrZtkQ%2F4Smn7axRQB4xIH8FshcHw%3D">Adarsh Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Adarsh Nivaas Private Limited</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=N6Rh2juWAEaKNueraFQmM%2FN3XzgAeL%2BM6P%2Ff365%2FDkc%3D">Adarsh Nivaas Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aditya Township Promoters</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=YwJOHf5kq2qmYwiksCKdCEHMqjNiYeubxixaKUUZn3k%3D">Aditya Township Promoters</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Adonai Shelters Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=K4opZgqjKMi2FZzurIz9Yk0LFKXazhkaHMHSCxqF4Z4%3D">Adonai Shelters Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Advaitha ventures Pvt  Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2iNjPC3sBGUboOr1PKubqlNiNjHxDUTSc1X%2BpTglLlQ%3D">Advaitha ventures Pvt  Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ahad Builders Pvt Ltd</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jDvzgnTjJjmi4XohaqFZnoXgXn6fUe8KwqanS%2Bgi0Is%3D">Ahad Builders Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Air Force Naval Housing Board</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7SudGOMblNWmLRrBoPqYWFWIrlFRFdtFd02NVdWik%2BY%3D">Air Force Naval Housing Board</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aircraft Employees House Building Co-operative Society Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ty%2Fx%2FJ77jf0xWmoB8lUepqEnE8PzzMETF2x5HYNGw18XWMvxp9IvT8febhGBvO2PGrdnqNDbQ%2FWgPXBDSaAdrg%3D%3D">Aircraft Employees House Building Co-operative Society Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Airforce Naval Housing Board</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=atWkXEACfuRdthWtThdlWud80%2BXA2azzDJwPlgAwUvY%3D">Airforce Naval Housing Board</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aishwarya Group Developers and Builders</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=QPElooGrE87BrKUoGYgUmDhPpOwaYaH84GsJVwMzoZWG3GaStA9Jnfg77Xrouo61">Aishwarya Group Developers and Builders</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aishwarya Projects</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KapC3ZDbjsxqTUv5e8j0oxIl8E9uqEU1mu%2BjK98hYhE%3D">Aishwarya Projects</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aishwarya greennest Properties pvt ltd </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HjIX2jYJRsO9Qme4E6lUJIC9HFucSfM9cbf587BUtm%2BQQVojQ1MwtPqBr1j6OfEi">Aishwarya greennest Properties pvt ltd </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ajmera Housing Corporation </td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=SFc80GXB6h%2Bzwo8sWGVfSPLPM0zAMVy2WUtT3tTkYCs%3D">Ajmera Housing Corporation </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akarsh Residence Pvt Ltd</td>
+                <td>14</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=pzjjxBO8%2FdU4w%2F%2FNEhaSdcKy5xI4IARU1PSJttDNV7I%3D">Akarsh Residence Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akarshak Realty Private Limited</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BiY4t0TInuzMq0WpyoSx8JKQzuOE3LkUWCsg8%2BsBakI%3D">Akarshak Realty Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akruti Amity Realtors</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=w9ipcnoeDNVqElXSfz03dhld8ET4OG5RKOkplmR%2B%2BS4%3D">Akruti Amity Realtors</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akruti Homes Bangalore Private Limited </td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ySPVG072hcXOXtyu9n3lx4iCls3aILx93ADnEKtPIu72WHcxIcaNMQ2IM6u5D73P">Akruti Homes Bangalore Private Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akshay </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=bH15PMRey6iolskUcIJetg%3D%3D">Akshay </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Akshaya Builders, Develpers and promoters </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Z%2FWE601OMmG%2Fjj0W7pq8MO8G3TwkkEPyyKveGTb6YsUjOv8nw6pf0GsYkHnzv1ar">Akshaya Builders, Develpers and promoters </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Alekhya Property Developments Pvt Ltd</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lnRZh0i6aufNq9V48fTVR9WZOw0EzPzJIj3K45B%2FCSeF4F5%2Bn1HvCsKmp0voItCL">Alekhya Property Developments Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Alpha Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=D9%2FGv6niRXwLFu3WrfAdP3HmoDQEETIkMrxdSrzqGZQ%3D">Alpha Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Altius Realcon Development India Private Limited</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vMXUn6TDyRO0YSGJekXgOeA2mbmbUd%2FjPc5PCooSNTHLA%2BOGVtERoRp0nM0zEVXYceagNAQRMiQyvF1KvOoZlA%3D%3D">Altius Realcon Development India Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ambiant iNetSolv Twincities LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=CMvhhYtfhRPus%2BdFQ1%2BwqUtzEeUeMXMEgfyQvt6i74g%3D">Ambiant iNetSolv Twincities LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Amity Builders and Devlopers </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4NUHjl9hV7U28uim5%2FDIaOOifuKbtGES%2Bw4lvYf2hvg%3D">Amity Builders and Devlopers </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Amrutha Constructions</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LeO%2B0olwy5RnwtjZ1DwiNQN9d9GgR6PyKC9OToX6MPM%3D">Amrutha Constructions</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Anand  / Govardhan Murthy</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Z%2BDz6Ntp4%2BX46%2BAMKqJfEfPWgnPg9YnNGG6aBPsgeiY%3D">Anand  / Govardhan Murthy</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Anand U Habib</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LvFBfhOm%2BFclAgCPxh8xUQ%3D%3D">Anand U Habib</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Anika Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lTE45kotpEMS4cTFCA7yUHHmoDQEETIkMrxdSrzqGZQ%3D">Anika Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Anish Projects Developers (I) Private Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=icT7%2BziOoh5kuwv2UFRcflHB50tr8Oz842kNNjRCYCjGxcuZSTNOmlLh5L06YNKA">Anish Projects Developers (I) Private Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Anitha LAKSHMINARASIMHA BABU</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=UApGUBYO2JddIMsXPJ1ubzKJptwxNUdeBKf7%2BQk6ORA%3D">Anitha LAKSHMINARASIMHA BABU</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Antevorta Developers Private Limited</td>
+                <td>28</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wevgeRwooBpOce8zEIuZBuHDCnQ8SSvB9CbNBs%2BrFR%2Fs2M1Jew8SBqQO8SQJ2jTx">Antevorta Developers Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Antevorta Developers Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wevgeRwooBpOce8zEIuZBklgQ6BFSFJ9VR%2BcSXRIjvc%3D">Antevorta Developers Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Antevorta Developers Pvt.Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wevgeRwooBpOce8zEIuZBp%2FGgxEzQEK2s2oEWJqFFFw%3D">Antevorta Developers Pvt.Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Apex Realty Ventures LLP</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=EwVz7uJfsa3wDlFvzuSXB4Qn2nOddw%2Ffryz7I34%2FE5I%3D">Apex Realty Ventures LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Apple spire India LLP</td>
+                <td>18</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=EePqShO%2BwO%2F8IilYryM%2Fp8g60rhatmSddUe6vEYgZdA%3D">Apple spire India LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arattukulam Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=A0tutwjxD7wp3%2BGutCToK7j%2FQDs6wFwFothnU3e6P2Y%3D">Arattukulam Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Artha</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tilB2%2BTaZ3InOu3haOsFXg%3D%3D">Artha</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Artha Real Estate Corporation</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9taygyDnlsJywtrJW4NLZ4RtA0oJdCYOrbw5QFttzbo%3D">Artha Real Estate Corporation</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arun Shelters Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1v%2FaHGcwakwJR80KAIDsxoXgXn6fUe8KwqanS%2Bgi0Is%3D">Arun Shelters Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arunodaya Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=w2dtZbgLC3pOF2Nha7FbPs1aWbsjVeDBLUr%2BwwqIFcE%3D">Arunodaya Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arvind Hebbal Homes Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=oVUCVyasemHgn%2BHbWwOnK1T3mGBI1%2B8%2B3PRgORuWHD85SSg9tGu00VVOhzr4%2BFFc">Arvind Hebbal Homes Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arvind Homes Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ixQ1YNx%2FVgGMRGH5P4LZNKhlVORwmj0UN%2Fbve6CYLgw%3D">Arvind Homes Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Arvind SmartSpaces Limited</td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HQiRHlYo7TJZ8bWkUKqW25v25JixEGoh3iGjZ6cSmT8%3D">Arvind SmartSpaces Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aryan Hometec Pvt Ltd.,</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=X0byIkI%2BlLJ25P%2F2gVyCB6gqKUGJmJYayCfR0A0mxmg%3D">Aryan Hometec Pvt Ltd.,</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aryan Hometec Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=X0byIkI%2BlLJ25P%2F2gVyCB9iGLbWLBi8RZxdxdGPymdk%3D">Aryan Hometec Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Asha Township Promoters and developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cKL30luMppbjcF04GChK7zcFlL7xO2qRl3J1Z2JSNTm4%2F0A7OsBcBaLYZ1N3uj9m">Asha Township Promoters and developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ashish Puravankara and Ravi Puravankara</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=E5t1Y5ZlyJgd1Slf6rFCaarFdAK%2F%2Bw9wlytuITOOrYCYAUHQ%2FCvKI6rYPHm5N1uE">Ashish Puravankara and Ravi Puravankara</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ashraya Builders and Promoters - Ramesh Moily and Prasanna Bekal</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=YQytn99DucvEDTNNHon8lXALDWBzN0QDh8uG%2Fu5KAuk9QEPo0A52yv5tw1BHyBpv6TrbHWfgiK6hsVko6eDUK3HmoDQEETIkMrxdSrzqGZQ%3D">Ashraya Builders and Promoters - Ramesh Moily and Prasanna Bekal</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetmine Capital Pvt. Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2Tgd%2FDh7WkJOgILIDZkdE47h0wot1fVt3C14EBsFLtM%3D">Assetmine Capital Pvt. Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetz Investments & Holdings LLP</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=W28X4atGArji%2B5QN7Gsz7ppMpfhdjbH8%2BfYIE9pLVWsos9e7sQC%2B6GVeaAHFeifx">Assetz Investments & Holdings LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetz Premium Holdings Private Limited</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=S37ZP9LyAtCbPBBFSrWkO45Fg2CPTQEHkM7iWCNXCqTlc4RHv6%2BuvFdZzOTkyB3E">Assetz Premium Holdings Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetz Value Homes North Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RM7%2FgqHt8ZXWxv%2Fos9TPWWrrj2A8BfBOa54LZSzH6XJwM%2FPyRIqdrAT%2BGGf%2B8Qwv">Assetz Value Homes North Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetz Whitefield Homes Private  Limited</td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tp%2BD1SSP3APzeDPfK8QPOPBp3Spo5rJg5BPKOnBenEZwM%2FPyRIqdrAT%2BGGf%2B8Qwv">Assetz Whitefield Homes Private  Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Assetz Whitefiled homes private limited</td>
+                <td>15</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PWVGyi8rUn%2F8B9%2FEYJVtEOThajZ6PwBcsAXURP8OI8OSUq43qjc%2FR7CvCPwnd1LZ">Assetz Whitefiled homes private limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Associate Dwellings Private Limited</td>
+                <td>11</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6qs1g1XAgQy4taMsa8dDVqIosQYujZujQVbSFd3fmzU5SSg9tGu00VVOhzr4%2BFFc">Associate Dwellings Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Astrum Value Homes Private Limited</td>
+                <td>34</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=aolrICUgERsxfjlKjzPGgDpPygu0pTK%2FfUgYp%2Fv%2BcYsM8AHzCmNOeMYiZM7WMxR4">Astrum Value Homes Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aswani Properties</td>
+                <td>68</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zaDzBndhmp6GN2xXXSgfWv4Smn7axRQB4xIH8FshcHw%3D">Aswani Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aswani Properties India Pvt Ltd</td>
+                <td>62</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zaDzBndhmp6GN2xXXSgfWiW%2BuWKfA0jZlx8TO%2FjmvgM%3D">Aswani Properties India Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Aubergine Properties Private Limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=YQscSLovnXJzlcPi9Rv3l2nT7Bth9AzLvUV87So4xDbs2M1Jew8SBqQO8SQJ2jTx">Aubergine Properties Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Avinash Prabhu Dheeraj Prabhu</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9ipk%2FP5nFkFk56NNDwumO6TzAEwLJnDn1a3Y%2F8qpUHU%3D">Avinash Prabhu Dheeraj Prabhu</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B E Praveen Kumar</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wa7tn2%2BuvHxNTffsaZWrFNR%2B8ahXfcrvdolgyV3ZnaQ%3D">B E Praveen Kumar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B H Krishnamurthy </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=d8x4BxiJKu%2Fpk7Yu3CTKdnHt4zz9X%2B9iCMTYrXBnZVw%3D">B H Krishnamurthy </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B M DEVELOPERS</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4pQ%2BV%2Bm6NC28TBc0Phw01w%3D%3D">B M DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B M R BUILDERS AND DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HI9pvRrY00tdeioFcoIg0RgnPmfYV51mUXktHjrJ850%3D">B M R BUILDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B Mahesh</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=T2AZA42pD2%2Ft%2BxBdWY2f6w%3D%3D">B Mahesh</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B Rajashekar and Rajan Kapoor</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6FqD7hV7FII%2BgaNJz3Zw%2Fgm98P9sBxaL8PVcTYIghGo%3D">B Rajashekar and Rajan Kapoor</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B V S Reddy</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Jj9NAJ4w3cz3wGXDC2O8Cw%3D%3D">B V S Reddy</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B VEENAVANI</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cxERuBEFVjKim3LcJ4wczQ%3D%3D">B VEENAVANI</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B chiranjeevi</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dHEeNg6Dw%2BtOpHy39SAF8Q%3D%3D">B chiranjeevi</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B. Rajashekar</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JEdzmvQbwTFVsryrcsEwdw%3D%3D">B. Rajashekar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B. Rajshekar</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=eNqyz4IFPsyieXcWL1tLJw%3D%3D">B. Rajshekar</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B.E. Praveen Kimar (PB Builders - Prabahavathi builders)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7E%2FiO1UHQ%2FM3oxmr3ptLjvB22d8VblXplLJ9iZ6UXmqI3M%2FNJSAlntp0HgJ%2BhBFwYSgOP23unoCCFhgQBURlyA%3D%3D">B.E. Praveen Kimar (PB Builders - Prabahavathi builders)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B.M.DEVELOPERS</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Yt%2FLh66zPWYRFgwVQFecHg%3D%3D">B.M.DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>B.P. GANGAHANUMAIAH (UTC INDIA PVT. LTD.)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=iNCPGTDRZg3UqcoZWa303%2FIZ6vwXLfl1MuwHk0bwa%2BjbE3miOWjHgNBXgkzbB5BK">B.P. GANGAHANUMAIAH (UTC INDIA PVT. LTD.)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BAHRI ESTATES PRIVATE LIMITED</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2PA4pHWttcUVZTID8RGMUNR0TH57mMX2c32YaPd0c2A%3D">BAHRI ESTATES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BAIRAVI PROPERTIES & CONSTRUCTIONS (P) LTD and others</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Uex3gwp9O0Cm8a40dJzvV9VbGMYZ5WdAGwZfkQRKWHngt17Un2wRPh5ISWBcnP7HOhk5z%2BpsDHYgJFMjCAkkkw%3D%3D">BAIRAVI PROPERTIES & CONSTRUCTIONS (P) LTD and others</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BALAJI BUILDERS AND DEVELOPERS / Srinivasa Murthy.T V</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=AP4dBshSCM8Eqeznrz4SyhRTZk257%2Fr9K4Zs%2FEl6k9ZVu9ztpC0h1Lv4Vu09FmWeegESWryLoIs3l7W%2B1xyT%2BA%3D%3D">BALAJI BUILDERS AND DEVELOPERS / Srinivasa Murthy.T V</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BALAJIKRUPA PROPERTIES</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=e2EGyw3o395OMZEKWdpaX23IqXwlSoCRLL5g%2F8ajLA8%3D">BALAJIKRUPA PROPERTIES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BALARAJU</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7tMhXt0ubId4I9fwYXGdnA%3D%3D">BALARAJU</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BASAVARAJ MALLIKARAJUN YERAGAL</td>
+                <td>36</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=oREUIbj0Dz%2FZ8M1qR3jORabQ%2Fn%2BOkkH6m9UdWEwE5gE%3D">BASAVARAJ MALLIKARAJUN YERAGAL</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BASAVARAJ.G.YADAVANNAVAR </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ZPzF6TNlII12Nmguw9U80AfjlxeArHoqcbDbnHTp7P4%3D">BASAVARAJ.G.YADAVANNAVAR </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCD EMPRASA LIMITED LIABILITY PARTNERSHIP</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PMusA8aBrSIBCZ1pVb%2FdzFyAJmmx9KEOu3olPTc4ncBqc5T6XNHfpn25lK4A8xFz">BCD EMPRASA LIMITED LIABILITY PARTNERSHIP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCIL RED EARTH DEVELOPERS INDIA PVT LTD </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=y8iMGy7hDJdkYLxGLoT3FLqpxLAMek4wgja35nUE4vuudsGhvOqjLavKxoS480uj">BCIL RED EARTH DEVELOPERS INDIA PVT LTD </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCIL Red Earth India Private Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=DY6eHPT%2BOQc%2B8iTtJimGJtTRZvvldQ5Sy1aIUcKPsz9bZNJVx50oB9aIFscJeje%2B">BCIL Red Earth India Private Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCV Developers Pvt Ltd</td>
+                <td>17</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=qSnHJupKZuBgvXULkInnZH3720OxZBFAURqZ4XIH2cI%3D">BCV Developers Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCV Developers Pvt Ltd (subsidiary Brigade Group)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=qSnHJupKZuBgvXULkInnZO%2F3JRAV2dqLija0IdvpUVVY%2FfuFbj13Qv3ThpGDXr0595Rhu2LNmt1uY0rQ5zz03g%3D%3D">BCV Developers Pvt Ltd (subsidiary Brigade Group)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCV Developers Pvt Ltd (subsidiary of Brigade group)</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=qSnHJupKZuBgvXULkInnZO%2F3JRAV2dqLija0IdvpUVWGbPvPIG%2FI72ycEo25QMCrHbghiXp1%2BBe3GQErIWK1HA%3D%3D">BCV Developers Pvt Ltd (subsidiary of Brigade group)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BCV Developers Pvt Ltd (subsidiary of Brigadegroup)</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=qSnHJupKZuBgvXULkInnZO%2F3JRAV2dqLija0IdvpUVUzhGAqaPAho5Tremq1ss27v3PAr8nw%2BSEVDdVU%2ByVqYQ%3D%3D">BCV Developers Pvt Ltd (subsidiary of Brigadegroup)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BEL HOUSE BUILDING SOCIETY (BEECHBSL)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rb6wHDY8bfA%2Bpw1NvGLYx8mGdjdOk5B%2BCoS7rf0YtWa2bgG%2F%2F4CjbkXQljTIXgU4">BEL HOUSE BUILDING SOCIETY (BEECHBSL)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BEL HOUSE BUILDING SOCIETY LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rb6wHDY8bfA%2Bpw1NvGLYx%2BV2qklUeamazYrwboKGfcA%3D">BEL HOUSE BUILDING SOCIETY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BENGALURU DEVELOPMENT AUTHORITY [BDA] </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=D12Sr4JQ1703JPLYLCyBbgRxg9CXzWPMyRoMuGLJUygUfqavkGTLbL8rDX3hNUTG">BENGALURU DEVELOPMENT AUTHORITY [BDA] </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BENNETT PROPERTY HOLDINGS COMPANY LTD</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=l7yiEBNg7vfIBYeCceROzt%2BkqEfXlHg0iKtrid40dXjPidtKv%2FKDRx9hvH1yVyZi">BENNETT PROPERTY HOLDINGS COMPANY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BENNETT PROPERTY HOLDINGS COMPANY LTD (A Times Group Company)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=l7yiEBNg7vfIBYeCceROzt%2BkqEfXlHg0iKtrid40dXgrTPxUIi2LtwiV7%2Fd521FiWH1fXyAtG2MphIALsci%2Bdg%3D%3D">BENNETT PROPERTY HOLDINGS COMPANY LTD (A Times Group Company)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BEST CONSTRUCTIONS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2g%2FzcE7GQAzUrJ1iEV6gOIlKz0IMVATLrJ9Jd6%2Bf%2Fqs%3D">BEST CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BHAIRAV HOLDINGS INC</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Yvwc1%2FD%2FdW40%2FwJ2%2BObBElWo1ntShWgVKxxoUpl%2BIF4%3D">BHAIRAV HOLDINGS INC</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BHARAT ELECTRONICS EMPLOYEES COOPERATIVE HOUSE BUILDING SOCIETY LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vMq8K1rM6wJSt1Nd59EKPAX%2FbA5foeHxZVlLKsl4LMk7YIGRNfUt5qUrOt0r54lz2pqwY2wpDOTXtus3ED7ymArghcQ7FxRNRxnzh9CpQ8o%3D">BHARAT ELECTRONICS EMPLOYEES COOPERATIVE HOUSE BUILDING SOCIETY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BHARAT REDDY</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gy5ksDTZwnpCorKt6R9IYA%3D%3D">BHARAT REDDY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BHARGAVI BUILDERS AND DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=3U5h4DEHB0esXyetvwskJknnn2IZOFYMbTSZykgi0dRx5qA0BBEyJDK8XUq86hmU">BHARGAVI BUILDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BINDU VENTURES</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Wenocg0mvYibcDZpOWRvMg%3D%3D">BINDU VENTURES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BIRLA ESTATE PVT. LTD.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=f12cMkX4l7uxiUEbh0cGsuZki9agcL1aKP32OaxJa3Y%3D">BIRLA ESTATE PVT. LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BIRLA TISYA LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tecvj4UiR1RWa7xwrucWAA%3D%3D">BIRLA TISYA LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BLUE SKY BUILDTEC - REPRESENTED BY SRI V RAVINDRA NAIDU, PARTNER</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2BbwBTkQmWWVGM%2FVO5RzYIM%2F1c%2FwTV7M5kUGXMYQmGuhDpJ3JDsvQvtCiMehIosHubiV%2BwOz7ena%2Fq3kSujVgbHHmoDQEETIkMrxdSrzqGZQ%3D">BLUE SKY BUILDTEC - REPRESENTED BY SRI V RAVINDRA NAIDU, PARTNER</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BLUE VALLEY PROPERTIES Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XyRpHwfej0brg63sKzA%2Buh2X1mdWcgVJ9Es8UDO3ZBNx5qA0BBEyJDK8XUq86hmU">BLUE VALLEY PROPERTIES Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BM DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LnA1yf7VCQEkym8hh0HLlw%3D%3D">BM DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BOLLINENI DEVELOPERS LIMITED</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mLeJnpfCiIEZjJoYPz9Rg6DR4Qv%2FwkyF%2BEPLG4M5CF8%3D">BOLLINENI DEVELOPERS LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BOLLINENI DEVELOPERS LTD</td>
+                <td>9</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mLeJnpfCiIEZjJoYPz9RgzmcuE3lmjZhPIrziJx1NFI%3D">BOLLINENI DEVELOPERS LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BRC</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=obxIbxvJLRbaWJ53XD7UhA%3D%3D">BRC</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BREN CORPORATION</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P9taZ79zf6pARQqE9bw%2Fo3HmoDQEETIkMrxdSrzqGZQ%3D">BREN CORPORATION</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BREN CORPORATION PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P9taZ79zf6pARQqE9bw%2Fo%2F1cO%2F%2BBA9iecOxbn7aTfQ9x5qA0BBEyJDK8XUq86hmU">BREN CORPORATION PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BREN Corporation Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Fm41X4yTfKnVGKsE0xodjsKy5xI4IARU1PSJttDNV7I%3D">BREN Corporation Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BRICKS AND MILESTONES PROJECTS LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JMr23a%2BXQYjNuTycew%2FzJAj%2BBTFf0ugHzcSD%2B%2ByQrVf24WJtt%2BoFUVGAwplgqh2F">BRICKS AND MILESTONES PROJECTS LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BRL VENTURES PRIVATE LIMITED</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jRdQQr%2BwD67XTqTzUNg%2BwzJh1i6QTH0oJVQg0VOIc9Y%3D">BRL VENTURES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BRL Ventures Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XCOgvFyXnVbw2YjFhHZPP6f7tZSI0XoyALGOtiyCeTM%3D">BRL Ventures Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSCPL INFRASTUCTURE LIMITED (UNICON SHELTERS PVT. LTD.)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=0LIJZ%2F476bzFFjkOEY%2F5vfMkuUNQImkpLxBIsr6TPKcRaMKvsQwYuWe9wJgcxq6539QQcpVLTLSzIQwtGrR6pA%3D%3D">BSCPL INFRASTUCTURE LIMITED (UNICON SHELTERS PVT. LTD.)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL CENTRAL & STATE GOVERNMENT IT/BT EMPLOYEES (WORKING & RETIRED) HOUSE BUILDING COOPERATIVE SOCIETY LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7LJBV%2FPTBYccg0%2ByyZQ45n8%2BZbq6TAI3PJqKghr09XyNyMSUnLrRlRnto54vleC4zgNQFp5%2FXcKCXLOb%2FWyByEzl1PPd2XxR%2B9jcFm5CUwuczcXSjUQdbTthPtSSSf5qY2nn5qIxKCYp8jYyEpm%2Fgg%3D%3D">BSNL CENTRAL & STATE GOVERNMENT IT/BT EMPLOYEES (WORKING & RETIRED) HOUSE BUILDING COOPERATIVE SOCIETY LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL CENTRAL AND STATE GOVT. IT / BT EMPLOYEES (WORKING AND RETIRED) HOUSE BUILDING CO-OPERATIVE SOCIETY LIMITED REP. BY DHASARATHA RAJU K</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FHK40C5wqy%2FeADpnRrU5ZFgizlT5iQkn1w%2FSFivmdWVZ8ASlDgr2yE3QUXRI6kakt2nj7v5vj2Trrie6ajqb8P%2FeBe7y895o2tE5ukVLjo7RwTnVgqhOgE0Xfb1%2BEb3KLjEtNHLqfMb50ht5Q1n2cX3zzDG3AXKJQOGo77ueOsD0zJ3pGiX92KgTXSa1Vk%2Fp">BSNL CENTRAL AND STATE GOVT. IT / BT EMPLOYEES (WORKING AND RETIRED) HOUSE BUILDING CO-OPERATIVE SOCIETY LIMITED REP. BY DHASARATHA RAJU K</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL CENTRAL& STATE GOVT IT BT EMPLOYEES 9 WORKING AND RETIRED) HOUSE BUILDING CO OPERATIVE SOCIETY LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FHX%2F%2FNOrMYxtZEW%2FIT9Dkaxj7j8If8Lr1vh0QCpFFWFlD7SDp5X8d307nG6LMyyDp2fPd7ptIUGdUTY2RHL6c6BquDMSKjS3vjcKBOWRZ%2BtCfXYj9LhELbzj5kLDFvh20n%2FaDE7UFiXQ047CKdARQA%3D%3D">BSNL CENTRAL& STATE GOVT IT BT EMPLOYEES 9 WORKING AND RETIRED) HOUSE BUILDING CO OPERATIVE SOCIETY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL EMPLOYEE WELFARE HOUSE BUILDING COOPERATIVE SOCIETY LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1J8ofBhu%2FdT8C1fVtiA3uLyw1zTsa9ogZf12jTGPxHQgxHzOQK9k5PX62yjlNXWSzv5uTcI1s2s3hY%2FvePYlyQ%3D%3D">BSNL EMPLOYEE WELFARE HOUSE BUILDING COOPERATIVE SOCIETY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL EMPLOYEE's WELFARE HOUSE BUILDING Co-operative Society Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LUEun2qPKSEBw%2Fv7yFbH%2ByWcWUa%2Fot9PEs7QOH5uFFdg33zrRIrJox1A5yncPoqerFQtxGUYBU3ZdhVwIWkK9A%3D%3D">BSNL EMPLOYEE's WELFARE HOUSE BUILDING Co-operative Society Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL Employee's House Building Co-operative Society</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9iDqUEbdULPkaVKCyMyqJoB6py34OYtg6bjJVjxpiXnmMFXppRkEObURPRpF3NT40CRh23klchXC42ZULDiUcw%3D%3D">BSNL Employee's House Building Co-operative Society</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL Employees Welfare House Building Co-Operative Society LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7ItKatZS039T5nhRDN4rRlbDtd6qBY0c9eNdLFzGY385o%2FmKLBYYIw4cFjSxjNKeqW4JpPaEAUBwpAG6HA5Hvw%3D%3D">BSNL Employees Welfare House Building Co-Operative Society LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL Information technology P.S.U and Others House Building Co-operative society ltd.(Registration HSG-1/166/HHS/47959/2015-16).</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vXn7x7draifq0pcr4Z9FmmsQUmwp%2BdKy7LcMSHwT%2FM6LJgz4I1cTVGyLCD2pNErFfndy7OShWL0sQPwZz2x8ROZhBDpYigLmB1sN8W5tZ7On2hoMTCbxCWPI%2B6z6ZcnUUlZejACCT0s%2F7iJl4rvZ0sTI93%2FE4vfUp4rSbrwNaG5x5qA0BBEyJDK8XUq86hmU">BSNL Information technology P.S.U and Others House Building Co-operative society ltd.(Registration HSG-1/166/HHS/47959/2015-16).</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL Srigandha Phase-4 BSNL Central and State Govt. IT/BT Employees (Working and Retired) House Building Co-operative Society Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4rPmuEQBU9TXusE9tYuN3kM4D2InMgXovRpmWZIqHk1ssxiXtQS0dm5eAL%2F4icBRQZdOSTokZVFqEmyzVLmhgDbIdjtZ%2BX0iWdMMdmxziZmlZXezu1ZyJL8KDivCfasfydNxNd6sxrUFPZ7vh%2FzHyg%2BZnhGKb0hfFLHuge7pq7yOIr235BR1z6Yw%2BWbvNmax">BSNL Srigandha Phase-4 BSNL Central and State Govt. IT/BT Employees (Working and Retired) House Building Co-operative Society Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL WELFARE HSG. SOCIETY</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JbTWHSRlF%2F4R1kNMofEOzr9S357mHRRLRnavKLKeBRw%3D">BSNL WELFARE HSG. SOCIETY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSNL, CENTRAL & STATE GOVT. IT/BT EMPLOYEES (WORKING & RETIRED) HOUSE BUILDING CO-OPERATIVE SOCIETY LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BYQ62gGGQL%2F9peYbfyL8AItCUtuQg3QgLVbkV39t1zDqbdVMIq2sxaq1QRxbfYkI3%2BaXym4DEhPNAi11z7Aff6BquDMSKjS3vjcKBOWRZ%2BuOThYJ5sRVwYkcB4KOcxcK0n%2FaDE7UFiXQ047CKdARQA%3D%3D">BSNL, CENTRAL & STATE GOVT. IT/BT EMPLOYEES (WORKING & RETIRED) HOUSE BUILDING CO-OPERATIVE SOCIETY LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSS BUILDERS AND PROMOTERS FORMERLY CALLED AS SONESTAA BUILDERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=DIhWYZgArXHRVn8PSX9wJ%2BAmR04odLoRk2TgLx3PdFY4%2B44hNZcqRQeDcMhNE%2F3t%2BR1RMJDgqebQ6KmGcItDpg%3D%3D">BSS BUILDERS AND PROMOTERS FORMERLY CALLED AS SONESTAA BUILDERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BSS Infrastructure</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=WlPSUmCaoAVtdRaaLmW5gZU%2F%2BQIbvCKiq2t27iJsWHA%3D">BSS Infrastructure</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BUOYANT TECHNOLOGY CONSTELLATIONS PRIVATE LIMITED</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mb5TKeFaLDBGOQYGqF2WUx2Rhpv5VmIN6DvcrYHILtrLImTJxBY%2FM85k%2FP8K27%2FR1l6OPzgFwDfBoxm0hqieYw%3D%3D">BUOYANT TECHNOLOGY CONSTELLATIONS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BVL Estate Pvt. Ltd.,</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XHByj2lqhGWNNqUYu3X0CoBW8qCu64beh3oHoOZhKyg%3D">BVL Estate Pvt. Ltd.,</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Babu</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PrR8dtxL1htSmG2x2xuyCg%3D%3D">Babu</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Balaji Builders and Developers </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ujmAMefTU%2BbcUk9itkmB8QFnopmjR2cisyWs1GLwlQM%3D">Balaji Builders and Developers </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Balaji Builders and Developers ( Teja Podali )</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ujmAMefTU%2BbcUk9itkmB8Z2uhC5S3MEUgy%2F6Nu6TDxtjAT%2Bd%2FqVn9cThrUXAuzYV">Balaji Builders and Developers ( Teja Podali )</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Baldota</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rLosP%2BqP2bEaMALFpCAXKg%3D%3D">Baldota</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bangalore Development Aurhority</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uY0tPpGSg5PxFtfuMZ2rhqMnfLleU9cpZKqKH0Y3x6Q%3D">Bangalore Development Aurhority</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bangalore Development Authority</td>
+                <td>55</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uY0tPpGSg5PxFtfuMZ2rhpWECtNGQIH5h%2B50vx73TUs%3D">Bangalore Development Authority</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Barkat Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lZZEP3Xosfz%2BE5uPWjK78v4Smn7axRQB4xIH8FshcHw%3D">Barkat Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Basaveswara Housing Co-Op.Society</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fHjhKZkoYiTpvIzRyUEndWtCKl9byndu2tjys4KShdPGa66s3MWvH6%2FMbEFA9wKf">Basaveswara Housing Co-Op.Society</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bearys Properties and Developments Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TUA9aZ6%2BWrpZG7xkj08Fw8scXE3YzswN%2Fz1EYdMSnmUd1cUSTqN1fgodHki%2F%2BtTDDPAB8wpjTnjGImTO1jMUeA%3D%3D">Bearys Properties and Developments Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bellam Ravichandra & Bellam Sasikala</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wBp4zoRcGLhaekEiBKOp9jdt7ROXAiDNvIQjTW1PoxUCvg%2FfQnxwUvNfAB1uoCqm">Bellam Ravichandra & Bellam Sasikala</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bennett Coleman & Co Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=3TXwtkBz4FHROWHZrLMOtTHoMtDZapemcJ6aSIMsJko%3D">Bennett Coleman & Co Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Best Golden Developers Pvt Ltd</td>
+                <td>15</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=SuLWp8Ti65EqlLp6%2F5%2B6tybGysgFKZfAHqT2ht5rS5A%3D">Best Golden Developers Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>BhagyaLakshmi Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fBPeM9OiR%2BDmTlAtRKeAzK6h12Yn90hAO4NlBr94G7g%3D">BhagyaLakshmi Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhagyalakshmi Homes LLP</td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7Q0N8k1qaXghHSyx33YejiIxritJfJ4co6lcGJ1ttMM%3D">Bhagyalakshmi Homes LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhagyalaxmi Homes</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dy8zLAQWGUDyFXcOpKS3aP4Smn7axRQB4xIH8FshcHw%3D">Bhagyalaxmi Homes</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhandari Construction and Developers Pvt. Ltd.</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=xfkgSNkbDIxWQ7FE6GUK0%2BOp3r6i%2FCuCqHWqR4DUocstMPbAZtfQ0DFYRs7OhHfU">Bhandari Construction and Developers Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhandhan Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=sc3p0MtfSO2aMwoMnc44%2Fhdff4yZ7jjp5eXbke7zFoA%3D">Bhandhan Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bharat And Bharath Properties</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=GMTh6mfiwJ%2FcIOSKr43b%2FeZfrAbR2cXU4eTJO6uyao0%3D">Bharat And Bharath Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bharath Subbarao</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2Z%2FrVAd8TvX5yOaji%2FCeBnHmoDQEETIkMrxdSrzqGZQ%3D">Bharath Subbarao</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhartiya City Developers Private Limited</td>
+                <td>22</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LsfjwJ3Zhr7Ls3K0LtMhVjhTBZ%2BkLrB%2FiDaYqI4NDa5wM%2FPyRIqdrAT%2BGGf%2B8Qwv">Bhartiya City Developers Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhartiya Urban Private Limited</td>
+                <td>13</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FJUdFcEghCcVvgL9tpLqAVX4e0NVBV%2FQkINAUlkBCaU%3D">Bhartiya Urban Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhartiya Urban Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FJUdFcEghCcVvgL9tpLqAX3720OxZBFAURqZ4XIH2cI%3D">Bhartiya Urban Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhavisha Properties</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Vk8faUwR0mU48rBTBnNARRdff4yZ7jjp5eXbke7zFoA%3D">Bhavisha Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bhavya Builders</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Y5znN18nVvh0o1B1xUrdMw%3D%3D">Bhavya Builders</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bipin Kumar M K, Managing Partner, Vaibhavi Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=aW8yE20N1Hsh1to9ReBLtFga2Uv%2BZyfrCZuFVueiZEXsl9VhLXRtA5%2FOn01L77xNPx601mB337wSyoS4LuHk3A%3D%3D">Bipin Kumar M K, Managing Partner, Vaibhavi Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Birla Estates Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JeiEt02S6%2Fd6xQepn1XyioXgXn6fUe8KwqanS%2Bgi0Is%3D">Birla Estates Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Blue Valley Properties Pvt Ltd</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=MC8LrcJpydLuKeM6%2BQnporg0JDR8CdB5fv%2BFhXA2kXc%3D">Blue Valley Properties Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Blue Valley Urban Infratech Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1XG5coO1y%2FYmoxcfDMQf573RqJzvUEYjL9q2QiaScP2gTMkOr8sLpySMmjyGfW8I">Blue Valley Urban Infratech Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bricknbolt</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=r%2FaghStwHmIKSzsHhOUI6w%3D%3D">Bricknbolt</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brigade Enterprises Limited</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HEJ%2F1zcKy8O6Swpzs4haCPV8OYLg8LBtrCIWOKNa1cs%3D">Brigade Enterprises Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brigade Enterprises Ltd</td>
+                <td>42</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HEJ%2F1zcKy8O6Swpzs4haCJo6m46tD2Z0%2Fjp0b6HzGwE%3D">Brigade Enterprises Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brigade Properties Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=X1hvXrlb%2F3JyXE11ISe63DpPygu0pTK%2FfUgYp%2Fv%2BcYsM8AHzCmNOeMYiZM7WMxR4">Brigade Properties Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brigade Tetrarch Private Limited</td>
+                <td>9</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=STTeByaDtpudk0jUkhVyvMsD44ZW0RGhGnSczTMRVdhx5qA0BBEyJDK8XUq86hmU">Brigade Tetrarch Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Bright Wave Projects Private Limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BCNwTVEe46%2F402o6NE6fSk5uxyWyQt%2FihVKUh9OAhaDs2M1Jew8SBqQO8SQJ2jTx">Bright Wave Projects Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brl</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fZImDF8P7XCyYNbszIJAXA%3D%3D">Brl</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Brundavan properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RMm2lHiRnxuDrBcvRVO7KB9gqeoXDWhXS6z3bNtitpw%3D">Brundavan properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>C K Narotham</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=s8AVr2m15mIZUYnt1cApIw%3D%3D">C K Narotham</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>C Satish Kumar, C Raghavendra and B V Sreenivasulu</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6%2BiFuV1uV5G5wwz8%2BfVPe5j%2BEtsFzmflaoLL3VUVB1P6v266XVrEJujepNVWbR9zvXYIiAGHLgti9W%2FtC%2FcpaA%3D%3D">C Satish Kumar, C Raghavendra and B V Sreenivasulu</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>C V Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KIBOfBeQspiWymavWCroAQ%3D%3D">C V Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CANH INFRASTRUCTURE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JrLBJYDgH1IkZECPS8cLXLfFHXG4S9DNTFZ2ngZDEjM%3D">CANH INFRASTRUCTURE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CANOPY ESTATES (P) LTD.,</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=IVy3GKh2SQBxi%2F0ZZLBEPriOWeDllPrqjTyJeDeRvMw%3D">CANOPY ESTATES (P) LTD.,</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CANOPY HOMES & HOLDINGS LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=5nyimpFAgmu%2Ffb4lg3EhnXtxmk%2FpjrEnhfhDApmdE8M%3D">CANOPY HOMES & HOLDINGS LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CASA GRANDE PVT LTD</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Z2OjsoorfzrMew7pAxlmoQrghcQ7FxRNRxnzh9CpQ8o%3D">CASA GRANDE PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CASAGRAND LOTUS PRIVATE LIMITED</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=883gLZTRDsOylnNw7gwfGVOjQyNWpnRWpkflXZuVyRs%3D">CASAGRAND LOTUS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CASTLES VISTA PRIVATE LIMITED</td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=erAThKX3xEed%2BzQZzDQwMtR0TH57mMX2c32YaPd0c2A%3D">CASTLES VISTA PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CELEBRITY PRIME DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ow%2BFTTHvvtc8qXsGJZbMuVYxVWCEqcjFO3lREQrWMh4%3D">CELEBRITY PRIME DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CENTURY AUSTRAL</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1uwPJ3H91Bht23c5LuJhhA%3D%3D">CENTURY AUSTRAL</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CENTURY STAR</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=x8PcKzlbPsRxKxsny4L4Ug%3D%3D">CENTURY STAR</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHAMUNDI BUILDERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4yzzIqPqSgNzO8rtX1hQ%2F4JOZpul51rBTT7fdYUl8VQ%3D">CHAMUNDI BUILDERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHENNAM RANGASWAMY</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=5p4oAiJESITpMjH4uN1mqTLgP48qfy9QivCTvqNZEEg%3D">CHENNAM RANGASWAMY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHETHAN KUMAR C</td>
+                <td>24</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KplZZv2CIp25FoNZblF3Pw%3D%3D">CHETHAN KUMAR C</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHIEF EXECUTIVE OF SOCIETY of BEL house building Society</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Cb0qBJ4zGu0edw3F%2FOHRuLiKS%2F14kXez45YKjrikPEWGnPrNtc%2BH10axbM4S%2BMTcpTa0Hi39V3NnyLBqbHuQXw%3D%3D">CHIEF EXECUTIVE OF SOCIETY of BEL house building Society</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHINMAY DEVELOPERS</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Oepx3KmZ2v3enjFAgm%2FEPfcK1qR3q0%2BDp2OxogbkvvU%3D">CHINMAY DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CHOWRIAPPA CONSTRUCTIONS PVT. LTD.</td>
+                <td>19</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TJH8z6nyEhJif%2FY09b6bi17jV0ynz3XFGY7cNZOv%2Ba0m%2FQz%2FdaDl3XI1gN1tZ20N">CHOWRIAPPA CONSTRUCTIONS PVT. LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CITILIGHTS ESTATES PVT LTD</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wHczE3ojJQj4wEBbcqpsP9BxuQeEOA4HMq0hKHh2%2B64%3D">CITILIGHTS ESTATES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CITRUS INFRASTRUCTURE PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uS3iGB0gSq1YTyAE2ZfuiWAsgZSSfNCrFr2yH41f9R4xTdx8jV7XujVFWpKB2Gcj">CITRUS INFRASTRUCTURE PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CJN PROPERTIES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ldQFeCRY7Xfwh3cDu4PW3Q%3D%3D">CJN PROPERTIES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CK NAROTHAM</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=VJ4yyOVisADy5xnUNslh5A%3D%3D">CK NAROTHAM</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CLASSIC FEATHERLITE WATERFRONT DEVELOPERS LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LOlSmAqW7GjGtZ7oe8pXKON5%2B5t9%2FBlvNYxGTFdBqUiID23za1v8Ega36RRNDbvP">CLASSIC FEATHERLITE WATERFRONT DEVELOPERS LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XbqWrm78KtoM%2B95Hkx0AcQ%3D%3D">CMD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMRS BUILDERS</td>
+                <td>22</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uJY5PzaNSj0ggio3FPdPPA%3D%3D">CMRS BUILDERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMRS Group</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=u4ap0Wj%2F1%2FoaKKahNRqdDQ%3D%3D">CMRS Group</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMRS Infrastructure Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zys3JeyT0WXqICCcipbwGKImkAG0RE9ikR5jTW1AxnM%3D">CMRS Infrastructure Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMRS Infrastructure Private Limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zys3JeyT0WXqICCcipbwGO62s3o7y2EfWUsfVa0ZZi05SSg9tGu00VVOhzr4%2BFFc">CMRS Infrastructure Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CMRS Infrastructure Pvt. Ltd</td>
+                <td>25</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zys3JeyT0WXqICCcipbwGO0uawSsupbGKoB37zNRPO8%3D">CMRS Infrastructure Pvt. Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CNC MANGALORE-KAVOOR PROJECT PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fzb5prUbZSzvg%2F67tp2DmWLlTEaK9IERpuxccri43DYyYdYukEx9KCVUINFTiHPW">CNC MANGALORE-KAVOOR PROJECT PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CONFIDENT PROJECTS (INDIA) PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=3mLxmreQyOfoYwK1pw6sdNOmc8LoxNAwAI6RlqXODSrWUFHY4yBau8vanZODik5X">CONFIDENT PROJECTS (INDIA) PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CONNAISSANCE SHOPPE INDIA PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=YemzvdoTxUWUxCUOj2a%2BL0ZHlkKWQR3YlTITfrzFgPja3yCEOdACSRL4WXkmKQWh">CONNAISSANCE SHOPPE INDIA PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CORNERSTONE PROPERTIES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FVTL%2Fj%2BCmUkEqlJ8Of%2BR%2FDn%2F6XL4jN1vzlY9GidmbD1RASt4hSuk7KHdOtOxOWUP">CORNERSTONE PROPERTIES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CORPORATE LEISURE AND PROPERTY DEVELOPMENTS PVT LTD</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=o4vJp3kI1WW%2FI5ZvOq03kVSxF%2BFWXm5tKy1TaF3rxUm9uTSU%2FToTTlzjUAOswM%2B4CuCFxDsXFE1HGfOH0KlDyg%3D%3D">CORPORATE LEISURE AND PROPERTY DEVELOPMENTS PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CORPORATE LEISURE RESORTS & HOTELS PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=o4vJp3kI1WW%2FI5ZvOq03kdS54b4oq755%2Fo7IGQSJLBFkIdZ1quTS7ip35JIC4yHn">CORPORATE LEISURE RESORTS & HOTELS PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>COUNTRY CLUB HOSPITALITY & HOLIDAYS LTD</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hNza62FBP0EW4AuNMn5vDe%2BhyfQwdMDawTaDqQFsioEFkIpvxOnhhwLrZSf0pOA9">COUNTRY CLUB HOSPITALITY & HOLIDAYS LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Camellia Infrastructures</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TbJYXYel7NqGtzCEHsVkSkBtga%2FLpKXPqs2jkr9rPvQ%3D">Camellia Infrastructures</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Canopy Estates (P) Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=waywxXeJiVDLIfJVNcc%2FLkAlJ0qQGiXFzzd8TXQaRXg%3D">Canopy Estates (P) Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Canopy Estates Private Limited </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RRCLi75b7GP9UVfFbsygtAoRAffJSD8mQqze0bpM1po%3D">Canopy Estates Private Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Casa Grande Garden City Builders Private Limited</td>
+                <td>12</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=i%2BpuN%2B1Q2co6JLr09Kp%2FNmT0nq7%2BW0tmg%2BBBEMb0IrvLA%2BOGVtERoRp0nM0zEVXYceagNAQRMiQyvF1KvOoZlA%3D%3D">Casa Grande Garden City Builders Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Casa Grande Garden City Builders Pvt Ltd</td>
+                <td>150</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=i%2BpuN%2B1Q2co6JLr09Kp%2FNmT0nq7%2BW0tmg%2BBBEMb0IrvCsucSOCAEVNT0ibbQzVey">Casa Grande Garden City Builders Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Central Government Employees Housing Cooperative Society Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=omwVdNJZRlRy5zZyFphSY2WouScI6yo5Qyrdx%2FmmGbQxM5o2vEFf%2BMfTqoeNXr25S4F2JTxmMHD30A8bz69aDg%3D%3D">Central Government Employees Housing Cooperative Society Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Central Government, Telecom & Information Technology Employees’ HousingCo-Operative Society Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=omwVdNJZRlRy5zZyFphSY3UYyC5gufHFUf90FzUbaJxX2px3foaM3CCtG7FhtTPLY1Ay9dIzQ%2FWdq6MRCtBMlEnQD9EztFoSUsGW%2FbW%2FeC5bxdZmAEOEIS9SfHvw4VpEH0Ji21bh2FJ1naP5as62og%3D%3D">Central Government, Telecom & Information Technology Employees’ HousingCo-Operative Society Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Central Govt. Telecom Railway & IT  Employees House Building Co-operative Society </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1zByRVkgAcHn4A6frE%2Bl9WiwipSl2Q4xg0XZpnPJbqCV1YeBbK2T%2B28uzSQbiP7o5GgE9he6N3S9sC476cl%2BPRP6U2KaLVzRgZTE%2FTpRN%2BRx7eM8%2FV%2FvYgjE2K1wZ2Vc">Central Govt. Telecom Railway & IT  Employees House Building Co-operative Society </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Century Galaxy Developers Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fdZj60aWGv8kebihBPBEpDbLJv4qDBP5OqO6NxPBiuIfQmLbVuHYUnWdo%2Flqzrai">Century Galaxy Developers Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Century Real Estate Holdings Private Limited</td>
+                <td>18</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=obEySlScIy0QHZveUf0e7fQtpXee1tFMIyD59EcDQoKoZVTkcJo9FDf273ugmC4M">Century Real Estate Holdings Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Century joint Development Private Limited </td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=0VzILAcpPtqpZs6kI0HVgs0%2FPnWlnS0etb4L528XprjSOwaW2q4E6OTfh1cod0z1">Century joint Development Private Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chandana Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LYz3HeBOjgE34%2B4YYR%2FmyHpeiUp4MkkSndkY3AuxHdY%3D">Chandana Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chandrappa S and Prakash M</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NtfCr3IimEBH1QP5%2BRF8s6%2FNS0N4WM5PD4qZYkYjEVY%3D">Chandrappa S and Prakash M</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Charmion Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1RjW6GI5uBp0wrjmarJ9HXpeiUp4MkkSndkY3AuxHdY%3D">Charmion Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chartered Holdings</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=vuY2JUjr1thcnTzWeKC%2FO4evgtSokglxsJzPboXC7KM%3D">Chartered Holdings</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chartered Housing Pvt Ltd</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Y6C0i4xkQ1Igv416mp3xvDOIqnKneU7AV5bz2hvcrkI%3D">Chartered Housing Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chief Executive </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=OWbioGVhKKPC4PSNSynTFnHmoDQEETIkMrxdSrzqGZQ%3D">Chief Executive </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chikka Yellappa and Sai Teja Constructions (Ravindra Reddy)</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=UP9J6B%2FWU7Ad8cxVqhQwicFlSfDChO2aB9WsMtmM5uY1ce80IUidDxoEowfszSlh4u%2BNvQe%2BK0ZrqOR%2BiFjCZQ%3D%3D">Chikka Yellappa and Sai Teja Constructions (Ravindra Reddy)</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Chirping Woods villament</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=zRNtjgzqa9V6Hr3W2SyxrQLxnVX376UEf1WM6QlCNUA%3D">Chirping Woods villament</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Citrus Shelters Private Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=8vyflqg1%2F5OXSB9sqQGLZD7jI0N170CnIrKAi1dXjwg%3D">Citrus Shelters Private Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Citrus Ventures Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=apAgTD1PPLrU4uC0ba8qNlvwm02j4%2BjRPUV186RXvwI%3D">Citrus Ventures Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>CoEvolve Estates Pvt. Ltd. (formerly Asset Handlers Pvt. Ltd.) </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=olnD8FJLOnTUeQRyBqONZiJvifoFYlnGrummhfaiyYwXrIdloEmBHTx%2FQw8PJscoM%2FswapBjA8q1pS6GIsc3tQ%3D%3D">CoEvolve Estates Pvt. Ltd. (formerly Asset Handlers Pvt. Ltd.) </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Columbia Infra Holdings</td>
+                <td>26</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=273EzZKSeRlPeyDleaEy0nOorcllbGkB0ZU%2FVDOhZOo%3D">Columbia Infra Holdings</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Columbia Pacific Communities Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BlBtyuwV%2B7RMwIpz42E%2Fxw0T%2BvMTSNIQNnA4xnunDeioZVTkcJo9FDf273ugmC4M">Columbia Pacific Communities Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Comfort Builders and Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4ALeuTmDgeuQrvsIrJEBjHsGIMAUTucwP9JDWwYx6c8%3D">Comfort Builders and Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Commune Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=yZhccpXQFnuIbmbtuz8BoKffRypMbja%2FakcSrFbbrSY%3D">Commune Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Commune Properties India Pvt Ltd</td>
+                <td>40</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=yZhccpXQFnuIbmbtuz8BoF1%2FAFKSz2LGUcDi6nOKb1Nx5qA0BBEyJDK8XUq86hmU">Commune Properties India Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Concept City Developers</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=uvCBuJ%2F%2Bzh4pdjTpwLmnitwk4aTDOx0xU4MHqSFMmGs%3D">Concept City Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Concorde Housing Corporation Pvt Ltd</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jEwpCtzV16IPdhVs8RGdwgsK3EY%2Fl2%2FTTXu1ZFqpRJw9Q5qAQ8k59azB0gCaZrOM">Concorde Housing Corporation Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Concorde I Value Homes India LLP</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=7AsSIrFD7gzUAWUGSYWycdvldakJoEjDxe0bnbJXA7hx5qA0BBEyJDK8XUq86hmU">Concorde I Value Homes India LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Concorde Sylvan View</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=E2mfVXrnbpCsCWSkOY756efJdzrnkVv2ZSCeC7gnWgI%3D">Concorde Sylvan View</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Confident Group</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=HovrelcWe5SmZl3L507IOg%3D%3D">Confident Group</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Countryside E city LLP</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ZuWwccGqv53RLfXrCRVt72ZVPpcMq%2B2Pa1VazdlhlW0%3D">Countryside E city LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Cubatic Shimul Ventures Private Limited</td>
+                <td>19</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jT858pqsktVJZBb0nL63RNOIbeSJ0mMUaQUcUMakXm7lc4RHv6%2BuvFdZzOTkyB3E">Cubatic Shimul Ventures Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Cynosure Homez</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cZsv4dg9FPzmKNEsfGDubQ%3D%3D">Cynosure Homez</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Cyrus Mistry</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TFDNdSrw7BfX0jKLudcbxg%3D%3D">Cyrus Mistry</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D C HI RISE LLP</td>
+                <td>51</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=FFPCAGeSrPVJKXFFTfMdkg%3D%3D">D C HI RISE LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D J PROJECTS PRIVATE LIMITED</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ZqOMG529gNZ8tzD0chFk8jJh1i6QTH0oJVQg0VOIc9Y%3D">D J PROJECTS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D kishore reddy</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Xu7t5q%2F9Mwf4EqkLB56KLA%3D%3D">D kishore reddy</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D. Anand Naidu</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2B49QXorEDCZAayls5r33Dg%3D%3D">D. Anand Naidu</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D.T. PRAKASH</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=47XQi9jivt440FJd1dv02A%3D%3D">D.T. PRAKASH</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>D.V. RAGHU</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tuGNTf4mKbHVC9Svj5%2FrBw%3D%3D">D.V. RAGHU</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DAYAAR BUILDERS & DEVELOPERS </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cS3TYQsgqj%2Bzfsr8K6mPorlLvZv7fqsAdgr0GHucm%2BA%3D">DAYAAR BUILDERS & DEVELOPERS </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DB INFRA DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=VHpmyB5Ns5bEDf4%2FGSosyNh%2BfpSVkIDZajs2O3QWrwA%3D">DB INFRA DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DEVAGIRI PROJECTS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dkyDnIbcmpnF1aPRdWD9ZIJOZpul51rBTT7fdYUl8VQ%3D">DEVAGIRI PROJECTS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DEVI MANUPATI</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=xvKU%2BW2iwaOxr66Z3cvmTA%3D%3D">DEVI MANUPATI</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DHANANJAYA DEVELOPERS </td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2B9bio680TOTTG1CdFbTXrZMqmte9mSg2hs%2BY0X79tJE%3D">DHANANJAYA DEVELOPERS </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DINESH D RANKA</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=H4X1lzlPMrZZ4S4ICIWe2w%3D%3D">DINESH D RANKA</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DISHA LOHARUKA INFRA PROJECTS</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Ou3btZuPjxOAKlix1B6Au3J6bPdrSm1dooMeXcmDKdM%3D">DISHA LOHARUKA INFRA PROJECTS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DIVYA INFRA PROPERTIES PVT LTD</td>
+                <td>19</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=S8700klBeZlYgoQSP%2BzyesTfVco6kro%2BBCpbe8flpV4%3D">DIVYA INFRA PROPERTIES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DLF ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=c%2BVN%2Fdyoaj3NMWJ07EWH2w%3D%3D">DLF ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DLR URBAN PROJEUCTES</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4adYnne8wN%2Fco1b%2BXZdlF9u3QBYJ8k3W0bJxc77esq4%3D">DLR URBAN PROJEUCTES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DOLLARESTATE PROPERTIES PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=1d9A0BChvtqRzlsBuqWsEmremBS%2B0A1MG0QHU2MYDHA%3D">DOLLARESTATE PROPERTIES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DREAMZ GK</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=GXi1yk2gMc3XUg53qoh0OQ%3D%3D">DREAMZ GK</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DREAMZ INFRA INDIA LTD.</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Mth0Watj%2BVICTRuZMX2FVc3juXnQ2J3aMXYTgUismbQ%3D">DREAMZ INFRA INDIA LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DREAMZ INFRA INDIA PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Mth0Watj%2BVICTRuZMX2FVWXUL3UDWtzLvmKjtvfO3F4%3D">DREAMZ INFRA INDIA PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DREAMZ INFRA PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FXd%2BcOwUvveAgF87pAJ4du66qNwwIxG0av3fTZdnvi0%3D">DREAMZ INFRA PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DS MAX PROPERTIES PVT LTD</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rALOQaWBkLV7aTO%2FKcNvuaeEtWFbo1WqL7K26JZelb8%3D">DS MAX PROPERTIES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DS MAX Properties</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ni0%2B6aY80s28d1%2BnhrbUgf4Smn7axRQB4xIH8FshcHw%3D">DS MAX Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DS MAX Properties Pvt. Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ni0%2B6aY80s28d1%2BnhrbUgTiBD81YYpvyB15pBqLSxQI%3D">DS MAX Properties Pvt. Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DS MAX REALTY PRIVATE LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=QJy8BMwsQmDwZKZ2Vw884S7hIh7xoPEiOzHCLdHESsg%3D">DS MAX REALTY PRIVATE LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DS MAX REALTY PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4RjGj6xBCnuCI8DCUU%2B%2FowqeeDXpbCSi020wfKeWZi0%3D">DS MAX REALTY PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DSR CONSTRUCTIONS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wcaxfHkBP1rl87I3eqb%2BY4JOZpul51rBTT7fdYUl8VQ%3D">DSR CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DSR INFRASTRUCTURE PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Gmzjx9ycm5sSCXIW%2FthMXEJDTW%2Fh%2B2JVkdFnVSpFOy8%3D">DSR INFRASTRUCTURE PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DSR Infrastructure Pvt.Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RKqhQe%2FdLdADLS9bgL3ZTmu%2BsI%2FgODNckPC18sJ%2BjrM%3D">DSR Infrastructure Pvt.Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DURGA PROJECTS AND INFRASTRUCTURE PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KY9OCEihRaQXIZJscl21J9vPKZaTI%2FXh25Ub4%2F9UoshC%2BxXfp6kC561oWSBl%2F1YD1l6OPzgFwDfBoxm0hqieYw%3D%3D">DURGA PROJECTS AND INFRASTRUCTURE PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DWAR ECO DESIGN</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=muYz%2FvlRsjfDr8m8BVxAOA%3D%3D">DWAR ECO DESIGN</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Damden Properties</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=EUERVCu2Ua%2B4Zt4CnuU05P4Smn7axRQB4xIH8FshcHw%3D">Damden Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dasta Developers Pvt. Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lj9ilBNjGQ1GUqoJlUonAD1%2FYj9egenFECeNY9oKP7g%3D">Dasta Developers Pvt. Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dayaar Infra Build Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gWqxeKCDy4ZCsfyTtUQOULl1nSYkbuBPSWvWAFO7rLcM8AHzCmNOeMYiZM7WMxR4">Dayaar Infra Build Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>DeFINER Ventures</td>
+                <td>7</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6szecdz0UAqvPOzbychplnHmoDQEETIkMrxdSrzqGZQ%3D">DeFINER Ventures</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dee Mandala Infrastructure (P) Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fBhwfRLwtnhH5Q2UVUqhKsgUVZwyb%2Fq%2BaW58R7XYdKslT8B2CEUgJ5yoQzSTS6g8">Dee Mandala Infrastructure (P) Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Definer Properties Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=O1P%2BhRRm9QWTIQ9BVMhTezpPygu0pTK%2FfUgYp%2Fv%2BcYsM8AHzCmNOeMYiZM7WMxR4">Definer Properties Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Desai Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Afi%2BLKk5HfKUU4w40ssF9HHmoDQEETIkMrxdSrzqGZQ%3D">Desai Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dhammanagi Developerss Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=xhxYg%2FuYdYUYpt8DZ6nXb%2F4b5ed7SUxBwNFvd0J7WOtx5qA0BBEyJDK8XUq86hmU">Dhammanagi Developerss Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dhruthi Infra Projects Ltd</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=wG5tkQrDsyHrKdboOm7AZMuEiLqCfGNrwg896%2F6e6g4%3D">Dhruthi Infra Projects Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dinesh S Gowda</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NMxv2SllalQ%2BgyrMEU0hWQ%3D%3D">Dinesh S Gowda</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dommaraju Subramanyam </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=XIGobLcCHlHr99BC5KUwDKbXelfn3auPcI%2FBK8Bcckc%3D">Dommaraju Subramanyam </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dr. K. Balaraman</td>
+                <td>22</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=4c%2FqGOoDZuCvMYtxdllymXHmoDQEETIkMrxdSrzqGZQ%3D">Dr. K. Balaraman</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dr.Mandeep kaur</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6v2vJiTzXHVe5a7Lw%2F%2BQxA%3D%3D">Dr.Mandeep kaur</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Dream infra India Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=GSSehCA3kYAkJZ53U36q9zCiHqeP5VbsM%2Bk7RS5sy0Q%3D">Dream infra India Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Druva Infratech</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=sLGKTgsAA5g5gbLQJVXEYA%3D%3D">Druva Infratech</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Ds Max Properties Private Limited</td>
+                <td>17</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2Bhf31v%2Br4gNboChfhVvMi7r3D8c4ovT8sy4tM1s%2Fg8sfQmLbVuHYUnWdo%2Flqzrai">Ds Max Properties Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Durga Projects </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Le3Mw7XpuqUL9FlRMN2cBg%3D%3D">Durga Projects </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Durga Projects & Infrastructure Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tv85MD8MjJk2tmAyb3MdVxlnoAIypIuCuT7eKUc%2Bv9tb8JtNo%2BPo0T1FdfOkV78C">Durga Projects & Infrastructure Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Durga Projects & Infrastructure Pvt.Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tv85MD8MjJk2tmAyb3MdVxlnoAIypIuCuT7eKUc%2Bv9snfEMIUH68mUB7GR%2BxkQ1S">Durga Projects & Infrastructure Pvt.Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Durga Projects and Infrastructure Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=JpraQ2J65gLiqFhlqq1ZN5trxQguiY0WKOQVjnYx%2FvYogC%2Bb8IYqbSj04iXfx%2FFX">Durga Projects and Infrastructure Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>E-SPRING BUILDING SYSTEMS (INDIA) PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mcH5AJAYuYFToOgAu8LJDTUJOvmmJ7dEAt9moZckbtY5Ka5d2y3SU4ovjHuSQn181l6OPzgFwDfBoxm0hqieYw%3D%3D">E-SPRING BUILDING SYSTEMS (INDIA) PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>E. MADHAVA REDDY</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=B8TPDHIgqNOpsjq45vRKk3HmoDQEETIkMrxdSrzqGZQ%3D">E. MADHAVA REDDY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EAPEN CHANDY</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=SJkJuDEXAgB4vdsdfqQeQA%3D%3D">EAPEN CHANDY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EAPL</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=aoCijkhEdUKANV6gRFFcoQ%3D%3D">EAPL</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EARTHEN HUES AND ESTATES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=VF61C1GF8Fow1oGWHxiBWdayGfFebESsUZdRC4l8aCkgsRC4C%2FZau%2B%2FdqTuNuQWA">EARTHEN HUES AND ESTATES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EAST NORTH VVS REALTY</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=M2hZlJ%2BBkUXk6n44fCIOqA1unJUYhzlvHl%2BAuFOdK1I%3D">EAST NORTH VVS REALTY</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ECO LIFE DEVELOPERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=eo8h49%2F5zMKQ1d7GqoMV%2Fth%2BfpSVkIDZajs2O3QWrwA%3D">ECO LIFE DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ELEGANT BUILDERS AND DEVELOPERS</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fxE8Zc2ft9nec%2FZTJJ%2BIQZ0Ue7zlywYiMBHDEe5V5z8%3D">ELEGANT BUILDERS AND DEVELOPERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ELV PROJECTS PVT. LTD.</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=b0Kiuej00BiXxW6FInW2muZki9agcL1aKP32OaxJa3Y%3D">ELV PROJECTS PVT. LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ELV Projects Private Limited</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=AtDefRPWQArfuWpDc%2BqrJKhlVORwmj0UN%2Fbve6CYLgw%3D">ELV Projects Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ELV Projects Pvt Ltd</td>
+                <td>74</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Y3kE6DhxQBGp3MgefDMRzD1DmoBDyTn1rMHSAJpms4w%3D">ELV Projects Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EMERALD HAVEN RESIDENCES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NddOqYcxUQKi%2BkKwgazuLJM9nK9io9dNpOj0ZRNqw3wgsRC4C%2FZau%2B%2FdqTuNuQWA">EMERALD HAVEN RESIDENCES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EMLAK VENTURES PRIAVTE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=V%2Fcuu1%2BD%2BOPTSXAeKEMPoO%2FHDhKajZJJlDn75yRXNTI%3D">EMLAK VENTURES PRIAVTE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ERA LANDMARKS  India Limited </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cIJ%2BOFUMc29N7TW4mG%2FqDpMDr%2F%2BuyhB%2BcH%2Bt5LNdq1k%3D">ERA LANDMARKS  India Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESHWAREE SHELTERS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=R2H4lIORjaSHI9u%2BotdVjIJOZpul51rBTT7fdYUl8VQ%3D">ESHWAREE SHELTERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESS & ESS INFRASTRUCTURE PRIVATE LIMITED	</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2BfqhnZNPSQg1IFqQOYO%2FNlmC2swSSk0KxpMcKiKmrDCh2PS4fvrpPP8jqZafA12U">ESS & ESS INFRASTRUCTURE PRIVATE LIMITED	</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESS &amp; ESS INFRASTRUCTURE PRIVATE LIMITED	</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=EFCcv8ZSIbEy1Hb13GZHrSwPo%2BRG1I%2F%2FLyIG3i5OukErMPXXAdfsUoHiDMTbfUNN">ESS &amp; ESS INFRASTRUCTURE PRIVATE LIMITED	</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESS AND ESS INFRASTRUCTURE PRIVATE LIMITED</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Eei3iDXTJJPu2PD4LEd64n1VgnEaqzPBQPRBfQz%2FnsPWUFHY4yBau8vanZODik5X">ESS AND ESS INFRASTRUCTURE PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESSENN INFRA TOWNSHIP PRIVATE LIMITED</td>
+                <td>29</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2BvOCwhdR6cVhi845urZyiwI9KgqGhiAOvW3TGgS7ce8xTdx8jV7XujVFWpKB2Gcj">ESSENN INFRA TOWNSHIP PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ESVEEGEE REALTY (GUJARAT) PRIVATE. LTD.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fRo8WN%2B%2BwXclH2ez4QHK%2BuXZXbGpVlAoShbAv5p8wRW000O3XgcGHz%2FUdMEVXnEV">ESVEEGEE REALTY (GUJARAT) PRIVATE. LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>ETERNITY STRUCTURES PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=i86mp5ql7%2F4hA6sDT6AffGKflHFjKKeQyt4gzWpkgUMnfGDPntG1oBc1ZHGnNelo">ETERNITY STRUCTURES PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EVANTHA SRI DURGA CONSTRUCTIONS</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=kUgNe2oti25nr3MDOCgRrpcI0QZ8kSpxdJ1CseXCLrc%3D">EVANTHA SRI DURGA CONSTRUCTIONS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EVO NATURA HOMES</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=y5Mc4j5Gp57Sd3dH1QyVBXHmoDQEETIkMrxdSrzqGZQ%3D">EVO NATURA HOMES</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EXPAT PROJECTS AND DEVELOPMENT PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=veRSkk16hukMkIx2lQoqMk0OfsA8xBzxpJKD%2B9kTyprDjsailkPmDmPhk%2BBJPx2e">EXPAT PROJECTS AND DEVELOPMENT PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>EZZY WHITEFIELD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=j%2Bq48qQmlfLcY2pymnohsw%3D%3D">EZZY WHITEFIELD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Elegant Bristol</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=6AWcvIsLjsWahvr6z45mPQ%3D%3D">Elegant Bristol</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Elegant Properties</td>
+                <td>12</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FnNhFj%2FodweYbYOgbS%2FL%2FKffRypMbja%2FakcSrFbbrSY%3D">Elegant Properties</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Elite Estates</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KY%2FvtuSm3J1AaCFnaYt9cA%3D%3D">Elite Estates</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Embassy Lake Terraces</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dVUXc3266R%2BzZq0WuTTttOxb7pasCUz%2FYKbWGzuZCyw%3D">Embassy Lake Terraces</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Embassy One Developers Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lb0yVuRtBR0BwhshcSg%2Btaz2uKibjmYge%2BEBYJZT7fMO5%2BHBKjzgwxC5BnQW%2FPnL">Embassy One Developers Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Embassy Property Development Private Limited</td>
+                <td>8</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=W6X1s%2B4by2mE%2FGs5G1drb%2Bpn8dllWR6YG2I0KftVnc6oZVTkcJo9FDf273ugmC4M">Embassy Property Development Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Embassy-Columbia Pacific ASL Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=h5Iscn%2BDndiig3gYsplVfJhI1gxibv1up%2BIBMcaVK9c9Q5qAQ8k59azB0gCaZrOM">Embassy-Columbia Pacific ASL Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Emerald Haven Development Limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Sv1ipTAfHAxGoaip%2FU0m9PcEhJo6qt2kc4C0pQIyh%2BIfQmLbVuHYUnWdo%2Flqzrai">Emerald Haven Development Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Eminence Homes and Spaces</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=hS58ILwzZeg5Id7UmjZlGaeWguBQrEDbJyy6Dn5Y6PM%3D">Eminence Homes and Spaces</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Epshita Builders</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jCycH4a142Fx%2F4AnQ2huK3HmoDQEETIkMrxdSrzqGZQ%3D">Epshita Builders</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Epshita Builders and Dakshayini</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jCycH4a142Fx%2F4AnQ2huK2zFt1zHmXWyml4MuO27%2FKs%3D">Epshita Builders and Dakshayini</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Epshitha Builders</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=l2rAbl4qv%2BPqGKIsMgQr7v4Smn7axRQB4xIH8FshcHw%3D">Epshitha Builders</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Eshanya Projects Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=DBeQI8OlufUb0OwAK6YyAsKy5xI4IARU1PSJttDNV7I%3D">Eshanya Projects Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Esteem Group</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mcr%2B6Cnv6gNIfUcE6sRxgg%3D%3D">Esteem Group</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Esteem Kings Dwelling Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=NEHRIOU3Qt0Yl%2BfWMOvFhXbvfuWEevi%2BvHKUEI0f8%2F2OIr235BR1z6Yw%2BWbvNmax">Esteem Kings Dwelling Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Esteem Xen Shelters Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=tyHFR1YtITNiyCE3ylADCu8p1%2Fep70LBICwfU%2Fbhs2U%3D">Esteem Xen Shelters Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Estella Projects Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=o1b2mEhxWPRDAsjNtfjRDssD44ZW0RGhGnSczTMRVdhx5qA0BBEyJDK8XUq86hmU">Estella Projects Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Eternity Developers Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gxiibVpvUHxVFBfWAyCaaMV2fL%2BZo2%2BZYDU4Bx47hiE5SSg9tGu00VVOhzr4%2BFFc">Eternity Developers Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fPB%2FyA1f8Uc%2BiILH%2BJUatw%3D%3D">Excel </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Dwelling India Private Limited </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=F8Mf9GeHgorguE1yb8bVnfL9CnDTCDzNn4bmWe24M2Q9sPeIzsIWwVtM8L5ugZ7q">Excel Dwelling India Private Limited </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Dwellings India Private Limited</td>
+                <td>30</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=G874HAAUTs8tfkwSimKjwMzuIkwltN4KwyzLdcOgxDyOIr235BR1z6Yw%2BWbvNmax">Excel Dwellings India Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Dwellings India Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=G874HAAUTs8tfkwSimKjwN4qzv0v3Fxh6vZyAL7gZhE%3D">Excel Dwellings India Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Dwellings Luxury Properties Pvt Ltd</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=G874HAAUTs8tfkwSimKjwKFg618j3lFcZ5A59lZCBiy%2BXzS1OXuxhLzCUUqYGNhW">Excel Dwellings Luxury Properties Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Dwellings Oxigen Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=G874HAAUTs8tfkwSimKjwJOifdJtdHlpV1Up9J2gyoA%3D">Excel Dwellings Oxigen Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Hyde Park ventures Pvt LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=28p%2Fyy2wGXhFKyxlDp1OgT8o5OFy24Lpvyk2psKkijpx5qA0BBEyJDK8XUq86hmU">Excel Hyde Park ventures Pvt LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Excel Hyde park</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=CL58Cb%2BLajtJIcll9icS%2Fg%3D%3D">Excel Hyde park</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Exd Projects Private Limited</td>
+                <td>23</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=GWFE6CwszaI3PGYm7OTo5ahlVORwmj0UN%2Fbve6CYLgw%3D">Exd Projects Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat  Projects Banglore Holdings Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2BSZ1Rneowk075fBnZKlQIgKgml%2BMLXccfT3CJRy4G%2FS%2BXzS1OXuxhLzCUUqYGNhW">Expat  Projects Banglore Holdings Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Group</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=FXgST4x0%2FJn6P%2FJhUBFH1A%3D%3D">Expat Group</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects & Development Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P7Zb2B7pN3h5qi5sq9%2BXMe9mpoUPE9mFnuf%2BdWrL%2FQk9Q5qAQ8k59azB0gCaZrOM">Expat Projects & Development Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects & Development Pvt. Ltd.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P7Zb2B7pN3h5qi5sq9%2BXMe9mpoUPE9mFnuf%2BdWrL%2FQmn%2B7WUiNF6MgCxjrYsgnkz">Expat Projects & Development Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects &amp; Development Pvt Ltd</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P7Zb2B7pN3h5qi5sq9%2BXMXzDu5IMCJSGOKvsWS1xUTTCsucSOCAEVNT0ibbQzVey">Expat Projects &amp; Development Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects &amp; Development Pvt Ltd,sdfdsfsd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=P7Zb2B7pN3h5qi5sq9%2BXMXzDu5IMCJSGOKvsWS1xUTQqFNpBbTj59rO6XaA5GS5tH0Ji21bh2FJ1naP5as62og%3D%3D">Expat Projects &amp; Development Pvt Ltd,sdfdsfsd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects Bangalore Holding Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=SiTngPnnDRcaXjKNgG%2FHoRH754jYBU%2B%2B1rZ1mldj6qfCsucSOCAEVNT0ibbQzVey">Expat Projects Bangalore Holding Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects Bangalore Holdings Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=SiTngPnnDRcaXjKNgG%2FHoRH754jYBU%2B%2B1rZ1mldj6qe69w%2FHOKL0%2FLMuLTNbP4PLH0Ji21bh2FJ1naP5as62og%3D%3D">Expat Projects Bangalore Holdings Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expat Projects and Development Pvt Ltd</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ORRkWDSbwtRGOM%2FI%2F51%2Bz%2FKInPYg%2FFZfx8zOUhir40J9%2B9tDsWQRQFEameFyB9nC">Expat Projects and Development Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Expert Investments</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BRJgfUEaTGqAXW%2BqBn5JHBIl8E9uqEU1mu%2BjK98hYhE%3D">Expert Investments</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>FELICITY ADOBE LLP</td>
+                <td>5</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KDWI5UtFl7363bCl%2FxVCyvbhYm236gVRUYDCmWCqHYU%3D">FELICITY ADOBE LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>FIRE Luxur Developers Private Limited</td>
+                <td>9</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=2fCSC%2F3q%2Bq8V4PxHiT0Uw8qgxcT02Ufihz2Qcwm2RIWOIr235BR1z6Yw%2BWbvNmax">FIRE Luxur Developers Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>FORTUNA BUILDCON INDIA PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mJhmXcip8Yz3e0PoNw34upVoJPVeujdw31cuuWJnH7E%3D">FORTUNA BUILDCON INDIA PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>FORTUNA URBANSCAPE PVT LTD</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=8mqzff5aS26cnH0klJ022J%2FSPaqeLk1WhQCCvQDvkN0%3D">FORTUNA URBANSCAPE PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>FRONTIER SHELTERS PVT LTD</td>
+                <td>68</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mv9%2FyyjAiRsjhtJYlbd%2FX6eEtWFbo1WqL7K26JZelb8%3D">FRONTIER SHELTERS PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Farokuh Ahemehd </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=jrqzSiEhbzwAl%2BcXS0u9r3HmoDQEETIkMrxdSrzqGZQ%3D">Farokuh Ahemehd </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortuna Buildcon India Private Limited</td>
+                <td>11</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=8lFoWnz0%2FDLxkf5RCS69jEmbby9c0OF0qsHP3pZ7hcIO5%2BHBKjzgwxC5BnQW%2FPnL">Fortuna Buildcon India Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortuna Constructions (I) Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TW%2FVaurhwwnIcT4IQpxR5Hkq7P57jiGGf8aDbUPyXj8fQmLbVuHYUnWdo%2Flqzrai">Fortuna Constructions (I) Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortuna Constructions India Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TW%2FVaurhwwnIcT4IQpxR5Do0lcU8FzvFa3FKlDktOfaT9lUtqwaClQYJfd9YI9UR">Fortuna Constructions India Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortuna Constructions India private limited</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=TW%2FVaurhwwnIcT4IQpxR5Gz2nvnJx3zWtOfR8WIHAE7LpVSemu11hSl6sBrHJkt2">Fortuna Constructions India private limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortuna Projects</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=PMkZlehErXu1HfyyQSkuWXHmoDQEETIkMrxdSrzqGZQ%3D">Fortuna Projects</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>Fortune Developers</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=AMxhGiJMbUgVxUGJTV%2Bebb9V5g96yGQGMfCZosVWy2M%3D">Fortune Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G CORP SPACES PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9XqyRmUr86APrpD8qPDuPwqeeDXpbCSi020wfKeWZi0%3D">G CORP SPACES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G K SHELTERS PRIVATE LIMITED</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=BQHpbbaEoBFahKku5Y7tqTJh1i6QTH0oJVQg0VOIc9Y%3D">G K SHELTERS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G Nanda Kumar Kirti K Mehta</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=ELHo68NzWO7To63DHD123CK2Mchhfff8EyVWvT5cu%2FE%3D">G Nanda Kumar Kirti K Mehta</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G P Venkat Naidu</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=dH0hsyrkXkoINeOb6kFwh3HmoDQEETIkMrxdSrzqGZQ%3D">G P Venkat Naidu</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G R PROMOTERS</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=myMVRkH7JqYD9puWDa8EuA%3D%3D">G R PROMOTERS</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G. P Venkat Naidu </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=73APl1pBRDLgHXcjck28J3fu5tBLUr7rPm2mCTc%2Bj%2F8%3D">G. P Venkat Naidu </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>G.M. Infinite Dwelling (India) Private Limited</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=cMBcRpztfmVYFaySHGqCCYF0ypV34C2BKwqOgGlSE3JV%2BHtDVQVf0JCDQFJZAQml">G.M. Infinite Dwelling (India) Private Limited</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GAG Builders and Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=gRslMUgxzman49W%2BCRo4Z2ucwR0o0RwyoJkKPBdFrxY%3D">GAG Builders and Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GARDENCITY REALTY PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=RLkN9viSr6eO%2BMmv4GcUdF%2BOGc196v6iKRqIc5CKlXI%3D">GARDENCITY REALTY PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GARUDACHALA ESTATES PVT. LTD.</td>
+                <td>147</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KSQK%2Bq2hg15pkTgD1DJUHoZJ6H9VQ%2FQxYCbYRwrLyRI%3D">GARUDACHALA ESTATES PVT. LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GAZY MAG PVT  LTD</td>
+                <td>29</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=DjHSP5HSnbgNdX2M7RueetZejj84BcA3waMZtIaonmM%3D">GAZY MAG PVT  LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GCN PROJECTS PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=osNN%2B135b3V5%2F8GByjSeaDJh1i6QTH0oJVQg0VOIc9Y%3D">GCN PROJECTS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GCORP HOMES PVT LTD</td>
+                <td>10</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Nrd15ofeDKJKSEKtHzXMJArghcQ7FxRNRxnzh9CpQ8o%3D">GCORP HOMES PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GEETANJALI EFFECTIVE REALTY SOLUTIONS PRIVATE LIMITED</td>
+                <td>6</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=LPZtsyPfu6c53t81DhBFs59lzssCmrddJd30JedJp80WGmEGdFB4KptN%2BX0uhVdWMU3cfI1e17o1RVqSgdhnIw%3D%3D">GEETANJALI EFFECTIVE REALTY SOLUTIONS PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GEETANJALI URBANX PRIVATE LIMITED</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=FyWcz9lVdFCqEG%2FhltXOylWCS%2B%2Bj738NwOWyUTSj%2FyvWXo4%2FOAXAN8GjGbSGqJ5j">GEETANJALI URBANX PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GEOWN CASPER ESTATES LLP</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=GslUU5lLrnvkSG0KOf%2Bq6tjV6n1Umzp1FuC9u1Vi%2B6k%3D">GEOWN CASPER ESTATES LLP</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GLOBAL EDIFICE INFRA</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=lYFrGkV4jKAMghW3B8yMmMCy%2FhhJDPLOyYoi8IRGFKk%3D">GLOBAL EDIFICE INFRA</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Builders and Developers</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=auTbMTjOQakDGKl%2BY1m9DV9iFq6LzD779r6Vv0rfg2c%3D">GM Builders and Developers</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM INFINITE</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=kAKSYMNwo6sFX2AAXHxk4w%3D%3D">GM INFINITE</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM INFINITE DWELLING  (INDIA) PVT LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rWpxj6VXht38GpL3otxmjcxnAcBNQEcuk9pMPDwIYP8Knng16WwkotNtMHynlmYt">GM INFINITE DWELLING  (INDIA) PVT LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM INFINITE DWELLING (INDIA) PRIVATE LIMITED</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rWpxj6VXht38GpL3otxmjSBNcduOQBVCBXY1PXFPaNwyYdYukEx9KCVUINFTiHPW">GM INFINITE DWELLING (INDIA) PRIVATE LIMITED</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM INFINITE DWELLINGS  (INDIA)  PVT.  LTD</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=rWpxj6VXht38GpL3otxmjTdAnQ1cg0QZo0QoWDEDyltvhz%2BgEjw0WdN2mIv01KPY">GM INFINITE DWELLINGS  (INDIA)  PVT.  LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM INFINITE E CITY TOWN PHASE -2</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=0aCO%2Fv7XUdg6gFi%2FCC3GVf%2BZun6BKwHsOEZJoWcvt4xx5qA0BBEyJDK8XUq86hmU">GM INFINITE E CITY TOWN PHASE -2</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite Dwelling (India) Pvt Ltd</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KFhj2WlaDLyb5HJ%2FZtUoVCTpE6eAMylndeRd3mZ30fg9Q5qAQ8k59azB0gCaZrOM">GM Infinite Dwelling (India) Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite Dwelling (India) Pvt. Ltd.</td>
+                <td>3</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KFhj2WlaDLyb5HJ%2FZtUoVCTpE6eAMylndeRd3mZ30fin%2B7WUiNF6MgCxjrYsgnkz">GM Infinite Dwelling (India) Pvt. Ltd.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite Dwelling India Pvt Ltd</td>
+                <td>4</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KFhj2WlaDLyb5HJ%2FZtUoVB00R52I0Fn2GclkYUG0YCmYm5AxiVHNoo9etH6AK2mD">GM Infinite Dwelling India Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite Dwellings Pvt Ltd</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=KFhj2WlaDLyb5HJ%2FZtUoVCGWL%2Bv6a1ItB98NHpagERo%3D">GM Infinite Dwellings Pvt Ltd</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite E-City</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fNwMPLN3H%2Fk6LNLWtHansHj8sfvl%2FraPMwBQ9aH7XmQ%3D">GM Infinite E-City</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite E-City Town Phase 2</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=fNwMPLN3H%2Fk6LNLWtHansN%2FBh7uBllxJUixaobto4T0%3D">GM Infinite E-City Town Phase 2</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Infinite Property Developers and construction </td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=%2FjfUcWTyHwz%2FEvST2bSrvzh0gE2q4hjRMZAFHCSalrrHtNPEEBUS5TxXfAHiZWPponpdro7O2DjZGvzifPM%2FyQ%3D%3D">GM Infinite Property Developers and construction </a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GM Inifinte</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=9CG%2FauyqiGX3rzUnxn3DIg%3D%3D">GM Inifinte</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GNEX INFRA Build</td>
+                <td>2</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=iQk2eaTwDQtjkSaeJFx5XXHmoDQEETIkMrxdSrzqGZQ%3D">GNEX INFRA Build</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GNR Properties Pvt Ltd Mr. GNC Reddy</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mKQvedg5loRHOb5pvIhPdZUPvkC5cNFZ5UcyhnEd3MZko%2BivF0Jpz5DSh55roBYM">GNR Properties Pvt Ltd Mr. GNC Reddy</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GNR Properties Pvt. Ltd And Vaastu Developers And Promoters</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=mKQvedg5loRHOb5pvIhPdWsZwAIB9iCLKsWUWZm97bCEUqomn1ran%2Bvjly7ATXpXE7cBk%2BY7vRSSa3hFMQknnA%3D%3D">GNR Properties Pvt. Ltd And Vaastu Developers And Promoters</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GODREJ PROPERTIES LTD</td>
+                <td>32</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=FaKrXqDbIduD2WmMjIOJLZIoZlq46q6hqYSn1K2rP0o%3D">GODREJ PROPERTIES LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GODREJ PROPERTIES LTD.</td>
+                <td>1</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=FaKrXqDbIduD2WmMjIOJLd0LwKo%2FN1nMuGqgGb8iXxs%3D">GODREJ PROPERTIES LTD.</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GOLDEN GATE PROPERTIES LTD</td>
+                <td>59</td>
+                <td><a target="_blank" href="complaintReportWiseList?pName=Dhj9wgbkOV3MRYkZVSU8bQP4PwrHYp822vhhWRmU7xo%3D">GOLDEN GATE PROPERTIES LTD</a> </td>
+            </tr>
+            
+            <tr>
+             	<td></td>
+                <td>GOLDEN GATE PROPER
+<!-- TRUNCATED by the spike: full response was 714165 bytes -->

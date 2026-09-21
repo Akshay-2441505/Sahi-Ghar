@@ -1,0 +1,23 @@
+Observation, in-app browser, 2026-09-21 (one page view, no interaction beyond load)
+URL: https://maharerait.maharashtra.gov.in/public/project/view/1   (the target of every "View Details" link on the main site's project cards)
+
+What rendered after 5 s:
+  Title: Maharashtra Real Estate Regulatory Authority
+  Body text: "Note: Please note that this is the beta version of the public view, launched for improved user experience."
+  UI: a text field labelled "Enter the CAPTCHA", a CAPTCHA image with a refresh icon, and a "Submit" button. No project data shown.
+
+Network log (only static assets and the single-spa micro-frontend bundles; no data API call before the CAPTCHA is solved):
+  GET /public/project/view/1                      200
+  GET /content/assets/css/style.css               200
+  GET /content/assets/vendor/bootstrap/css/bootstrap.min.css  200
+  GET /content/assets/vendor/simple-datatables/style.css      200
+  GET /content/assets/vendor/bootstrap-icons/bootstrap-icons.css 200
+  GET /maha-rera-root-config.js                   200
+  GET /headerpage/main.js                         200
+  GET /publicpage/main.js                         200
+  GET /content/assets/img/maharera-logo-bg-blue.png 200
+
+Static fetch with the probe returned the identical 15,773-byte SPA shell for /robots.txt, /public/project/view/1 and /project/view/1
+(so the second host has no robots.txt: unknown paths return the app shell).
+
+Action taken: stopped on this page. No CAPTCHA was attempted, no OCR, no solving service, no token replay.

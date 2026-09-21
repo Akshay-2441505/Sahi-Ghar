@@ -1,0 +1,2038 @@
+/*---------------------------------------------------------------------*/
+;(function($){
+
+/*================= Global Variable Start =================*/		   
+var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+var IEbellow9 = !$.support.leadingWhitespace;
+var iPhoneAndiPad = /iPhone|iPod/i.test(navigator.userAgent);
+var isIE = navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0;
+function isIEver () {
+  var myNav = navigator.userAgent.toLowerCase();
+  return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+}
+//if (isIEver () == 8) {}
+		   
+var jsFolder = "/themes/maharera/js/";
+var cssFolder = "/themes/maharera/css/";	
+var fontsFolder = "/themes/maharera/fonts/";	
+var ww = document.body.clientWidth, wh = document.body.clientHeight;
+var mobilePort = 991, ipadView = 1024, wideScreen = 1600;
+
+/*================= Global Variable End =================*/	
+
+//css3 style calling 
+document.write('<link rel="stylesheet" type="text/css" href="' + cssFolder +'animate.css">');	
+
+/*================= On Document Load Start =================*/	
+$(document).ready( function(){
+	if($(".daily-cause-list-form").length){
+		var date = new URLSearchParams(window.location.search).get('req_date');
+		$('#fromDate').val(date);
+	}
+	
+		//alert('hi');
+		$('#autoShowModal').modal('show');
+		$('.modal-footer').on('click', function () {
+		$('#autoShowModal').modal('hide');
+		});
+	
+	
+	// pagination show 30-12-24
+	$(".selectCheck").click(function(){
+		$(this).next().slideToggle();
+	});
+	//project Search pagination for selected set
+	if($(".projectSearch").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-project-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".promotersSearch").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-promoter-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".agentsSearch").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-agent-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".complaintsSearch").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-complaints-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".searchProjectForm").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-project-complaint-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".searchPromoterComp").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-promoter-complaint-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	if($(".orderJudSearch").length){
+		var pageParam = new URLSearchParams(window.location.search).get('page');
+		//console.log(pageParam);
+		if (pageParam) {
+			$("#select-order-judgement-pagination").find('option').each(function() {
+				if ($(this).val() == pageParam) {
+					$(this).attr('selected', 'selected');
+				} else {
+					$(this).removeAttr('selected');
+				}
+			});
+		}
+	}
+	// $("#select-project-pagination").on("change", function() {
+	// 	var url_data = $('.paginationText').text();
+	// 	var selectedValue = $(this).val();
+	// 	$(this).find('option').each(function() {
+	// 		if ($(this).val() == selectedValue) {
+	// 			$(this).attr('selected', 'selected');
+	// 		} else {
+	// 			$(this).removeAttr('selected');
+	// 		}
+	// 	});
+	// 	var queryParams = selectedValue + "&op=Search";
+	// 	location.href = url_data + queryParams;
+		
+	// });
+	var date1 = new Date();
+	$(".datepickeradd").datepicker({
+		startDate: "-1m",
+		endDate: date1, 
+		dateFormat: 'dd-mm-yy',
+		maxDate: new Date(),
+		//todayHighlight: true,
+		//autoclose: true	 
+	 });
+	 $(".datepickeradd ").click(function(e){
+		e.preventDefault();
+   		//Create Variable for first day of current month
+		var firstDay = new Date(date1.getFullYear(), date1.getMonth(), 1);
+		$("#toDateget").datepicker({
+			maxDate: new Date(),
+			endDate: new Date(),
+			startDate: firstDay,
+		});
+		$("#fromDate").datepicker({
+			maxDate: new Date(),
+			endDate: new Date(),
+			startDate: firstDay,
+		});
+		
+	});
+	$(".datepickerNew").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'dd-mm-yy',
+	 });
+	//console.log('test1');
+	if ($("body").hasClass('layout-one-sidebar')) {
+		//console.log('test');
+		var base_url = $('#base_url').val();
+		if ($("form.user-login-form").length) {
+			$("input[name='hiddenText']").val(base_url);
+		}
+	}
+
+	if ($("body").hasClass('layout-one-sidebar')) {
+		var base_url = $('#base_url').val();
+		if ($("form.user-login-form").length) {
+			$("input[name='hiddenText']").val(base_url);
+		}
+	}
+	if ($("body").hasClass('page-node-type-feedback_form')) {
+		var base_url = $('#base_url').val();
+		var encryptUrl = base_url + 'encrypt/jencrypt';
+		$("form#node-feedback-form-form").jCryption({
+			getKeysURL: encryptUrl + "?getPublicKey=true",
+			handshakeURL: encryptUrl + "?handshake=true"
+		});
+	}
+	if ($('body').hasClass('layout-one-sidebar')) {
+		var base_url = $('#base_url').val();
+		var encryptUrl = base_url + 'encrypt/jencrypt';
+		// $("form#user-login-form").jCryption({
+		// 	getKeysURL: encryptUrl + "?getPublicKey=true",
+		// 	handshakeURL: encryptUrl + "?handshake=true"
+		// });
+		$("form#user-register-form").jCryption({
+			getKeysURL: encryptUrl + "?getPublicKey=true",
+			handshakeURL: encryptUrl + "?handshake=true"
+		});
+
+		$("form#user-pass").jCryption({
+			getKeysURL: encryptUrl + "?getPublicKey=true",
+			handshakeURL: encryptUrl + "?handshake=true"
+		});
+	}
+	/* if ($('body').hasClass('path-subscribers-login')) {
+		$("form#subscribers-login-form").jCryption({
+			getKeysURL: encryptUrl + "?getPublicKey=true",
+			handshakeURL: encryptUrl + "?handshake=true"
+		});
+	} */
+	$("a.prosumclick-modal").click(function(e){
+		e.preventDefault();
+		var currentVal = $(this).attr('pmoj-data');
+		var nameVal = $(this).attr('pm-name');
+		var base_url = $("#base_url").val();
+		var data = '';
+		if(currentVal != ''){
+		 	var data = '<div class="modal-header"><h5 class="modal-title" id="exampleModalLabel">'+nameVal+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="projectViewdetail"><iframe src="data:application/pdf;base64,'+currentVal+'" height="800" width="800"></iframe></div></div>';
+		}else{
+			var data = 'No Record Found';
+		}
+		$(".modal-content").html(data);
+	});
+	
+	// $("a.ordJugeclick-modal").click(function(e){
+	// 	e.preventDefault();
+	// 	$('body').append('<div id="loaderModal"><span class="fa fa-spinner fa-spin"></span></div>');
+	// 	var ojdtype = $(this).attr('ojt-data');
+	// 	var ojdivi = $(this).attr('oj-divis');
+	// 	var ojcomid = $(this).attr('oj-comid');
+	// 	var otype = $(this).attr('oj-type');
+	// 	var base_url = $("#base_url").val();
+	// 	$.ajax({
+	// 		url: base_url+'orders-judgements-document',
+	// 		method:'get',
+	// 		context: document.body,
+	// 		data: { ojdtype: ojdtype, ojdivi: ojdivi, ojcomid: ojcomid, otype: otype },
+	// 		success: function (data){
+	// 			console.log(data);
+	// 			$(".modal-content").html(data);
+	// 			$("#loaderModal").remove();
+	// 			$(this).trigger('click');
+	// 		},
+	// 		error: function (data){
+	// 			$("#loaderModal").remove();
+	// 			console.log('Failed Path Entry');
+	// 		}
+	// 	}); 
+	// });
+	$("a.ordJugeclick-modal").click(function(e){
+		//console.log('hi');
+		e.preventDefault();
+		var ocurrentVal = $(this).attr('oj-data');
+		var onameVal = $(this).attr('oj-name');
+		//console.log(ocurrentVal);
+		ocurrentVal = (ocurrentVal || '').replace(/\s/g, '');
+		var data = '';
+		if(ocurrentVal != ''){
+			try {
+				const binaryString = atob(ocurrentVal);
+				const len = binaryString.length;
+				const bytes = new Uint8Array(len);
+				for (let i = 0; i < len; i++) {
+					bytes[i] = binaryString.charCodeAt(i);
+				}
+
+				const blob = new Blob([bytes], { type: 'application/pdf' });
+				const blobUrl = URL.createObjectURL(blob);
+				data = '<div class="modal-header"><h5 class="modal-title" id="exampleModalLabel">'+onameVal+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="projectViewdetail"><iframe src="'+blobUrl+'" height="800" width="800"></iframe></div></div>';
+			} catch (err) {
+				data = 'Invalid PDF data';
+			}
+			// var data = '<div class="modal-header"><h5 class="modal-title" id="exampleModalLabel">'+onameVal+'</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="projectViewdetail"><iframe src="data:application/pdf;base64,'+ocurrentVal+'" height="800" width="800"></iframe></div></div>';
+		}else{
+			data = 'No Record Found';
+		}
+		$(".modal-content").html(data);
+	});
+	
+	$("#exampleModal").on('click',function(){
+		$(".modal-header").remove();
+		$(".modal-body").remove(); 
+		$(this).data('bs.modal', null);
+		//$(this).trigger('click');
+	});
+	$('#edit-project-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		//var prodivision = "#edit-project-division";
+		//getChangeproject(currentValue,prodivision);
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';
+		//var stateVal = $('#edit-project-state option:selected').val();
+		var divisionValue = '';
+		var projectdistrict = "#edit-project-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+		
+		
+	});
+	$('#edit-promoter-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-promoter-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-agent-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-agent-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-project-complaint-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-project-complaint-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-promoter-complaint-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-promoter-complaint-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-project-report-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-project-report-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-summary-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-summary-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-order-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-order-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-project-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';
+		var stateVal = $('#edit-project-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+		
+	});
+	$('#edit-promoter-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'promoter_custom_search_form';
+		var distructField = 'promoter_district';
+		var stateVal = $('#edit-promoter-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-promoter-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-agent-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'custom_search_form';
+		var distructField = 'agent_district';
+		var stateVal = $('#edit-agent-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-agent-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	
+	$('#edit-summary-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_summary_form';
+		var distructField = 'summary_district';
+		var stateVal = $('#edit-summary-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-summary-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-order-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'orders_judgements_form';
+		var distructField = 'order_district';
+		var stateVal = $('#edit-order-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-order-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-project-complaint-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_complaint_form';
+		var distructField = 'project_complaint_district';
+		var stateVal = $('#edit-project-complaint-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-complaint-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+
+	$('#edit-project-report-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_complaint_view_form';
+		var distructField = 'project_report_district';
+		var stateVal = $('#edit-project-report-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-report-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-promoter-complaint-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'promoter_complaint_form';
+		var distructField = 'promoter_complaint_district';
+		var stateVal = $('#edit-promoter-complaint-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-promoter-complaint-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	// add project complete left form change state call
+	$('#edit-complaints-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-complaints-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	// add project complete left form change division call
+	$('#edit-complaints-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'complaints_search_page_left_form';
+		var distructField = 'complaints_district';
+		var stateVal = $('#edit-complaints-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-complaints-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	
+	// setTimeout(function() {
+		// $("#edit-complaints-state").trigger('change');
+		// $("#edit-complaints-division").trigger('change');		
+	// }, 1000);
+
+	// if($("#block-statisticscounterblock").length){
+		var base_url = $("#base_url").val();
+		$.ajax({
+			url: base_url+'statisticscounter.php',
+			method:'get',
+			success: function (data){
+				// console.log(data);
+				$("#block-statisticscounterblock").html(data);
+			},
+			error: function (data){
+				// $("#block-statisticscounterblock").html(data);
+			}
+		}); 
+	// }
+
+	if($('#projects-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'project_district'; 
+		var prostateid = '#edit-project-district';
+		getstatedata(prostateid,formCode,fieldCode);
+				
+	}
+	if($('#promoters-form').length){
+		var formCode = 'promoter_custom_search_form';
+		// var fieldCode = 'promoter_division'; 
+		// var stateid = '#edit-promoter-division';
+		var fieldCode = 'promoter_district'; 
+		var stateid = "#edit-promoter-district";
+		getstatedata(stateid,formCode,fieldCode);
+				
+	}
+	if($('#agents-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'agent_district'; 
+		var stateid = '#edit-agent-district';
+		getstatedata(stateid,formCode,fieldCode);
+				
+	}
+
+	// if($('#projects-form').length){
+	// 	var formCode = 'custom_search_form';
+	// 	var fieldCode = 'project_division'; 
+	// 	var prostateid = "#edit-project-district";
+	// 	getstatedata(prostateid,formCode,fieldCode);
+				
+	// }
+	// if($('#promoters-form').length){
+	// 	var formCode = 'promoter_custom_search_form';
+	// 	var fieldCode = 'promoter_division'; 
+	// 	var stateid = '#edit-promoter-division';
+	// 	getstatedata(stateid,formCode,fieldCode);
+				
+	// }
+	// if($('#agents-form').length){
+	// 	var formCode = 'custom_search_form';
+	// 	var fieldCode = 'agent_division'; 
+	// 	var stateid = '#edit-agent-division';
+	// 	getstatedata(stateid,formCode,fieldCode);
+				
+	// }
+	
+	if($('#projects-search-page-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'project_division';
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';  
+		var innstateVal = $('#edit-project-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-project-division";
+		var districtpro = "#edit-project-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	if($('#promoters-search-page-form').length){
+		//console.log('hi');
+		var formCode = 'promoter_custom_search_form';
+		var fieldCode = 'promoter_division';
+		var districtForm = 'promoter_custom_search_form';
+		var distructField = 'promoter_district';  
+		var innstateVal = $('#edit-promoter-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-promoter-division";
+		var districtpro = "#edit-promoter-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	if($('#agent-search-page-form').length){
+		//console.log('hi');
+		var formCode = 'custom_search_form';
+		var fieldCode = 'agent_division'; 
+		var districtForm = 'custom_search_form';
+		var distructField = 'agent_district';
+		var innstateVal = $('#edit-agent-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-agent-division";
+		var districtpro = "#edit-agent-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	
+	if($('#project-summary-form').length){
+		var stateid = '#edit-summary-division';
+		var formCode = 'project_summary_form';
+		var fieldCode = 'summary_division';
+		var districtForm = 'project_summary_form';
+		var distructField = 'summary_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-summary-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-summary-division";
+		var comdist = "#edit-summary-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+		//complaintHolddata(comstate,comdivis,comdist);
+		
+	}
+	if($('#orders-judgements-form').length){
+		var stateid = '#edit-order-division';
+		var formCode = 'orders_judgements_form';
+		var fieldCode = 'order_division';
+		var districtForm = 'orders_judgements_form';
+		var distructField = 'order_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-order-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-order-division";
+		var comdist = "#edit-order-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+		 //complaintHolddata(comstate,comdivis,comdist);
+		
+	}
+	if($('#project-complaint-view-form').length){
+		//var stateid = '#edit-project-report-division';
+	 	//getstatedata(stateid);
+		 var formCode = 'project_complaint_view_form';
+		 var fieldCode = 'project_report_division';
+		 var districtForm = 'project_complaint_view_form';
+		var distructField = 'project_report_district';
+		var comstate = $('#edit-project-report-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-project-report-division";
+		var comdist = "#edit-project-report-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+			
+	}
+	if($('#project-complaint-form').length){
+		var stateid = '#edit-project-complaint-division';
+		var formCode = 'project_complaint_form';
+		var fieldCode = 'project_complaint_division';
+		var districtForm = 'project_complaint_form';
+		var distructField = 'project_complaint_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-project-complaint-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-project-complaint-division";
+		var comdist = "#edit-project-complaint-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+
+					
+	}
+	if($('#promoter-complaint-form').length){
+		var stateid = '#edit-promoter-complaint-division';
+		var formCode = 'promoter_complaint_form';
+		var fieldCode = 'promoter_complaint_division';
+		var districtForm = 'promoter_complaint_form';
+		var distructField = 'promoter_complaint_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-promoter-complaint-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-promoter-complaint-division";
+		var comdist = "#edit-promoter-complaint-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+			
+	}
+	
+	var cratype = $("#edit-order-complaint-type input[type='radio']:checked").val();
+	const currentDate  = new Date();
+		//console.log(cratype);
+		if(cratype == 'non_registration_rulings'){
+			$("#edit-orders-judgements-type--wrapper").hide();
+			var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+			var day = ('0' + currentDate.getDate()).slice(-2);
+			var year = currentDate.getFullYear() - 1;
+			var non_date = day + '-' + month + '-' + year;
+			var date1 = day + '-' + month + '-' + currentDate.getFullYear();
+			$(".form-item-ruling-judgement-from input[type='text']").val(non_date);
+			$(".form-item-ruling-judgement-to input[type='text']").val(date1);
+		}else{
+			$("#edit-orders-judgements-type--wrapper").show();
+		}
+	$("#edit-order-complaint-type input[type='radio']").change(function(){
+		var cratype = $("#edit-order-complaint-type input[type='radio']:checked").val();
+		
+		if(cratype == 'non_registration_rulings'){
+			$("#edit-orders-judgements-type--wrapper").hide();
+			var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+			var day = ('0' + currentDate.getDate()).slice(-2);
+			var year = currentDate.getFullYear() - 1;
+			var non_date = day + '-' + month + '-' + year;
+			var date1 = day + '-' + month + '-' + currentDate.getFullYear();
+			$(".form-item-ruling-judgement-from input[type='text']").val(non_date);
+			$(".form-item-ruling-judgement-to input[type='text']").val(date1);
+		}else{
+			$("#edit-orders-judgements-type--wrapper").show();
+		}
+	});
+	
+	$("#edit-orders-judgements-type input[type='radio']").change(function(){
+		var cratype = $("#edit-orders-judgements-type input[type='radio']:checked").val();
+		//console.log(cratype);
+		const date = new Date();
+		if(cratype == '59'){
+			var month = ('0' + (date.getMonth() + 1)).slice(-2);
+			var day = ('0' + date.getDate()).slice(-2);
+			var year = date.getFullYear() - 3;
+			var intro_date = day + '-' + month + '-' + year;
+			var date1 = day + '-' + month + '-' + date.getFullYear();
+			$(".form-item-ruling-judgement-from input[type='text']").val(intro_date);
+			$(".form-item-ruling-judgement-to input[type='text']").val(date1);
+			
+		}
+		if(cratype == '60'){
+			var month = ('0' + (date.getMonth() + 1)).slice(-2);
+			var day = ('0' + date.getDate()).slice(-2);
+			var year = date.getFullYear() - 2;
+			var final_date = day + '-' + month + '-' + year;
+			var date1 = day + '-' + month +'-'+ date.getFullYear();
+			$(".form-item-ruling-judgement-from input[type='text']").val(final_date);
+			$(".form-item-ruling-judgement-to input[type='text']").val(date1);
+		}
+		if(cratype == '0'){
+			var month = ('0' + (date.getMonth() + 1)).slice(-2);
+			var day = ('0' + date.getDate()).slice(-2);
+			var year = date.getFullYear() - 1;
+			var non_date = day + '-' + month + '-' + year;
+			var date1 = day + '-' + month + '-' + date.getFullYear();
+			$(".form-item-ruling-judgement-from input[type='text']").val(non_date);
+			$(".form-item-ruling-judgement-to input[type='text']").val(date1);
+		}
+	
+		
+	});
+	
+	$("a.orderJagementHi").click(function(){
+			var base_url = $("#base_url").val();
+			var pkey = $(this).attr('data-key');
+			var ldata = $(this).attr('data-lang');
+			//var pdata = $(this).attr('data-avalue');
+			//console.log(pkey);
+			var pvalue = $(this).text();
+			if(ldata == 'mr'){
+				var ldata_url = base_url + ldata + '/';
+				$(this).attr('href', function() {
+					return ldata_url + 'orders-judgements?order-history='+pvalue+'&pmdata-key='+pkey;
+				});
+			}else{
+				$(this).attr('href', function() {
+					return base_url + 'orders-judgements?order-history='+pvalue+'&pmdata-key='+pkey;
+				});
+			}
+		});
+	
+		/* $("a.oderjgdata").click(function(e){
+			e.preventDefault();
+			$('body').append('<div id="loaderModal"><span class="fa fa-spinner fa-spin"></span></div>');
+			var currentVal = $(this).attr('oj-data');
+			console.log(currentVal);
+			var base_url = $("#base_url").val();
+			$.ajax({
+				url: base_url+'orders-judgements-document',
+				method:'get',
+				context: document.body,
+				data: { id: currentVal },
+				success: function (data){
+					// console.log(data);
+					$(".modal-content").html(data);
+					$("#loaderModal").remove();
+					$(this).trigger('click');
+				},
+				error: function (data){
+					$("#loaderModal").remove();
+					console.log('Failed Path Entry');
+				}
+			}); 
+		}); */
+		
+	/* $("a.oderjgdata").click(function(e){
+		e.preventDefault();
+		var currentVal = $(this).attr('oj-data');
+		//console.log(currentVal);
+		var base_url = $("#base_url").val();
+		var src = "data:application/pdf;base64,"+currentVal;
+		var data = '<div class="modal-header"><h5 class="modal-title" id="exampleModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div class="pdfHolder"><object data='+src+' type="application/pdf" width="850px" height="850px">Download <a target="_blank" href="http://get.adobe.com/reader/">Adobe PDF Reader</a> to view the file.</object></div></div>';
+		$(".modal-content").html(data);
+            }); */					
+	$('body').removeClass('noJS').addClass("hasJS");
+	$(this).scrollTop(0);
+	getWidth();
+
+	setInterval(function(){
+		if($(".form-date").length){
+			//console.log('IN SIDE');
+			$(".form-date").each(function(){
+				$(this).attr('type','text').addClass('customDatePicker datepickerNew');
+				$(this).attr('readonly', 'readonly');
+				$(this).attr('placeholder', 'dd-mm-yyyy');
+				
+			});	
+		}else{
+			//console.log('OUT SIDE');
+		}	
+	}, 1000);
+	setTimeout(function() { 
+		$('.datepickerNew').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'dd-mm-yy',
+		   	todayHighlight: true,
+		  	autoclose: true	 
+		});
+		}, 2500);
+	
+// datepicker
+
+  $('.datepicker').datepicker({
+	 format: 'dd-mm-yyyy',
+	 todayHighlight: true,
+	 autoclose: true	 
+  });
+  
+ setTimeout(function() { 
+  $('.datepicker').datepicker({
+	 format: 'dd-mm-yyyy',
+	 todayHighlight: true,
+	 autoclose: true	 
+  });
+  }, 2500);
+
+
+
+$(".datepicker .datepickerNew .datepickeradd ").click(function(e){
+	e.preventDefault();
+});
+ 
+ 
+ // DATE FORMAT CHANGE RUN TIME
+setInterval(function(){
+	if($(".datepicker .datepickerNew").length){
+		//console.log('NEW');
+		$.urlParam = function(name){
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+			if (results==null){
+			   return null;
+			}
+			else{
+			   return results[1] || '';
+			}
+		}
+		$('.datepicker .datepickerNew').each(function(){
+			//console.log($(this).attr('name'));
+			if($(this).val()){
+				if(!$(this).hasClass('setDate')){
+					var fieldName = $(this).attr('name');
+					var param1 = $.urlParam(fieldName);
+					//var param2 = $.urlParam("field_tender_due_date_value");
+					if((param1 != null && param1 != '0')){
+						var res1 = decodeURIComponent(param1);
+						if(res1){
+							var d1 = res1.slice(0, 10).split('/');   
+							var p1 = d1[1] +'/'+ d1[0] +'/'+ d1[2];
+							if(p1 != null && p1 != '0' && p1 != 'undefined'){
+								$('input[name="'+fieldName+'"]').val(decodeURIComponent(param1));
+								$('input[name="'+fieldName+'"]').addClass('setDate');
+							}else{
+			
+							}
+						}
+					}
+				}					
+			}				
+		});			
+	}
+}, 2000);
+ 
+	
+	$("table , .mapImgHolder").wrap("<div class='tableOuter'></div>");				
+
+	
+	if (  $(".yearsTabs .swiper-slide").length <= 6   ){
+		$('.yearsTabs ').addClass( "disabled" );
+	}
+
+	if (  $(".yearsTabs .swiper-slide").length   ){
+		
+		var yearsTabs = new Swiper(".yearsTabs", {
+			slidesPerView: 6,
+			spaceBetween: 0,
+			allowTouchMove: false,
+			slidesPerGroup: 6,
+			loop: false,
+			loopFillGroupWithBlank: false,
+			
+			navigation: {
+			  nextEl: ".swiper-button-next",
+			  prevEl: ".swiper-button-prev",
+			},
+		  });
+	}
+		
+
+	
+    if( $(".maharastraMap").length  ){
+        $(".maharastraMap a").click(function(){
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active');
+            $(this).parent().siblings().children().removeClass('active');
+        }); 
+    }
+
+
+	 //background
+   if($(".bgBackgound  img").length) {
+		$('.bgBackgound  img').each(function(){
+			var banimgSrc = $(this).attr('src');		
+			$(this).parent().css('background-image', 'url(' + banimgSrc +')');
+			
+		});
+   }
+   
+   if( $(".onLoadPopupClose").length){
+			$(".onLoadPopupClose, .loadBg").click(function(){
+				$(".onLoadPopup").hide();
+				return false;
+			});
+		}
+
+		// Responsive Tabing Script
+		if( $(".resTab").length) {
+			$('.resTab').responsiveTabs({
+				 rotate: false
+				,startCollapsed: 'tab' //accordion
+				,collapsible: 'accordion' //accordion
+				,scrollToAccordion: true
+				,scrollToAccordionOnLoad:false
+			});
+		};
+			
+   // Search Box start
+        if ($(".searchBtn").length) {
+            $('.searchBtn').click(function(e) { 
+                
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active');
+					$(this).find(".bi-search").addClass("bi-x-lg");
+                    $(".searchInput").addClass("showInput");
+                } else {
+                    $(this).removeClass('active');
+                   $(this).find(".bi-search").removeClass("bi-x-lg");
+                }
+				e.preventDefault();
+                return false;
+            });
+        }
+        $('.searchInput').click(function(e) {
+            e.stopPropagation();
+        });
+
+       /* $(document).click(function() {
+            $('.searchBtn .searchInput').slideUp();
+            $('.searchBtn').removeClass('active');
+        });*/
+	// Search Box end
+	
+	// Back to Top function
+if( $("#TopToBottom").length){
+    $(window).scroll(function(){
+        if ($(window).scrollTop()>120){
+        $('#TopToBottom').fadeIn('250').css('display','block');}
+        else {
+        $('#TopToBottom').fadeOut('250');}
+    });
+    $('#TopToBottom').click(function(){
+        $('html, body').animate({scrollTop:0}, '200');
+        return false;
+    });
+};
+
+// feedback validation
+
+if ($("form#node-feedback-form-form").length) {
+	$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+		return arg !== value;
+	}, "Please select any one.");
+	$.validator.addMethod("mobilenocorrect", function (value, element) {
+		return this.optional(element) || /^[0-9 ]+$/i.test(value);
+	}, "Please enter valid Contact No.");
+	$.validator.addMethod("description", function (value, element) {
+		return this.optional(element) || /^[a-zA-Z0-9'\=\",\s-_&@.\? ]+$/.test(value);
+	}, "Please enter only letters and digits.");
+	$.validator.addMethod("onlytext", function (value, element) {
+		return this.optional(element) || /^[a-zA-Z .]+$/i.test(value);
+	}, "Please enter only letters.");
+
+	$("#node-feedback-form-form").validate({
+		rules: {
+			'title[0][value]': { required: true, onlytext: true },
+			'field_email[0][value]': { email: true, required: true },
+			'field_contact_no[0][value]': { required: true, mobilenocorrect: true, number: true, rangelength: [10, 11] },
+			'field_subject[0][value]': { required: true, description: true },
+			'field_comment_seek_information_q[0][value]': { required: true, description: true },
+		},
+		ignore: ".form-file",
+		messages: {
+			'mail': {
+				email: 'Please enter valid Email address'
+			},
+			'field_contact_no[0][value]': {
+				number: 'Please enter valid Mobile No.',
+				rangelength: 'Please enter maximum 11 and minimum 10 digits for Mobile No.',
+			},
+			'field_subject[0][value]': {
+				description: 'Please enter valid Subject.',
+			},
+			'field_comment_seek_information_q[0][value]': {
+				description: 'Please enter valid Comment/ Seek Information / Questions.',
+			},
+
+		},
+		submitHandler: function (form) {
+			form.submit()
+		}
+	});
+}
+
+
+
+
+// Swiper: Slider
+if($(".swiper-container").length){  
+new Swiper('.swiper-container', {
+    loop: true,
+    nextButton: '.swiper-button-next',
+    prevButton: '.swiper-button-prev',
+    slidesPerView: 3,
+    paginationClickable: true,
+    spaceBetween: 20,
+    breakpoints: {
+        1920: {
+            slidesPerView: 5,
+            spaceBetween: 10
+        },
+        1028: {
+            slidesPerView: 2,
+            spaceBetween: 30
+        },
+        480: {
+            slidesPerView: 1,
+            spaceBetween: 10
+        }
+    }
+});
+	
+}
+ // one slide banner slider	
+        if ($(".oneColSlider").length) {
+            var indexBanner = new Swiper('.oneColSlider ', {
+                spaceBetween: 0,
+                slidesPerView: 1,
+                loop: false,
+                autoplay: {
+                    delay: 15000,
+                    disableOnInteraction: false,
+                },
+                pagination: false,
+                paginationClickable: true,
+                navigation: {
+                    nextEl: '.oneColSlider .swiper-button-next',
+                    prevEl: '.oneColSlider .swiper-button-prev',
+                },
+                breakpoints: {
+                    639: {
+                        slidesPerView: 1,
+                    },
+                    767: {
+                        slidesPerView: 1,
+                    },
+                    1024: {
+                        slidesPerView: 1,
+                    },
+                    1279: {
+                        slidesPerView: 1,
+                    }
+                }
+            });
+};
+
+
+
+ // five Col banner slider	
+        if ($(".sixColSlider").length) {
+            var indexBanner = new Swiper('.sixColSlider ', {
+                spaceBetween: 0,
+                slidesPerView: 6,
+                loop: true,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+                pagination: false,
+                paginationClickable: true,
+                navigation: {
+                    nextEl: '.sixColSlider-next',
+                    prevEl: '.sixColSlider-prev',
+                },
+                breakpoints: {
+					0: {
+                        slidesPerView:1,
+                    },					
+					480: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    },
+                    991: {
+                        slidesPerView: 4,
+                    },
+                    1200: {
+                        slidesPerView:5,
+                    },
+                    1400: {
+                        slidesPerView: 6,
+                    }
+                }
+            });
+};
+	
+ // five col banner  slider	end
+ 
+ 
+ 
+ // forthColSlider Col banner slider	
+  setTimeout(function() {
+  
+        if ($(".forthColSlider").length) {
+
+            var indexBanner = new Swiper('.forthColSlider ', {
+                spaceBetween: 20,
+                slidesPerView: 4,
+                loop: true,
+                autoplay: {
+                    delay: 2000,
+                    disableOnInteraction: false,
+                },
+                pagination: false,
+                paginationClickable: true,
+                navigation: {
+                    nextEl: '.forthColSlider-next',
+                    prevEl: '.forthColSlider-prev',
+                },
+                breakpoints: {
+					0: {
+                        slidesPerView:1,
+                    },					
+					480: {
+                        slidesPerView: 1,
+                    },
+                    639: {
+                        slidesPerView: 2,
+                    },
+                    991: {
+                        slidesPerView: 3,
+                    },
+                    1200: {
+                        slidesPerView:4,
+                    },
+                    1400: {
+                        slidesPerView: 4,
+                    }
+                }
+            });
+};
+
+},3000);
+
+
+
+
+// Multiple Ticker	
+	if( $(".ticker").length){
+		$('.ticker').each(function(i){
+			$(this).addClass('tickerDiv'+i).attr('id', 'ticker'+i);
+			$('#ticker'+i).find('.tickerDivBlock').first().addClass('newsTikker'+i).attr('id', 'newsTikker'+i);
+			$('#ticker'+i).find('a.playPause').attr('id', 'stopNews'+i)
+			$('#newsTikker'+i).vTicker({ speed: 1E3, pause: 4E3, animation: "fade", mousePause: false, showItems: 3, height: 298, direction: 'up' })
+			$("#stopNews"+i).click(function () {
+				if($(this).hasClass('stop')){
+					$(this).removeClass("stop").addClass("play").text("Play").attr('title', 'Play');
+				}else{
+					$(this).removeClass("play").addClass("stop").text("Pause").attr('title', 'pause');
+				}
+				return false;
+			});
+		});
+	};
+  // Multiple Ticker end
+  
+  
+	if( $(".accordion").length){
+        $('.accordion .accordDetail').hide();
+        $(".accordion .accordDetail:first").show(); 
+        $(".accordion .accTrigger:first").addClass("active");	
+        $('.accordion .accTrigger').click(function(){
+           if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+                $(this).next().slideUp();
+           } else {
+               if ($('body').hasClass('desktop')) {
+                $('.accordion .accTrigger').removeClass('active');
+                $('.accordion .accordDetail').slideUp();
+               }
+                $(this).addClass('active');			   
+                $(this).next().slideDown();
+           }
+           return false;
+        });
+     };
+  // Video Popup JS
+
+  
+  
+	if($('.videoPopupLink').length){
+		$('.videoPopupLink').magnificPopup({
+			type:'iframe',
+			
+			
+		});
+	}
+	
+	
+	
+
+// To open External link Dialogbox for External links
+$('a').not(".litebox, .colorbox-load, .w3cLogos a, .videoPopupLink, .menuPart  a").filter(function() {
+		return this.hostname && this.hostname !== location.hostname;
+	}).click(function(e) {  
+		e.preventDefault();
+		var url = $(this).attr("href");		 
+		smoke.confirm("You are about to proceed to an external website. Click YES to proceed.", function(e){
+			if (e){ 
+				window.open(url, "_blank");		
+			}else{ 
+				return false; 
+			}
+		}, {
+			ok: "Yes",
+			cancel: "No",
+			classname: "custom-class",
+			reverseButtons: true
+		}); 
+	});	
+
+$('a[target="_blank"]').addClass("targetBlankLink");
+/*
+$('a.targetBlankLink').click(function(e) { 
+        e.preventDefault();
+    if($(this).attr("target","_blank")){
+    var url = $(this).attr("href");		 
+     smoke.confirm("You are about to proceed to an external website. Click YES to proceed.", function(e){
+        if (e){ 
+             window.open(url, "_blank");		
+        }else{ 
+            return false; 
+        }
+        });
+    }
+}); */
+
+// To open External link Dialogbox for External links ends
+	
+ // forthColSlider col banner  slider	end
+ 
+
+	
+ 
+	// Back to Top function
+	if( $("#backtotop").length){
+		$(window).scroll(function(){
+			if ($(window).scrollTop()>120){
+			$('#backtotop').fadeIn('250').css('display','block');}
+			else {
+			$('#backtotop').fadeOut('250');}
+		});
+		$('#backtotop').click(function(){
+			$('html, body').animate({scrollTop:0}, '200');
+			return false;
+		});
+	};
+	
+	// Get Focus Inputbox
+	if( $(".getFocus").length){
+			$(".getFocus").each(function(){
+			$(this).on("focus", function(){
+			if ($(this).val() == $(this)[0].defaultValue) { $(this).val("");};
+		  }).on("blur", function(){
+			  if ($(this).val() == "") {$(this).val($(this)[0].defaultValue);};
+		  });								  
+		});
+	};
+	
+	// For device checking
+	if (isMobile == false) {
+	
+	};
+	
+	
+	
+	
+	
+	if( $(".litebox").length){	
+		$('.litebox').liteBox();
+	};	
+	
+	$('.equalHeights > div').equalHeight();
+	
+	setTimeout (function(){
+		if( $(".fixedErrorMsg").length){					 
+			$(".fixedErrorMsg").slideDown("slow");				 
+			setTimeout( function(){$('.fixedErrorMsg').slideUp();},5000 );
+		}
+		if( $(".fixedSuccessMsg").length){					 
+			$(".fixedSuccessMsg").slideDown("slow");				 
+			setTimeout( function(){$('.fixedSuccessMsg').slideUp();},5000 );
+		}
+	},500);
+	
+	/*================= On Document Load and Resize Start =================*/
+	$(window).on('resize', function () {
+									 
+		ww = document.body.clientWidth; 
+		wh = document.body.clientHeight;		
+		
+		$('.vCenter').each(function () {$(this).verticalAlign();});	
+		
+		if($("body").hasClass("mobilePort")){
+			$("body").removeClass("wob");
+		}
+		
+		//$('.container').resize(function(){});
+		
+    }).trigger('resize');
+	
+	
+	
+	/*================= On Document Load and Resize End =================*/
+	
+
+
+
+
+
+
+
+
+
+	
+	// Message on Cookie Disabled
+	$.cookie('cookieWorked', 'yes', { path: '/', secure: true, HttpOnly: true });
+	if ($.cookie('cookieWorked') == 'yes') {
+		}
+	else{
+		if( $("div.jsRequired").length == 0){
+			$("body").prepend(
+				'<div class="jsRequired">Cookies are not enabled on your browser. Need to adjust this in your browser security preferences. Please enable cookies for better user experience.</div>'
+			);	
+		}
+	}
+	
+	 	/*Navigation */
+	if( $("#nav").length) {
+		if($(".toggleMenu").length == 0){
+			$("#mainNav").prepend('<a href="#" class="toggleMenu"><i class="bi bi-list"></i></a>');	
+		}
+		$(".toggleMenu").click(function() {
+			$(this).toggleClass("active");
+			$("body").addClass("activeMobNav");
+			return false;
+		});
+		
+		$("#nav li a").each(function() {
+			if ($(this).next().length) {
+				$(this).parent().addClass("parent");
+			};
+		})
+		/*$("#nav li.parent > a").each(function () {
+			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon"></i>')
+		});
+		$("#navMob li.parent").each(function() {
+			if ($(this).has(".menuIcon").length <= 0) $(this).append('<i class="menuIcon fa fa-angle-down"></i>')
+		});*/
+		dropdown('nav', 'hover', 1);
+		adjustMenu();	
+	};
+	
+	if( $("#nav").length) {
+		$(".is-active").parent().parent().parent().addClass("highlight");
+	}
+	$('.nav-item button').click(function(e){
+		//e.preventDefault();
+		//var stringCreate = $(this).attr("data-value");
+		var stringDetail = $(this).attr("data-deatil");
+		var stringcity = $(this).attr("aria-controls");
+		var baseUrl = $('#base_url').val();
+		var data = stringDetail+"@"+stringcity;
+		var warrantUrl = baseUrl+"warrant-details/"+JSON.stringify(data);
+		//console.log(warrantUrl);
+		
+		$.ajax({
+			url: warrantUrl,
+			success: function(result){
+				if($('.tab-content').prop('id')=='mykeypoint')
+				{
+					$('#mykeypoint').html(result);
+				}
+				
+				
+			},
+			error: function(result){
+				alert('failed');
+				
+			}
+		});
+	});
+
+	$('.lapsedDatapro a').click(function(e){
+		e.preventDefault();
+		//alert('hi12');
+		var lapYear1 = $(this).attr("lyear");
+		if(lapYear1 == 'undefined'){
+			var lapYear = "";
+		}else{
+			var lapYear = lapYear1;
+		}
+		var lapDivision1 = $(this).attr("dividata");
+		if(lapDivision1 == 'undefined'){
+			var lapDivision = "";
+		}else{
+			var lapDivision = lapDivision1;
+		}
+		var lapDistict1 = $(this).attr("stdata");
+		if(lapDistict1 == 'undefined'){
+			var lapDistict = "";
+		}else{
+			var lapDistict = lapDistict1;
+		}
+		//var lapDivision = $("#edit-lapsed-division option:selected").val();
+		//var lapDistict = $("#edit-lapsed-district option:selected").val();
+		
+		var data1 = lapYear+"@"+lapDivision+"@"+lapDistict1;
+		var baseUrl = $('#base_url').val();
+		var lapsedUrl = baseUrl+"lapsed-projects-detail/"+data1;
+		var exportUrl = baseUrl+"export-lapsed-data/"+data1;
+		$("#export-button").prop("href", exportUrl);
+		
+		/* $("#export-button a").on("change", function() {
+			$("#export-button a").attr("href", exportUrl);
+		}); */
+		
+		$.ajax({
+			url: lapsedUrl,
+			success: function(result){
+				$('#dataLapsed').html(result);
+				//console.log(result);
+				/* if($('.tab-content').prop('id')=='mykeypoint')
+				{
+					$('.dataLapsed').html(result);
+				} */
+				
+				
+			},
+			error: function(result){
+				alert('failed');
+				
+			}
+		});
+	});
+	
+	
+			
+		/*$(".menuIcon").click(function(){ 
+			$(this).siblings("ul").slideToggle();						  
+		 	$(this).toggleClass("active");
+			$(this).parent("li").siblings("li").children(".menuSubUl").hide();	
+		 });*/
+	
+	
+		//Date Circular Notice and Office Order
+
+	if($("form#views-exposed-form-notice-board-page-2").length){
+	//alert('hi');
+	$.validator.addMethod("datecorrect", function(value, element) {
+		return this.optional(element) || /^\d{2}\/\d{2}\/\d{4}$/i.test(value);
+	}, "Please enter valid Date for example dd/mm/YYYY.");
+	$.validator.addMethod("validdate", function(value, element) {
+		if(value != ''){
+			if (!value.match(/^00\/00\/0000$/) && value != '') return value; 
+		} else {
+			return true;
+		}
+	}, "Please enter valid Date for example dd/mm/YYYY.");
+	$("#views-exposed-form-notice-board-page-2").validate({			 
+		rules: {
+			'field_date_notice_value': { datecorrect: true, validdate: true },
+			
+			
+		},
+		ignore : ".form-file",
+		messages: {
+			'field_date_notice_value': {
+				datecorrect: 'Please enter valid Date for example dd/mm/YYYY.'
+			},
+			
+			
+			
+		},								
+		submitHandler: function(form) {
+				form.submit()
+		} 
+	});
+}
+	
+});
+/*================= On Document Load End =================*/
+
+/*================= On Window Resize Start =================*/	
+$(window).bind('resize orientationchange', function() {
+	getWidth();												
+	//adjustMenu();
+	menuMove();
+	$('.vCenter').each(function () {$(this).verticalAlign();});
+});
+
+/*================= On Window Resize End =================*/	
+
+/*================= On Window Load Start =================*/
+$(window).load(function() {
+	$('#edit-project-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		//var prodivision = "#edit-project-division";
+		//getChangeproject(currentValue,prodivision);
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';
+		//var stateVal = $('#edit-project-state option:selected').val();
+		var divisionValue = '';
+		var projectdistrict = "#edit-project-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+		
+		
+	});
+	$('#edit-promoter-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-promoter-division";
+		//getChangeproject(currentValue,prmotdivision);
+		var districtForm = 'promoter_custom_search_form';
+		var distructField = 'promoter_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-promoter-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+		
+	});
+	$('#edit-agent-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-agent-division";
+		//getChangeproject(currentValue,prmotdivision);
+		var districtForm = 'custom_search_form';
+		var distructField = 'agent_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-agent-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-project-complaint-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-project-complaint-division";
+		//getChangeproject(currentValue,prmotdivision);
+		var districtForm = 'project_complaint_form';
+		var distructField = 'project_complaint_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-project-complaint-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+
+		
+	});
+	$('#edit-promoter-complaint-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-promoter-complaint-division";
+		//getChangeproject(currentValue,prmotdivision);
+
+		var districtForm = 'promoter_complaint_form';
+		var distructField = 'promoter_complaint_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-promoter-complaint-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+				
+	});
+	$('#edit-project-report-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-project-report-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-summary-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-summary-division";
+		getChangeproject(currentValue,prmotdivision);
+		
+	});
+	$('#edit-order-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-order-division";
+		//getChangeproject(currentValue,prmotdivision);
+
+		var districtForm = 'orders_judgements_form';
+		var distructField = 'order_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-order-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+		
+	});
+
+	$('#edit-complaints-state').change(function(e){
+		e.preventDefault();
+		var currentValue = $(this).val();
+		var prmotdivision = "#edit-complaints-division";
+		//getChangeproject(currentValue,prmotdivision);
+
+		var districtForm = 'complaints_search_page_left_form';
+		var distructField = 'complaints_district';
+		var divisionValue = '';
+		var projectdistrict = "#edit-complaints-district";
+		getChangedivision(currentValue,divisionValue,projectdistrict,districtForm,distructField);
+		
+	});
+	$('#edit-project-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';
+		var stateVal = $('#edit-project-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+		
+	});
+	$('#edit-promoter-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'promoter_custom_search_form';
+		var distructField = 'promoter_district';
+		var stateVal = $('#edit-promoter-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-promoter-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-agent-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'custom_search_form';
+		var distructField = 'agent_district';
+		var stateVal = $('#edit-agent-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-agent-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-summary-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_summary_form';
+		var distructField = 'summary_district';
+		var stateVal = $('#edit-summary-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-summary-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-order-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'orders_judgements_form';
+		var distructField = 'order_district';
+		var stateVal = $('#edit-order-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-order-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-project-complaint-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_complaint_form';
+		var distructField = 'project_complaint_district';
+		var stateVal = $('#edit-project-complaint-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-complaint-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+
+	$('#edit-project-report-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'project_complaint_view_form';
+		var distructField = 'project_report_district';
+		var stateVal = $('#edit-project-report-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-project-report-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	$('#edit-promoter-complaint-division').change(function(e){
+		e.preventDefault();
+		var districtForm = 'promoter_complaint_form';
+		var distructField = 'promoter_complaint_district';
+		var stateVal = $('#edit-promoter-complaint-state option:selected').val();
+		var divisionValue = $(this).val();
+		var projectdistrict = "#edit-promoter-complaint-district";
+		getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField);
+
+	});
+	if($('#projects-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'project_district'; 
+		var prostateid = '#edit-project-district';
+		getstatedata(prostateid,formCode,fieldCode);
+				
+	}
+	if($('#promoters-form').length){
+		var formCode = 'promoter_custom_search_form';
+		// var fieldCode = 'promoter_division'; 
+		// var stateid = '#edit-promoter-division';
+		var fieldCode = 'promoter_district'; 
+		var stateid = "#edit-promoter-district";
+		getstatedata(stateid,formCode,fieldCode);
+				
+	}
+	if($('#agents-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'agent_district'; 
+		var stateid = '#edit-agent-district';
+		getstatedata(stateid,formCode,fieldCode);
+				
+	}
+
+	if($('#complaints-search-page-left-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'complaints_district'; 
+		var stateid = '#edit-complaints-district';
+		getstatedata(stateid,formCode,fieldCode);
+				
+	}
+	
+	if($('#projects-search-page-form').length){
+		var formCode = 'custom_search_form';
+		var fieldCode = 'project_division';
+		var districtForm = 'custom_search_form';
+		var distructField = 'project_district';  
+		var innstateVal = $('#edit-project-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-project-division";
+		var districtpro = "#edit-project-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	if($('#promoters-search-page-form').length){
+		//console.log('hi');
+		var formCode = 'promoter_custom_search_form';
+		var fieldCode = 'promoter_division';
+		var districtForm = 'promoter_custom_search_form';
+		var distructField = 'promoter_district';  
+		var innstateVal = $('#edit-promoter-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-promoter-division";
+		var districtpro = "#edit-promoter-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	if($('#agent-search-page-form').length){
+		//console.log('hi');
+		var formCode = 'custom_search_form';
+		var fieldCode = 'agent_division'; 
+		var districtForm = 'custom_search_form';
+		var distructField = 'agent_district';
+		var innstateVal = $('#edit-agent-state option:selected').val();
+		if(innstateVal == "" || innstateVal == "undefined"){
+		 var innstateVal = "27";
+		}
+		var statepro = "#edit-agent-division";
+		var districtpro = "#edit-agent-district";
+		innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField);
+				
+	}
+	
+	if($('#project-summary-form').length){
+		var stateid = '#edit-summary-division';
+		var formCode = 'project_summary_form';
+		var fieldCode = 'summary_division';
+		var districtForm = 'project_summary_form';
+		var distructField = 'summary_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-summary-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-summary-division";
+		var comdist = "#edit-summary-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+		//complaintHolddata(comstate,comdivis,comdist);
+		
+	}
+	if($('#orders-judgements-form').length){
+		var stateid = '#edit-order-division';
+		var formCode = 'orders_judgements_form';
+		var fieldCode = 'order_division';
+		var districtForm = 'orders_judgements_form';
+		var distructField = 'order_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-order-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-order-division";
+		var comdist = "#edit-order-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+		 //complaintHolddata(comstate,comdivis,comdist);
+		
+	}
+	if($('#project-complaint-view-form').length){
+		//var stateid = '#edit-project-report-division';
+	 	//getstatedata(stateid);
+		 var formCode = 'project_complaint_view_form';
+		 var fieldCode = 'project_report_division';
+		 var districtForm = 'project_complaint_view_form';
+		var distructField = 'project_report_district';
+		var comstate = $('#edit-project-report-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-project-report-division";
+		var comdist = "#edit-project-report-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+			
+	}
+	if($('#project-complaint-form').length){
+		var stateid = '#edit-project-complaint-division';
+		var formCode = 'project_complaint_form';
+		var fieldCode = 'project_complaint_division';
+		var districtForm = 'project_complaint_form';
+		var distructField = 'project_complaint_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-project-complaint-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-project-complaint-division";
+		var comdist = "#edit-project-complaint-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+
+					
+	}
+	if($('#promoter-complaint-form').length){
+		var stateid = '#edit-promoter-complaint-division';
+		var formCode = 'promoter_complaint_form';
+		var fieldCode = 'promoter_complaint_division';
+		var districtForm = 'promoter_complaint_form';
+		var distructField = 'promoter_complaint_district';
+	 	getstatedata(stateid,formCode,fieldCode);
+		var comstate = $('#edit-promoter-complaint-state option:selected').val();
+		//console.log(comstate);
+		if(comstate == "" || comstate == "undefined"){
+		 var comstate = "27";
+		}
+		var comdivis = "#edit-promoter-complaint-division";
+		var comdist = "#edit-promoter-complaint-district";
+		innerPageHolddata(comstate,comdivis,comdist,formCode,fieldCode,districtForm,distructField);
+			
+	}				
+});
+/*================= On Document Load End =================*/
+
+function menuMove() {
+if ($(".mobileNav").length == 0) {
+	var navigation = $('#nav').clone();
+	$(navigation).appendTo("body").wrap("<div class='mobileNav'></div>");
+	
+	
+	if ($(".mobileNav #navMob").length == 0) {
+		$(".mobileNav #nav").attr("id", "navMob");
+		$(".mobileNav").append("<span class='menuClose homeSprite'></span>");
+		$(".mobileNav").append("<span class='navigationText'>Navigation</span>");
+		$(".mobileNav .menuClose").click(function() {
+			$("body").removeClass("activeMobNav");
+		});
+		
+		
+		
+		$(".menuSubUl").parent().prepend("<div class='menuIcon'></div>");		 
+		$(".menuIcon").on('click', function(){
+			$(this).siblings("ul").slideToggle();
+			$(this).toggleClass("active");
+			$(this).parent("li").siblings("li").children(".menuSubUl").hide().siblings('.menuIcon').removeClass('active');
+		 });
+	}
+	
+}
+}
+function getWidth() {
+	ww = document.body.clientWidth;
+	if(ww>wideScreen){$('body').removeClass('device').addClass('desktop widerDesktop');}
+	if(ww>mobilePort && ww<=wideScreen){	$('body').removeClass('device widerDesktop').addClass('desktop');}
+	if(ww<=mobilePort) {$('body').removeClass('desktop widerDesktop').addClass('device');}
+	if(ww > 767 && ww < 1025){$('body').addClass('ipad');}
+	else {$('body').removeClass('ipad');}	
+}
+
+})(jQuery);
+
+
+function validate() {
+    return false;
+};
+
+function getstatedata(stateid,formCode,fieldCode){
+	var currentValue = '27';
+	var langId = '1';
+	var base_url = $('#base_url').val();
+	var divisionValue = '';
+	var apiUrl = base_url +'div-district-data?state_code='+currentValue+'&lang_id='+langId+'&division_code='+divisionValue+'&district_form='+formCode+'&distruct_field='+fieldCode;
+	//var apiUrl = base_url +'get-division-data?stateCode='+currentValue+'&langID='+langId+'&form_code='+formCode+'&field_code='+fieldCode;
+	console.log(apiUrl);
+	$.ajax({
+		url: apiUrl,
+		success: function (data){
+			$(stateid).html(data);				
+		},
+		error: function (data){
+			console.log('Failed Path Entry');
+		}
+	});
+}
+
+function getChangeproject(currentValue,prodivision){
+	var langId = '1';
+	var base_url = $('#base_url').val();
+	$('body').append('<div id="loaderModal"><span class="fa fa-spinner fa-spin"></span></div>');
+	var apiUrl = base_url +'get-division-data?stateCode='+currentValue+'&langID='+langId;
+	//console.log(apiUrl);
+	$.ajax({
+		url: apiUrl,
+		success: function (data){
+			// console.log(data);
+			$(prodivision).html(data);
+			$("#loaderModal").remove();
+			
+		},
+		error: function (data){
+			$("#loaderModal").remove();
+			console.log('Failed Path Entry');
+		}
+	}); 
+}
+function getChangedivision(stateVal,divisionValue,projectdistrict,districtForm,distructField){ 
+	var langId = '1';
+	var base_url = $('#base_url').val();
+	$('body').append('<div id="loaderModal"><span class="fa fa-spinner fa-spin"></span></div>');
+	var apiUrl = base_url +'div-district-data?state_code='+stateVal+'&lang_id='+langId+'&division_code='+divisionValue+'&district_form='+districtForm+'&distruct_field='+distructField;
+	console.log(apiUrl);
+	$.ajax({
+		url: apiUrl,
+		success: function (data){
+			// console.log(data);
+			$(projectdistrict).html(data);
+			$("#loaderModal").remove();
+			
+		},
+		error: function (data){
+			$("#loaderModal").remove();
+			console.log('Failed Path Entry');
+		}
+	}); 
+}
+function innerPageHolddata(innstateVal,statepro,districtpro,formCode,fieldCode,districtForm,distructField){
+	var langId = '1';
+	var base_url = $('#base_url').val();
+	if(innstateVal != ''){
+		var inndivisionVal = '';
+		var proUrl = base_url +'div-district-data?state_code='+innstateVal+'&lang_id='+langId+'&division_code='+inndivisionVal+'&district_form='+districtForm+'&distruct_field='+distructField;
+		//var proUrl = base_url +'get-division-data?stateCode='+innstateVal+'&langID='+langId+'&form_code='+formCode+'&field_code='+fieldCode;
+		console.log(proUrl);
+		$.ajax({
+			url: proUrl,
+			success: function (data){
+				$(districtpro).html(data);	
+
+				// var inndivisionVal = $(statepro +' option:selected').val();		
+				// var prodivUrl = base_url +'div-district-data?state_code='+innstateVal+'&lang_id='+langId+'&division_code='+inndivisionVal+'&district_form='+districtForm+'&distruct_field='+distructField;
+				// 	console.log(prodivUrl);
+				// 	$.ajax({
+				// 		url: prodivUrl,
+				// 		success: function (data){
+				// 			$(districtpro).html(data);				
+				// 		},
+				// 		error: function (data){
+				// 			console.log('Failed Path Entry');
+				// 		}
+				// 	});	
+			},
+			error: function (data){
+				console.log('Failed Path Entry');
+			}
+		});
+	}
+}
+function complaintHolddata(comstate,comdivis,comdist){
+		var langId = '1';
+		var base_url = $('#base_url').val();
+		var prodivUrl = base_url +'div-district-data?state_code='+comstate+'&lang_id='+langId+'&division_code='+comdivis;
+		console.log(prodivUrl);
+		$.ajax({
+			url: prodivUrl,
+			success: function (data){
+				$(comdist).html(data);				
+			},
+			error: function (data){
+				console.log('Failed Path Entry');
+			}
+		});	
+}

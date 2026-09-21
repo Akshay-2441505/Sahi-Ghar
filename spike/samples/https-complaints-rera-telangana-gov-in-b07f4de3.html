@@ -1,0 +1,821 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- PRIMARY SEO -->
+    <title>TG RERA Complaints Portal | Telangana RERA Complaint Filing, Registration and Status Tracking</title>
+    <meta name="description" content="Official TG RERA Complaints Portal of Telangana Real Estate Regulatory Authority for complaint filing, user registration, login, grievance submission, case updates, and online application status tracking.">
+    <meta name="keywords" content="TG RERA, TGRERA, Telangana RERA, Telangana RERA complaints portal, TG RERA complaint filing, RERA complaint registration Telangana, property complaint Telangana, real estate complaint Telangana, TG RERA login, TG RERA user registration, complaint status Telangana, RERA grievance portal Telangana, builder complaint Telangana, apartment complaint Telangana, Telangana Real Estate Regulatory Authority">
+    <meta name="author" content="Telangana RERA">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a2746">
+
+    <!-- CANONICAL -->
+    <link rel="canonical" href="https://complaints-rera.telangana.gov.in/">
+
+    <!-- OPEN GRAPH (WhatsApp / Facebook) -->
+    <meta property="og:title" content="TG RERA Complaints Portal | Telangana RERA Services">
+    <meta property="og:description" content="Register online, file TG RERA complaints, login securely, and track Telangana real estate grievance status from the official portal.">
+    <meta property="og:image" content="https://complaints-rera.telangana.gov.in/rerav3/assets/images/rera-logo.png">
+    <meta property="og:site_name" content="TG RERA Complaints Portal">
+    <meta property="og:url" content="https://complaints-rera.telangana.gov.in/">
+    <meta property="og:type" content="website">
+
+    <!-- FAVICON -->
+    <link rel="icon" href="/rerav3/assets/images/favicon.png">
+
+        <!-- PERFORMANCE -->
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <!-- CSS -->
+        <link href="/RERAV3/assets/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/RERAV3/assets/css/icons.css" rel="stylesheet">
+                <link href="/rerav3/assets/css/leaflet.css" rel="stylesheet" />
+                <link href="/rerav3/assets/css/leaflet.fullscreen.css" rel="stylesheet" />
+
+                <!-- PRELOAD IMPORTANT -->
+                <link rel="preload" href="/RERA/rera-logo.png" as="image">
+
+                    <!-- STRUCTURED DATA (Razor Safe) -->
+                    <script type="application/ld+json">
+                            {
+                              "@context": "https://schema.org",
+                              "@type": "GovernmentOrganization",
+                              "name": "Telangana Real Estate Regulatory Authority",
+                              "url": "https://complaints-rera.telangana.gov.in",
+                              "logo": "https://complaints-rera.telangana.gov.in/RERA/rera-logo.png",
+                              "contactPoint": {
+                                "@type": "ContactPoint",
+                                "telephone": "+91-40-29394973",
+                                "contactType": "customer service",
+                                "areaServed": "IN",
+                                "availableLanguage": "English"
+                              }
+                            }
+                    </script>
+    
+                    <style>
+
+                            /* ================= REAL ESTATE BACKGROUND ================= */
+                            body {
+                                margin: 0;
+                                font-family: 'Segoe UI', sans-serif;
+                                /* background: url("/TGRERAV5/RERA/bg.jpg") no-repeat center center/cover; */
+                                background: url("/TGRERAV5/RERA/bg_latest.jpg") no-repeat center center/cover;
+                                position: relative;
+                                color: #e5e7eb;
+                                height: 100vh;
+                            }
+
+                                /* Dark Overlay */
+                                body::before {
+                                    content: "";
+                                    position: absolute;
+                                    inset: 0;
+                                    /* background:linear-gradient(to right,rgba(15,23,42,0.95),rgba(15,23,42,0.85)); */
+                                    z-index: 0;
+                                    background: #0f172a33;
+                                }
+
+                            /* Keep content above overlay */
+                            .main-wrapper {
+                                position: relative;
+                                background: rgb(13 30 54 / 75%);
+                                z-index: 1;
+                                height: 100vh;
+                            }
+
+                            /* ================= HEADER ================= */
+                            .header-section {
+                                padding: 12px 0;
+                                backdrop-filter: blur(15px);
+                                /*  background: rgba(15,23,42,0.6); */
+                                background: rgb(10 39 70);
+                                border-bottom: 1px solid rgb(147 142 142 / 43%);
+                            }
+
+                                .header-section h2 {
+                                    font-weight: 700;
+                                    letter-spacing: 1px;
+                                    /*  background: linear-gradient(to right,#38bdf8,#14b8a6); */
+                                    background: #cdcdcd;
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                }
+
+                                .header-section h6 {
+                                    color: #cdcdcd;
+                                }
+
+                            /* ================= BUTTON ================= */
+                            .btn-premium {
+                                /*   background: linear-gradient(to right,#14b8a6,#06b6d4); */
+                                background: #48446b;
+                                border: none;
+                                padding: 8px 22px;
+                                font-weight: 600;
+                                border-radius: 10px;
+                                color: #ffffff;
+                                box-shadow: 0 5px 20px rgb(57 60 60 / 40%);
+                                transition: 0.3s;
+                            }
+
+                                .btn-premium a {
+                                    color: #fff !important;
+                                    text-decoration: none;
+                                }
+
+                                .btn-premium:hover {
+                                    transform: translateY(-3px);
+                                    box-shadow: 0 10px 30px rgba(6,182,212,0.7);
+                                }
+
+                            /* ================= GLASS CARD ================= */
+                            .glass-card {
+                                background: rgba(30,41,59,0.65);
+                                backdrop-filter: blur(20px);
+                                border: 1px solid rgba(255,255,255,0.08);
+                                border-radius: 20px;
+                                padding: 30px;
+                                box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+                                transition: 0.3s;
+                                padding-bottom: 0;
+                            }
+
+                                .glass-card:hover {
+                                    transform: translateY(-5px);
+                                }
+
+                                /* ================= INSTRUCTIONS ================= */
+                                .glass-card h5 {
+                                    /* background: linear-gradient(to right,#38bdf8,#14b8a6); */
+                                    background: #cdcdcd;
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    font-weight: 600;
+                                    margin-bottom: 9px !important;
+                                    /* border-bottom: 1px solid #ccc; */
+                                }
+
+                                .glass-card ul {
+                                    list-style: none;
+                                    padding-left: 0;
+                                }
+
+                                .glass-card li {
+                                    padding: 10px 0;
+                                    border-bottom: 1px solid rgba(255,255,255,0.05);
+                                    transition: 0.3s;
+                                }
+
+                                    .glass-card li:hover {
+                                        padding-left: 10px;
+                                        color: #38bdf8;
+                                    }
+
+                            /* ================= STATUS CARDS ================= */
+                            .status-card {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-bottom: 25px;
+                                padding-left: 15px;
+                                padding-right: 10px;
+                                min-height: 147px;
+                                padding-top: 0;
+                            }
+
+                                .status-card h3 {
+                                    font-weight: 700;
+                                    text-shadow: 0 0 15px rgb(255 255 255 / 60%);
+                                }
+
+                            .search-box {
+                                position: relative;
+                            }
+
+                                .search-box input:focus {
+                                    border-color: #a09fab !important;
+                                    box-shadow: 0 0 20px rgb(72 68 107) !important;
+                                    color: #fff;
+                                    background: #3e4b5e !important;
+                                }
+
+                            .status-search-icon {
+                                position: absolute;
+                                right: 15px;
+                                top: 38px;
+                                cursor: pointer;
+                                color: #fff;
+                            }
+
+                            .search-box.mb-4 {
+                                position: relative;
+                            }
+                            /* ================= SEARCH ================= */
+                            .search-box input {
+                                background: rgb(34 34 34 / 43%);
+                                border: 1px solid rgb(14 183 186 / 49%);
+                                color: white;
+                                border-radius: 12px;
+                                padding: 12px;
+                                background: rgba(30, 41, 59, 0.65);
+                                backdrop-filter: blur(20px);
+                            }
+
+                                .search-box input:focus {
+                                    border-color: #14b8a6;
+                                    box-shadow: 0 0 20px rgba(20,184,166,0.5);
+                                }
+
+                            /* ================= MAP IMAGE ================= */
+                            .map-img {
+                                border-radius: 20px;
+                                box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+                                transition: 0.4s;
+                                background: #293546;
+                            }
+
+                                .map-img:hover {
+                                    transform: scale(1.05);
+                                }
+
+                            /* ================= FOOTER ================= */
+                            .footer {
+                                background: rgba(15,23,42,0.8);
+                                backdrop-filter: blur(10px);
+                                padding: 8px;
+                                text-align: center;
+                                border-top: 1px solid rgba(255,255,255,0.05);
+                                margin-top: 2px;
+                                /*   position: absolute; */
+                                width: 100%;
+                                bottom: 0;
+                            }
+
+                                .footer span {
+                                    color: #38bdf8;
+                                }
+
+                            .logo-left {
+                                height: 72px;
+                                margin-right: 10px;
+                                object-fit: contain;
+                                background: #fff;
+                                border-radius: 10px;
+                                padding: 8px;
+                            }
+
+                            .logo-right {
+                                height: 72px;
+                                margin-right: 10px;
+                                object-fit: contain;
+                            }
+
+                            .container-fluid {
+                                max-width: 1300px;
+                            }
+
+                            .form-control::placeholder {
+                                color: #ffffff; /* soft gray */
+                                opacity: 1; /* remove default opacity */
+                            }
+
+                            i.bi {
+                                color: #fff !important;
+                                font-size: 16px;
+                            }
+
+                            .text-info {
+                                --bs-text-opacity: 1;
+                                color: rgb(255 255 255) !important;
+                            }
+
+                            .status-card h6 {
+                                /* background: linear-gradient(to right, #38bdf8, #14b8a6); */
+                                background: #cdcdcd;
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                font-size: 17px;
+                            }
+
+                            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+                                color: black !important;
+                            }
+                    </style>
+                    <style>
+                            #map {
+                                height: 400px; /* REQUIRED */
+                                width: 100%;
+                                backdrop-filter: blur(20px);
+                                border: 1px solid rgba(255,255,255,0.08);
+                                border-radius: 20px;
+                                padding: 30px;
+                                box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+                                transition: 0.3s;
+                                padding-bottom: 0;
+                            }
+
+                            .leaflet-container {
+                                background: #293546;
+                            }
+
+                            .leaflet-popup-content-wrapper {
+                                border-radius: 6px;
+                                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                            }
+
+                            .leaflet-interactive {
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                            }
+
+
+
+                            .manual-link {
+                                font-weight: 600;
+                                color: #0d6efd;
+                                text-decoration: none;
+                            }
+
+                                .manual-link:hover {
+                                    text-decoration: underline;
+                                }
+
+                            .visitor-counter {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 6px;
+                            }
+
+                            .digit-container {
+                                display: flex;
+                                gap: 4px;
+                            }
+
+                            .digit-box {
+                                width: 26px;
+                                height: 30px;
+                                background: #0f172a;
+                                color: #38bdf8;
+                                font-weight: 700;
+                                font-size: 16px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 4px;
+                                border: 1px solid #38bdf8;
+                                box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
+                            }
+                    </style>
+                </head>
+
+                <body>
+
+                    <div class="main-wrapper">
+
+                        <!-- HEADER -->
+                        <div class="header-section">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 text-center ">
+                                        <img src="/RERA/rera-logo.png" class="img-fluid logo-left">
+                                        </div>
+                                        <div class="col-md-8 text-center">
+                                            <h2>Real Estate Regulatory Authority</h2>
+                                            <h6>Complaint Application - Government of Telangana</h6>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <img src="/RERA/rise.png" class="img-fluid logo-right">
+                                            </div>
+                                        </div>
+
+                                        <!-- Login Buttons BELOW header -->
+
+                                    </div>
+                                </div>
+
+                                <!-- MAIN -->
+                                <div class="container-fluid mt-3">
+                                    <div class="row g-4">
+                                        <div class="text-end mt-4">
+                                            <button class="btn btn-premium me-2"
+                                                    onclick="location.href='/Home/Login'">
+                                                Login
+                                            </button>
+
+                                            <button class="btn btn-premium"
+                                                    onclick="location.href='/Home/UserRegistration'">
+                                                New User
+                                            </button>
+                                        </div>
+                                        <!-- MAP -->
+                                        <div class="col-md-4">
+                                            <div id="map"></div>
+
+                                            <div id="map-footer-label" style="display:none;">
+                                                District: <span id="selectedDistrictName"></span>
+                                            </div>
+                                            <!-- <img src="~/RERA/Tg-Map.png" class="img-fluid map-img"> -->
+                                        </div>
+
+                                        <!-- INSTRUCTIONS -->
+                                        <div class="col-md-4">
+                                            <div class="glass-card">
+                                                <h5 class="mb-4 text-center">Instructions to Citizens</h5>
+
+
+                                                <ul class="list-unstyled instruction-list">
+                                                    <li>
+                                                        <i class="bi bi-person-plus-fill text-info me-2"></i>
+                                                        User Registration (Create Account)
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-box-arrow-in-right text-info me-2"></i>
+                                                        Login to Portal
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-file-earmark-text text-info me-2"></i>
+                                                        Fill Application (Form M / N)
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-cloud-upload text-info me-2"></i>
+                                                        Upload Proper Evidence
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-credit-card text-info me-2"></i>
+                                                        Pay Application Fee
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-calendar-check text-info me-2"></i>
+                                                        Attend Hearing as per Instructions
+                                                    </li>
+                                                </ul>
+
+                                                <div class="manual-box text-center mb-3">
+                                                    <i class="bi bi-journal-text me-1"></i>
+                                                    For detailed steps refer the
+                                                    <a href="/documents/tg_rera_user_manual(complaint).pdf" class="manual-link">
+                                                        User Manual
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- STATUS -->
+                                        <div class="col-md-4">
+
+                                            <div class="search-box mb-2 position-relative">
+                                                <span>Know your Status</span>
+
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="txtApplicationNo"
+                                                       placeholder="Application No. / Case No.">
+
+                                                <i class="fa fa-search status-search-icon"
+                                                   id="btngetstatus"></i>
+                                            </div>
+
+                                            <div class="glass-card status-card" style="display:none">
+                                                <div>
+                                                    <h6>Complaints Registered</h6>
+                                                    <h3 class="text-info" id="TtlComplCount">0</h3>
+                                                </div>
+                                                <img src="/RERA/registered-agent.jpg" width="50%" class="rounded">
+                                                </div>
+
+                    <div class="glass-card status-card" style="display:none">
+                                                    <div>
+                                                        <h6>Complaints Disposed</h6>
+                                                        <h3 class="text-info" id="compmatterdisCount">0</h3>
+                                                    </div>
+                                                    <img src="/RERA/Disposed.jpg" width="50%" class="rounded">
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                        <!-- FOOTER -->
+
+                                        <div class="footer">
+
+                                            <p>
+                                                Telangana Real Estate Regulatory Authority
+                                                DTCP Building, Ground Floor, 640,
+                                                A.C.Guads, Masab Tank, Opp. PTI Building,
+                                                Hyderabad – 500004.<br>
+                                                Phone No.: 040-29394973, 040-29394974 ||
+                                                Whatsapp Number: 9000006301<br>
+                                                TG RERA Office mail ID: rera-maud[at]telangana[dot]gov[dot]in  ||
+                                                TG RERA Secretary mail ID: secy-rera-maud[at]telangana[dot]gov[dot]in ||
+                                                Office Timings: Monday to Saturday 10:30 AM to 5:00 PM
+                                            </p>
+
+
+                                            <footer class="container">
+                                                <div class="row align-items-center text-center text-lg-start">
+
+                                                    <!-- Left -->
+                                                    <div class="col-lg-4 col-md-4">
+                                                        <span class="text-white">
+                                                            All Rights Reserved © TG RERA 2026
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Center (Visitor Counter) -->
+                                                    <div class="col-lg-4 col-md-4 text-center">
+                                                        <div class="visitor-counter">
+                                                            <span class="text-white me-2" style="font-size:14px;">
+                                                                <i class="bi bi-people-fill"></i> Visitors :
+                                                            </span>
+
+                                                            <div class="digit-container">
+                                                                        <span class="digit-box">0</span>
+                                                                        <span class="digit-box">1</span>
+                                                                        <span class="digit-box">6</span>
+                                                                        <span class="digit-box">0</span>
+                                                                        <span class="digit-box">9</span>
+                                                                        <span class="digit-box">0</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 col-md-4 text-lg-end">
+                                                        <span class="text-white">
+                                                            Designed &amp; Developed by
+
+
+                                                            <img src="/rerav3/assets/images/footer-logo.png" style="width:100px;background-color:white" />
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </footer>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color:#48446b; color:#fff;">
+                                                    <h5 class="modal-title" id="statusModalLabel">Status of the Application</h5>
+                                                    <button type="button" class="close btnstatusclose" data-dismiss="modal"
+                                                            style=" font-size: 28px;
+                                                        font-weight: bold;
+                                                        color: red;
+                                                        background: transparent;
+                                                        border: none;
+                                                        position: absolute;
+                                                        right: 15px;
+                                                        /* top: 10px; */
+                                                        cursor: pointer;"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                </div>
+
+                                                <div class="modal-footer border-0 justify-content-ens">
+                                                    <button type="button" class="btn btn-secondary btnstatusclose" data-dismiss="modal"
+                                                            style="background-color:#48446b; border-color:#48446b; color:#fff;">
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script src="/RERAV3/assets/js/bootstrap.bundle.min.js"></script>
+
+                                    <script src="/rerav3/assets/js/sweetalert2.all.min.js"></script>
+                                    <script src="/rerav3/assets/js/jquery-3.6.0.min.js"></script>
+                                    <script src="/rerav3/assets/js/leaflet.js"></script>
+                                    <script src="/rerav3/assets/js/leaflet.fullscreen.min.js"></script>
+
+                                    <link href="/rerav3/assets/css/jquery.datatables.min.css" rel="stylesheet" />
+                                    <script src="/rerav3/assets/js/jquery.datatables.min.js"></script>
+                                    <script>
+                                            //Modal button close
+                                            $(".btnstatusclose").click(function () { $("#statusModal").modal("hide"); });
+                                            //Bind status in modal
+                                            $("#btngetstatus").click(function () {
+
+                                                var appNo = $("#txtApplicationNo").val().trim();
+
+                                                if (appNo === "") {
+                                                    Swal.fire("Error", "Enter Application Number / Case No", "error");
+                                                    return;
+                                                }
+
+                                                $.ajax({
+                                                    url: '/Home/Get_StatusByAppCaseNo',
+                                                    type: 'GET',
+                                                    data: { ApplicationNo: appNo },
+                                                    success: function (response) {
+
+                                                        if (response.success) {
+
+                                                            var data = response.data;
+
+                                                            if (!Array.isArray(data)) {
+                                                                data = [data];
+                                                            }
+
+                                                            if (data.length === 0) {
+                                                                Swal.fire("Info", "No records found", "info");
+                                                                return;
+                                                            }
+
+                                                            // 🔥 Destroy old DataTable if exists
+                                                            if ($.fn.DataTable.isDataTable('#basic-datatable')) {
+                                                                $('#basic-datatable').DataTable().destroy();
+                                                            }
+
+                                                            var table = '<div class="table-responsive">';
+                                                            table += '<table id="basic-datatable" class="table table-striped table-bordered bordered-table">';
+                                                            table += '<thead class="table-light"><tr>';
+                                                            table += '<th style="background:#48446b !important; color:#fff !important; text-align:center !important;">Application ID</th>';
+                                                            table += '<th style="background:#48446b !important; color:#fff !important; text-align:center !important;">Application Created Date</th>';
+                                                            table += '<th style="background:#48446b !important; color:#fff !important; text-align:center !important;">Complaints VS Respondent</th>';
+                                                            table += '<th style="background:#48446b !important; color:#fff !important; text-align:center !important;">Status</th>';
+                                                            table += '</tr></thead><tbody>';
+                                                            $.each(data, function (index, item) {
+                                                                table += '<tr>';
+                                                                table += `<td>${item.application_ID ?? ''}</td>`;
+                                                                table += `<td>${item.application_Created_Date ?? ''}</td>`;
+                                                                table += `<td>${item.complainantVsRespondent ?? ''}</td>`;
+                                                                table += `<td>${item.status ?? ''}</td>`;
+                                                                table += '</tr>';
+                                                            });
+
+                                                            table += '</tbody></table></div>';
+
+                                                            $("#statusModal .modal-body").html(table);
+
+                                                            // 🔥 Initialize DataTable
+                                                            $('#basic-datatable').DataTable({
+
+                                                                lengthMenu: [[5, 10, 15, -1], [5, 10, 15, "All"]],
+                                                                pageLength: 5,
+                                                                language: {
+                                                                    emptyTable: "No Data",
+                                                                    search: "Search:",
+                                                                    lengthMenu: "Show _MENU_ records",
+                                                                    paginate: {
+                                                                        next: "Next",
+                                                                        previous: "Previous"
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            $("#statusModal").modal("show");
+                                                        }
+                                                        else {
+                                                            Swal.fire("Error", response.message, "error");
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        Swal.fire("Error", "Failed to fetch status", "error");
+                                                    }
+                                                });
+
+                                            });
+
+                                            //bind counts
+                                            $(document).ready(function () {
+                                                loadLandingHomeCounts();
+                                            });
+
+                                            function loadLandingHomeCounts() {
+                                                $.ajax({
+                                                    url: '/Home/Get_landingHomeCount',
+                                                    type: 'GET',
+                                                    success: function (response) {
+                                                        if (response.success) {
+
+                                                            // Bind values to h4
+                                                            $('#TtlComplCount').text(response.data.noOfComplaintsRegistered);
+                                                            $('#compmatterdisCount').text(response.data.noOfComplaintsResolved);
+
+                                                        } else {
+                                                            Swal.fire('Error', response.message, 'error');
+                                                        }
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                                                    }
+                                                });
+                                            }
+                                    </script>
+                                    <script>
+
+                                            var districtProjectData = [{"districtcode":"1","districtname":"ADILABAD","projectCount":"0"},{"districtcode":"9","districtname":"BHADRADRI KOTHAGUDEM ","projectCount":"0"},{"districtcode":"25","districtname":"HYDERABAD","projectCount":"8"},{"districtcode":"28","districtname":"JAGITHYAL","projectCount":"0"},{"districtcode":"6","districtname":"JANGAON","projectCount":"0"},{"districtcode":"5","districtname":"JAYASHANKAR","projectCount":"0"},{"districtcode":"17","districtname":"JOGULAMBA GADWAL","projectCount":"0"},{"districtcode":"2","districtname":"KAMAREDDY","projectCount":"0"},{"districtcode":"27","districtname":"KARIMNAGAR","projectCount":"0"},{"districtcode":"8","districtname":"KHAMMAM","projectCount":"1"},{"districtcode":"26","districtname":"KUMURAM BHEEM (ASIFABAD)","projectCount":"0"},{"districtcode":"7","districtname":"MAHABUBABAD","projectCount":"0"},{"districtcode":"14","districtname":"MAHABUBNAGAR","projectCount":"0"},{"districtcode":"12","districtname":"MANCHERIAL","projectCount":"0"},{"districtcode":"10","districtname":"MEDAK","projectCount":"2"},{"districtcode":"22","districtname":"MEDCHAL-MALKAJGIRI","projectCount":"27"},{"districtcode":"16","districtname":"NAGARKURNOOL","projectCount":"0"},{"districtcode":"18","districtname":"NALGONDA","projectCount":"0"},{"districtcode":"23","districtname":"NIRMAL","projectCount":"0"},{"districtcode":"31","districtname":"NIZAMABAD","projectCount":"1"},{"districtcode":"29","districtname":"PEDDAPALLI","projectCount":"0"},{"districtcode":"30","districtname":"RAJANNA SIRCILLA","projectCount":"0"},{"districtcode":"24","districtname":"RANGA REDDY","projectCount":"42"},{"districtcode":"11","districtname":"SANGAREDDY","projectCount":"27"},{"districtcode":"13","districtname":"SIDDIPET","projectCount":"1"},{"districtcode":"19","districtname":"SURYAPET","projectCount":"1"},{"districtcode":"21","districtname":"VIKARABAD","projectCount":"0"},{"districtcode":"15","districtname":"WANAPARTHY","projectCount":"0"},{"districtcode":"4","districtname":"WARANGAL RURAL ","projectCount":"0"},{"districtcode":"3","districtname":"WARANGAL URBAN","projectCount":"1"},{"districtcode":"20","districtname":"YADADRI BHUVANAGIRI","projectCount":"4"}];
+
+                                            var map = L.map('map', {
+                                                zoomControl: false,
+                                                scrollWheelZoom: false,
+                                                attributionControl: false
+                                            }).setView([17.9000, 79.2000], 7);
+
+                                            var brightColors = [
+                                                '#1E88E5',
+                                                '#43A047',
+                                                '#FB8C00',
+                                                '#8E24AA',
+                                                '#E53935',
+                                                '#00ACC1',
+                                                '#FDD835',
+                                                '#3949AB',
+                                                '#00897B',
+                                                '#C2185B'
+                                            ];
+
+                                            var geojsonLayer;
+
+                                            fetch('/RERAV3/assets/shapefile/TGDistrictShape.geojson')
+                                                .then(response => response.json())
+                                                .then(geojsonData => {
+
+                                                    geojsonData.features.forEach((feature, index) => {
+
+                                                        var geoDistrictId = feature.properties.Dist_ID;
+
+                                                        var district = districtProjectData?.find(d =>
+                                                            d.districtcode === geoDistrictId
+                                                        );
+
+                                                        feature.properties.projectCount = district ? district.projectCount : "0";
+                                                        feature.properties.color = brightColors[index % brightColors.length];
+                                                    });
+
+                                                    geojsonLayer = L.geoJSON(geojsonData, {
+
+                                                        style: function (feature) {
+                                                            return {
+                                                                fillColor: feature.properties.color,
+                                                                weight: 1,
+                                                                color: '#ffffff',
+                                                                fillOpacity: 0.8
+                                                            };
+                                                        },
+
+                                                        onEachFeature: function (feature, layer) {
+
+                                                            // layer.bindPopup(
+                                                            //     `<div style="font-family:Segoe UI; font-size:14px;">
+                                                            //             <b>${feature.properties.District}</b><br/>
+                                                            //             No. of Complaints: ${feature.properties.projectCount}
+                                                            //         </div>`
+                                                            // );
+
+                                                            // layer.on('mouseover', function () {
+
+                                                            //     this.setStyle({
+                                                            //         weight: 2,
+                                                            //         color: '#ffffff',
+                                                            //         fillOpacity: 1
+                                                            //     });
+
+                                                            //     this.openPopup();
+                                                            // });
+
+                                                            // layer.on('mouseout', function () {
+
+                                                            //     geojsonLayer.resetStyle(this);
+
+                                                            //     this.closePopup();
+                                                            // });
+
+                                                        }
+
+                                                    }).addTo(map);
+
+                                                })
+                                                .catch(error => {
+                                                    console.error("GeoJSON Load Error:", error);
+                                                });
+
+                                    </script>
+                                    <script>
+                                            function preventBack() { window.history.forward(); }
+                                            setTimeout("preventBack()", 0);
+                                            window.onunload = function () { null };
+                                    </script>
+                                </body>
+                            </html>

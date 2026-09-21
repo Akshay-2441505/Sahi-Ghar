@@ -1,0 +1,5370 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<html lang="kn" translate="no" class="notranslate">
+
+<head >
+<meta name="google-site-verification" content="xPj3x9LtOkfce6ZFLqQ8b2tMa-qjhgtkvVoI26VsZQI" />
+<link rel="shortcut icon" href="/resources/images/reralogo.ico">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="x-content-type-options" content="nosniff">
+	<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'"> -->
+	 <!-- <meta http-equiv="X-Frame-Options" content="deny"> -->
+	 <meta http-equiv="X-XSS-Protection" content="1">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- <meta name="robots" content="noindex" /> -->
+<meta name="google" content="notranslate">
+<title>RERA Project List</title>
+	
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.js" 
+integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+	
+<link rel="stylesheet" href="/resources/css/style2.css">
+
+
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="/resources/css/style.css?rr=78889" rel="stylesheet"/>
+<link href="/resources/css/font-awesome.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="/resources/css/datatable/jquery.dataTables.css">
+<link href="/resources/css/dashboard.css" rel="stylesheet"/>
+
+<script src="/resources/js/jquery.min.js"></script>
+<script src="/resources/js/bootstrap.min.js"></script>
+<script src="/resources/js/jquery.ticker.js?xzx=099"></script>
+<script src="/resources/js/site.js"></script>
+<script src="/resources/js/common.js"></script> 
+<script src="/resources/js/commdropdown.js"></script> 
+<script src="/resources/js/tripleencoding.js"></script>  
+<script src="/resources/js/validation.js"></script>  
+<script src="/resources/js/raphael-min.js"></script> 
+<script src="/resources/js/morris.min.js"></script>  
+<script type="text/javascript" language="javascript" src="/resources/js/jquery.dataTables.js"></script>
+<script src="/resources/js/DatePicker/jquery.datepick.js"></script>
+<link href="/resources/js/DatePicker/flora.datepick.css" rel="stylesheet"/>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css">
+<script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>  
+
+<script>
+function disableBackButton()
+{
+window.history.forward();
+}
+
+if(top!=self){
+    top.location.replace(document.location);
+    document.location='';
+}
+
+_ctxpath='/';
+
+
+	 if (!navigator.onLine) 
+{ 
+	document.body.innerHTML = 'Loading...'; 
+	window.location = 'ErrorPage.html'; 
+} 
+	 
+	 jQuery(document).ready(function(){
+		  jQuery(function() {
+		        jQuery(this).bind("contextmenu", function(event) {
+		            event.preventDefault();
+		            alert('Due to security reason, Right click is not allowed!!')
+		        });
+		    });
+		});
+	 
+	window.oncontextmenu = function () {
+	    return false;
+	}
+	
+	$(document).keydown(function (event) {
+	    if (event.keyCode == 123) {
+	    	alert('Due to security reason, This function has been disabled!!')
+	        return false;
+	    }
+	    else if ((event.ctrlKey && event.shiftKey && event.keyCode == 73) || (event.ctrlKey && event.shiftKey && event.keyCode == 74) || (event.ctrlKey && event.keyCode == 85) || (event.ctrlKey && event.shiftKey && event.keyCode == 85) || (event.ctrlKey && event.shiftKey && event.keyCode == 67)
+	    		|| (event.metaKey && event.altKey && event.keyCode == 73) || (event.metaKey && event.altKey && event.keyCode == 74) || (event.metaKey && event.altKey && event.keyCode == 85) || (event.metaKey && event.altKey && event.keyCode == 67)) {
+	    	alert('Due to security reason, This function has been disabled!!')
+	    	return false;
+	    }
+	});
+	
+	$(window).load(function() {
+		// Animate loader off screen
+		$("#loader").fadeOut("slow");;
+	});
+
+	jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+	    "date-uk-pre": function ( a ) {
+	        var ukDatea = a.split('/');
+	        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+	    },
+
+	    "date-uk-asc": function ( a, b ) {
+	        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+	    },
+
+	    "date-uk-desc": function ( a, b ) {
+	        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+	    }
+	    } ); 
+</script>
+<style>
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+}
+
+footer {
+	background-color: #3948B1 !important;
+}
+
+.btn-style {
+background-color: #3948B1 !important;
+}
+
+.theme-clr {
+color: #3948B1 !important;
+}
+
+.orange {
+    background-color: #3948B1 !important;
+}
+
+.inner_wrapper h1 span {
+    color: #3948B1 !important;
+}
+#loader {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(255,255,255,0.7);
+    //background: url(/resources/images/reralogo.png) center;
+    z-index:9999;
+}
+
+@-webkit-keyframes spin {
+	0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loader::after {
+       content:'';
+    display:block;
+    position:absolute;
+    border: 12px solid #f3f3f3;
+    left:48%;top:40%;
+    width:100px;height:100px;
+    border-style:solid;
+    border-color:#3948B1;
+    border-top-color:transparent;
+    
+    //background: url(/resources/images/reralogo.png) center; 
+    border-width: 12px;
+    border-radius:50%;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+
+</style>
+</head>
+
+ 
+<body onload="disableBackButton()">
+		<!--loader-->
+		<div id="loader"></div>
+		
+		<header id="header">
+			
+
+
+
+
+
+
+<a href="/home" style="float: left;background: #3948B1;color:white;margin-bottom: 0;padding-right: 10px;padding-left: 10px;font-weight: bold;border: #aecbd9 1px solid;" class="officialclass">ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರದ ಅಧಿಕೃತ ಜಾಲತಾಣ</a>
+
+             <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="suare-icons a-plus icon-plus clsButton "
+						id="btnFontIncrease"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ+</span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="round-icons a-normal icon-normal clsButton "
+						id="bntFontNormal"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ&nbsp;</span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="round-icons a-minus icon-minus clsButton "
+						id="bntFontDecrease"><a href="#"><span
+							class="accebilility_icon" style="background-color: #3948b1;color: white;">ಆ- </span> </a></li>
+				</ul>
+				 <ul style="float: right;margin-bottom: 0;" class="font-zoom">
+					<li class="acceblity"><a href="#"><span
+							class="accebilility_icon disabbil">ಆ </span> </a></li>
+				</ul>
+				
+			
+     	
+     		<a style="float: right;background: #3948B1;color:white;padding-right: 10px;font-weight: bold;border-bottom: #aecbd9 1px solid;" href="/changeLanguage?language=en">&nbsp;English &nbsp;</a>
+     	
+     	
+    
+	
+
+  <nav style="background-color: #3948b1 !important;border-radius: 0px;border: 0;"
+    class="target navbar navbar-expand-lg navbar-dark sticky-top bg-primary">
+    <div class="container">
+
+    </div>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="main_nav">
+      <ul class="navbar-nav">
+
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"> <a class="nav-link" href="/home" style="color: #aecbd9; font-weight: bold;">ಮುಖಪುಟ</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;"> ರೇರ ವಿವರಗಳು</a>
+          <ul class="dropdown-menu">
+
+            <li><a class="dropdown-item2" href="/aboutUs">ರೇರ ವಿವರಗಳು</a></li>
+            <li><a class="dropdown-item2" href="/orgStructurePage">ಸಂಸ್ಥೆಯ ಫಲಕ</a></li>
+            <li><a class="dropdown-item2" href="/mediaGallery">ರೇರ ಚಿತ್ರಗಳು</a></li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಕೆ-ಆರ್‌ಇಎಟಿ</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item2" href="/aboutKREAT">ಕೆ-ಆರ್‌ಇಎಟಿ ವಿವರಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/objectiveKREAT">ಉದ್ದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/organisationChartKREAT">ಸಂಸ್ಥೆಯ ಫಲಕ</a></li>
+			<li><a class="dropdown-item2" href="/filingAppeal">ಮೇಲ್ಮನವಿಯನ್ನು ಸಲ್ಲಿಸು</a></li>
+			<li><a class="dropdown-item2" href="/enforcementOfTribunal">ನ್ಯಾಯ ಮಂಡಳಿಯ ಜಾರಿ</a></li>
+			<li><a class="dropdown-item2" href="/regulationsKREAT">ನಿಯಮಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/workingHoursKREAT">ಕೆಲಸದ ಸಮಯ</a></li>
+			<li><a class="dropdown-item2" href="/contactKREAT">ಸಂಪರ್ಕಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/tribunalDailyCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewHearingList">ದೈನಂದಿನ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/tribunalDisposedList">ತೀರ್ಪುಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/notificationsKREAT">ಸಾರ್ವಜನಿಕ ಪ್ರಕಟಣೆ</a></li>
+			<li><a class="dropdown-item2" href="/resources/notifications/KREAT_Notification3.pdf" target="_blank">ಕೆ-ಆರ್‌ಇಎಟಿ ಶುಲ್ಕ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ನೋಂದಣಿ</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/initProjectRegistration">ಯೋಜನೆಯ ನೋಂದಣಿ</a></li>
+			<li><a class="dropdown-item2" href="/initAgentRegistration">ಏಜೆಂಟ್ ನೋಂದಣಿ</a></li> 
+			<li><a class="dropdown-item2" href="/complaintHome">ದೂರು ನೋಂದಣಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForExtensionPage">ಯೋಜನೆಯ ವಿಸ್ತರಣೆಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/changeRequestPage">ಬದಲಾವಣೆ ವಿನಂತಿಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/changeRequestAgentPage">Apply for Agent Change Request</a></li>
+			<li><a class="dropdown-item2" href="/postRegLoginPage">ಪೋಸ್ಟ್ ನೋಂದಣಿ ಮತ್ತು ತ್ರೈಮಾಸಿಕ ನವೀಕರಣ</a></li>
+			<li><a class="dropdown-item2" href="/reratransfer/applyForTransferofRights">ಹಕ್ಕುಗಳ ವರ್ಗಾವಣೆ</a></li>
+			
+			<li><a class="dropdown-item2" href="/applyForModificationPage">ಯೋಜನೆಯ ಮಾರ್ಪಾಡುಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForCompletionPage">ಯೋಜನೆ ಪೂರ್ಣಗೊಳಿಸುವಿಕೆಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForAgentRenewal">ಏಜೆಂಟ್ ನವೀಕರಣಕ್ಕಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ</a></li>
+			<li><a class="dropdown-item2" href="/applyForAnnualReport">ವಾರ್ಷಿಕ ಲೆಕ್ಕಪರಿಶೋಧನೆ ವರದಿಯನ್ನು ಸಲ್ಲಿಸಿ</a></li>
+			
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಸೇವೆಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/viewAllProjects">ಯೋಜನೆಯ ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllAgents">ಏಜೆಂಟ್ ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllComplaints">ದೂರು ಸ್ಥಿತಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewAllComplaintDetails">Complaints Under Process</a></li>
+			<li><a class="dropdown-item2" href="/viewAllJudgements">Search Orders</a></li>
+			<li><a class="dropdown-item2" href="/viewAllInterimOrders">ಮಧ್ಯಂತರ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewAllProjectOrders">ಪ್ರಾಧಿಕಾರದ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewAllAOorders">Orders of Adjudicating Officer</a></li>
+			<li><a class="dropdown-item2" href="/viewAllLokAdalatComplaints">ಲೋಕ ಅದಾಲತ್ ಆದೇಶಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/viewRenewalProjects">ಯೋಜನೆಯ ವಿಸ್ತರಣೆ ಸ್ಥಿತಿ</a><li>
+			
+			<li><a class="dropdown-item2" href="/pendingPaymentPage">ಆನ್‌ಲೈನ್ ಪಾವತಿ ಸ್ಥಿತಿ</a></li>
+			
+			<li><a class="dropdown-item2" href="/applyForCertifiedCopy">ದೃಢೀಕೃತ ಪ್ರತಿಯನ್ನು ಪಡೆಯಲು ಮನವಿ</a></li>
+			<li><a class="dropdown-item2" href="/viewRevenueRecoveryList">ಭೂಕಂದಾಯ ವಸೂಲಾತಿ ಪ್ರಮಾಣ ಪತ್ರ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/rtiPage">ಮಾಹಿತಿ ಹಕ್ಕು ಕಾಯ್ದೆ</a></li>
+			<li><a class="dropdown-item2" href="/projectDailyCauseList">ಯೋಜನೆಯ ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+			<li><a class="dropdown-item2" href="/agentDailyCauseList">ಏಜೆಂಟ್ ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ</a></li>
+	   		
+	   		
+	   		
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ದೂರುಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/dailyCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ ( ನ್ಯಾಯ ನಿರ್ಣಯಾಧಿಕಾರಿ )</a></li>
+            <li><a class="dropdown-item2" href="/audjudicatingDailyOrderList">ದೈನಂದಿನ ಆದೇಶಗಳು ( ನ್ಯಾಯ ನಿರ್ಣಯಾಧಿಕಾರಿ )</a></li>
+            <li><a class="dropdown-item2" href="/authorityCauseList">ದೈನಂದಿನ ಕಾರಣ ಪಟ್ಟಿ ( ಪ್ರಾಧಿಕಾರ )</a></li>
+            <li><a class="dropdown-item2" href="/authorityDailyOrderList">ದೈನಂದಿನ ಆದೇಶಗಳು ( ಪ್ರಾಧಿಕಾರ )</a></li>
+			<li><a class="dropdown-item2" href="/promoterComplaintReport">ಪ್ರವರ್ತಕವಾರು ದೂರುಗಳ ವರದಿ</a></li>
+			<li><a class="dropdown-item2" href="/projectComplaintReport">ಯೋಜನವಾರು ದೂರುಗಳ ವರದಿ</a></li>
+			<li><a class="dropdown-item2" href="/complaintRealizationList">ಫಿರ್ಯಾದುಗಳಲ್ಲಿ ವಸೂಲಾದ ಪ್ರಕರಣ ಪಟ್ಟಿ</a></li>
+          </ul>
+        </li>
+
+         <li class="nav-item"> <a class="nav-link" href="/helpdeskLoginPage" style="color: #aecbd9; font-weight: bold;">ಸಹಾಯವಾಣಿ</a>
+        </li>
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ನೋಂದಾಯಿಸದ ಯೋಜನೆಗಳು</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/unregProjectList">ತನಿಖೆಯ ಅಡಿಯಲ್ಲಿ ಯೋಜನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/reportRegForm">ನೋಂದಾಯಿಸದ ಯೋಜನೆಗಳನ್ನು ವರದಿ ಮಾಡಿ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಪ್ರಕಟಣೆ </a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/circularPage">ಸುತ್ತೋಲೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/notificationPage">ಸಾರ್ವಜನಿಕ ಪ್ರಕಟಣೆ</a></li>
+			<li><a class="dropdown-item2" href="/tenderPage">ಟೆಂಡರ್ ಪ್ರಕಟಣೆ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಸಹಾಯ </a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/downloadPage">ಡೌನ್ಲೋಡ್ಗಳು</a></li>
+			
+			<li><a class="dropdown-item2" href="/resources/staticpage/FAQ.pdf" target="_blank">ರೇರಾ ಕಾಯ್ದೆಯ ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/resources/staticpage/KARNATKA_FAQs.pdf" target="_blank">ರೇರಾ ನಿಯಮಗಳ ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+			<li><a class="dropdown-item2" href="/resources/downloads/RERA_FAQ.pdf" target="_blank">ಪುನರಾವೃತ ಪ್ರಶ್ನೆಗಳು</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"> <a class="nav-link" href="/contactUsPage" style="color: #aecbd9; font-weight: bold;">ಸಂಪರ್ಕಿಸಿ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"
+            style="color: #aecbd9; font-weight: bold;">ಲಾಗ್ ಇನ್</a>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a class="dropdown-item2" href="/authorityLoginPage">ಅಧಿಕಾರಿಗಳ ಲಾಗಿನ್</a></li>
+            
+            <li><a class="dropdown-item2" href="/rerauser/loginPage">ಟೆಂಪ್ ಲಾಗಿನ್</a></li>
+            <li><a class="dropdown-item2" href="/publicDomainLoginPage">ಸಾರ್ವಜನಿಕರ ಲಾಗಿನ್</a></li>
+            <li><a class="dropdown-item2" href="/complaintHome">ದೂರು ಲಾಗಿನ್</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div> <!-- navbar-collapse.// -->
+  </nav>
+<div class="target">
+
+
+
+
+
+
+
+<div class="row" style="flex-wrap: nowrap;margin: auto">
+<div class="col-md-3" style="background: linear-gradient(to right, #3948B1 0%, #AECBD9 100%, #AECBD9 100%) repeat scroll 0 0;">
+<img src="/resources/images/GOK.png" title="ಕರ್ನಾಟಕ ಸರ್ಕಾರ" style="float: left;" height="70px">
+<img src="/resources/images/cm2026.jpeg" alt="Hon'ble Chief Minister" title="ಮಾನ್ಯ ಮುಖ್ಯಮಂತ್ರಿಗಳು" style="border-radius: 200%;float: left;margin-right: 5px;" height="70" width="70"/>
+<span style="font-weight: bold;float: left;text-align: left;margin-top: 3%;color: white;font-size: 12px!important;" class="aboutRera">ಶ್ರೀ ಡಿ.ಕೆ. ಶಿವಕುಮಾರ್<br><small>ಮಾನ್ಯ ಮುಖ್ಯಮಂತ್ರಿಗಳು</small></span>
+</div>
+<div class="col-md-6 top-center-title1"  style="flex:auto;">
+       ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರ <br>ಕರ್ನಾಟಕ ಸರ್ಕಾರ
+</div>
+<div class="col-md-3" style="background: linear-gradient(to left, #3948B1 0%, #AECBD9 100%, #AECBD9 100%) repeat scroll 0 0;margin-left: auto;">
+<img src="/resources/images/logos.png" title="ಕರ್ನಾಟಕ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ನಿಯಂತ್ರಣ ಪ್ರಾಧಿಕಾರ" alt="" height="70px" style="float: right;">
+<img src="/resources/images/hm2023.jpg" alt="Hon'ble Housing Minister" title="ಮಾನ್ಯ ವಸತಿ ಸಚಿವರು" style="border-radius: 200%;float: right;margin-left: 5px;" height="70" width="70"/>
+<span class="aboutRera" style="font-weight: bold;float:right;text-align: right;margin-top: 3%;color:white;">ಶ್ರೀ ಬಿ.ಝಡ್. ಜಮೀರ್<br>ಅಹಮದ್ ಖಾನ್<br><small>ಮಾನ್ಯ ವಸತಿ ಸಚಿವರು</small></span>
+</div>
+</div> 
+</div>
+
+
+
+		<button onclick="topFunction()" id="myBtn" title="Go to top">
+		<i class="fa fa-chevron-circle-up fa-2x" aria-hidden="true"></i>
+	</button>
+	<button type="button" id="myBot" value="bottom" onclick="gobottom();">
+		<i class="fa fa-chevron-circle-down fa-2x" aria-hidden="true"></i>
+	</button>
+	</div>
+	
+	<style>
+#myBtn {
+	display: none;
+	position: fixed;
+	bottom: 40px;
+	right: 60px;
+	z-index: 99;
+	border: none;
+	outline: none;
+	background-color: #3948B1;
+	color: white;
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 10px;
+	width: 40px;
+}
+
+#myBot {
+	position: fixed;
+	bottom: 40px;
+	right: 10px;
+	z-index: 99;
+	border: none;
+	outline: none;
+	background-color: #3948B1;
+	color: white;
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 10px;
+	width: 40px;
+}
+</style>
+			
+	<script>
+		// When the user scrolls down 20px from the top of the document, show the button
+		window.onscroll = function() {
+			scrollFunction();
+			scrollFunctionBtm()
+		};
+	
+		function scrollFunction() {
+			if (document.body.scrollTop > 20
+					|| document.documentElement.scrollTop > 20) {
+				document.getElementById("myBtn").style.display = "block";
+			} else {
+				document.getElementById("myBtn").style.display = "none";
+			}
+		}
+	
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+	
+		function scrollFunctionBtm() {
+			if (document.body.scrollTop > document.body.scrollHeight - 750
+					|| document.documentElement.scrollTop > document.body.scrollHeight - 750) {
+				document.getElementById("myBot").style.display = "none";
+			} else {
+				document.getElementById("myBot").style.display = "block";
+			}
+		}
+
+		function gobottom() {
+			console.log("scrollHeight" + document.body.scrollHeight)
+			console.log("scrollTop" + document.body.scrollTop)
+			window.scrollTo(0, document.body.scrollHeight);
+		}
+	</script>
+		</header>
+	
+		<section id="sidemenu">
+			
+		</section>
+			
+		<section id="site-content">
+			
+
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+                <script>
+                
+            	var applicationArray = new Array();
+            	var applicationNameList = new Array();
+            	var applicationNameList2 = new Array();
+            	var applicationNameList3 = new Array();
+            	var applicationNameList4 = new Array();
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/090926/010582'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/090926/010582');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/180926/008944');
+            		applicationNameList3
+            		.push('SATTVA AANGANE');
+            		applicationNameList4
+            		.push('Sattva Resi Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/070926/010576'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/070926/010576');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/150926/008943');
+            		applicationNameList3
+            		.push('GODREJ FLORENNE PHASE II');
+            		applicationNameList4
+            		.push('Godrej Properties Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/301/PR/070926/010574'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/301/PR/070926/010574');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/301/PR/180926/008945');
+            		applicationNameList3
+            		.push('SATTVA EKATRA');
+            		applicationNameList4
+            		.push('SHIRASA CONSTRUCTION PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/050926/010569'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/050926/010569');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/150926/008942');
+            		applicationNameList3
+            		.push('GODREJ FLORENNE');
+            		applicationNameList4
+            		.push('Godrej Properties Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/030926/010566'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/030926/010566');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/110926/008940');
+            		applicationNameList3
+            		.push('JD SIGNATURE');
+            		applicationNameList4
+            		.push('JD DEVELOPERS AND PROMOTERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/010926/010559'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/010926/010559');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/090926/008924');
+            		applicationNameList3
+            		.push('EMBASSY RIVERINE');
+            		applicationNameList4
+            		.push('SUMMIT DEVELOPMENTS LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/010926/010558'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/010926/010558');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/090926/008925');
+            		applicationNameList3
+            		.push('EMBASSY SOUTH RESERVE');
+            		applicationNameList4
+            		.push('SUMMIT DEVELOPMENTS LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/290826/010555'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/290826/010555');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180926/008948');
+            		applicationNameList3
+            		.push('Provident Equinox 6');
+            		applicationNameList4
+            		.push('Provident Housing Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/280826/010551'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/280826/010551');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/110926/008939');
+            		applicationNameList3
+            		.push('BANYAN TREE');
+            		applicationNameList4
+            		.push('VENKATESH P SARATHY');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/270826/010547'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/270826/010547');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/100926/008931');
+            		applicationNameList3
+            		.push('Nikoo Homes 9 Alpine Bhartiya Garden Hill Phase-2');
+            		applicationNameList4
+            		.push('Bhartiya Urban Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/270826/010546'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/270826/010546');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/100926/008930');
+            		applicationNameList3
+            		.push('Nikoo Homes 9, Alpine, Bhartiya Garden Hill Ph-1');
+            		applicationNameList4
+            		.push('Bhartiya Urban Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/250826/010543'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/250826/010543');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/070926/008913');
+            		applicationNameList3
+            		.push('SHREE VISTARA ');
+            		applicationNameList4
+            		.push('GIRISH M SHETTY PROP- SHREE DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/210826/010534'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/210826/010534');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/150926/008941');
+            		applicationNameList3
+            		.push('Prestige Parklane');
+            		applicationNameList4
+            		.push('APEX REALTY MANAGEMENT PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/200826/010530'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/200826/010530');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/080926/008922');
+            		applicationNameList3
+            		.push('THE ROYALTON BY ZED');
+            		applicationNameList4
+            		.push('ZED ENTERPRISES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/180826/010525'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/180826/010525');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/080926/008919');
+            		applicationNameList3
+            		.push('Garden Breeze @ The Prestige City');
+            		applicationNameList4
+            		.push('PRESTIGE PROJECTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/180826/010524'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/180826/010524');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/030926/008907');
+            		applicationNameList3
+            		.push('AARADHYA GARDENS');
+            		applicationNameList4
+            		.push('SAI SAMRUDHI CONSTRUCTIONS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/170826/010521'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/170826/010521');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/020926/008905');
+            		applicationNameList3
+            		.push('AAROHANA ALTERRA');
+            		applicationNameList4
+            		.push('AAROHANA PROJECTS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/170826/010520'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/170826/010520');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/080926/008921');
+            		applicationNameList3
+            		.push('SATHVIK SIGNATURE');
+            		applicationNameList4
+            		.push('SURINENI INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/307/PR/170826/010519'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/307/PR/170826/010519');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/307/PR/250826/008894');
+            		applicationNameList3
+            		.push('MBS VASUDHA');
+            		applicationNameList4
+            		.push('H B Manjunath, C R Satish and Suguna Satish');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/150826/010516'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/150826/010516');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/110926/008934');
+            		applicationNameList3
+            		.push('AIKAM GOLF ESTATES PHASE II ');
+            		applicationNameList4
+            		.push('BCD EMPRASA LIMITED LIABILITY PARTNERSHIP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/130826/010512'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/130826/010512');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/250826/008893');
+            		applicationNameList3
+            		.push('INLAND EUPHORIA');
+            		applicationNameList4
+            		.push('INLAND BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/130826/010511'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/130826/010511');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/010926/008900');
+            		applicationNameList3
+            		.push('LIFE SPRINGS BY VAISHNODEVI');
+            		applicationNameList4
+            		.push('Vaishnodevi Ritz Estates LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/130826/010507'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/130826/010507');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/180926/008947');
+            		applicationNameList3
+            		.push('Isiri Tumkur Township');
+            		applicationNameList4
+            		.push('Venugopal A V');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1248/444/PR/120826/010505'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1248/444/PR/120826/010505');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1248/444/PR/080926/008920');
+            		applicationNameList3
+            		.push('RAMKRISHY HILL VIEW');
+            		applicationNameList4
+            		.push('RAMKRISHY INFRASTRUCTURE PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/120826/010501'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/120826/010501');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/070926/008917');
+            		applicationNameList3
+            		.push('S V S Layout');
+            		applicationNameList4
+            		.push('K V Shivakumar');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/120826/010500'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/120826/010500');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/100926/008928');
+            		applicationNameList3
+            		.push('SOGADU VILLAGE');
+            		applicationNameList4
+            		.push('S SHIVANNA AND S NAGARATHNA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/110826/010499'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/110826/010499');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/110926/008938');
+            		applicationNameList3
+            		.push('MLN Hights');
+            		applicationNameList4
+            		.push('Grib awaas builders LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1254/460/PR/110826/010497'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1254/460/PR/110826/010497');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1254/460/PR/090926/008923');
+            		applicationNameList3
+            		.push('Ananta');
+            		applicationNameList4
+            		.push('ESTEEM KINGS DWELLING PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/110826/010495'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/110826/010495');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/070926/008916');
+            		applicationNameList3
+            		.push('Chandrappa Badavane');
+            		applicationNameList4
+            		.push('Chandrappa R and Dayananda  A R');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/090826/010492'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/090826/010492');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/190826/008878');
+            		applicationNameList3
+            		.push('Boulevard at Godrej Woodscapes');
+            		applicationNameList4
+            		.push('GODREJ PROPERTIES LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/090826/010491'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/090826/010491');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/210826/008885');
+            		applicationNameList3
+            		.push('YESUYAPPA LAYOUT');
+            		applicationNameList4
+            		.push('SHANTH KUMAR, SUSANNA KUMARI, MANJULA AND PUTTAIAH');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/080826/010490'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/080826/010490');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/250826/008891');
+            		applicationNameList3
+            		.push('HILLSIDE');
+            		applicationNameList4
+            		.push('CITADEL DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/307/PR/040826/010482'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/307/PR/040826/010482');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/307/PR/180826/008874');
+            		applicationNameList3
+            		.push('Apollo Address');
+            		applicationNameList4
+            		.push('Indus Valley Properties Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/040826/010481'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/040826/010481');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180826/008875');
+            		applicationNameList3
+            		.push('Azalea at Brigade Meadows ');
+            		applicationNameList4
+            		.push('Brigade Enterprises Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/030826/010476'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/030826/010476');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/200826/008882');
+            		applicationNameList3
+            		.push('ADITI NORTH STAR');
+            		applicationNameList4
+            		.push('ADI DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/010826/010471'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/010826/010471');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/020926/008901');
+            		applicationNameList3
+            		.push('WHITESTONE TWINKLES');
+            		applicationNameList4
+            		.push('WHITESTONE PROJECTS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/310726/010469'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/310726/010469');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/200826/008883');
+            		applicationNameList3
+            		.push('SERENE HEIGHTS');
+            		applicationNameList4
+            		.push('M/S KHAIN PROPERTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/310726/010467'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/310726/010467');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/280826/008896');
+            		applicationNameList3
+            		.push('Gurukulam Nest2.0');
+            		applicationNameList4
+            		.push('PRASANNAAP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/300726/010462'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/300726/010462');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/090926/008926');
+            		applicationNameList3
+            		.push('Sai Prakash');
+            		applicationNameList4
+            		.push('Titan Developers');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/270726/010459'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/270726/010459');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/170826/008867');
+            		applicationNameList3
+            		.push('Hancu Badavane');
+            		applicationNameList4
+            		.push('Muniraju A');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1274/353/PR/250726/010457'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1274/353/PR/250726/010457');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1274/353/PR/210826/008884');
+            		applicationNameList3
+            		.push('JUKAKU LEGACY');
+            		applicationNameList4
+            		.push('HASMAI BUILDERS &amp; DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1249/447/PR/240726/010455'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1249/447/PR/240726/010455');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1249/447/PR/070926/008914');
+            		applicationNameList3
+            		.push('HARSHA FORTUNE');
+            		applicationNameList4
+            		.push('HARSHA BUILDERS AND DEVELOPERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/240726/010454'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/240726/010454');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/250826/008892');
+            		applicationNameList3
+            		.push('Disha Pursuit of Radiance');
+            		applicationNameList4
+            		.push('DISHAHABITAT HOMES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/240726/010453'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/240726/010453');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/040826/008858');
+            		applicationNameList3
+            		.push('HPR SHADES OF GREEN');
+            		applicationNameList4
+            		.push('HPR INFRA LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1263/419/PR/230726/010452'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1263/419/PR/230726/010452');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1263/419/PR/180826/008873');
+            		applicationNameList3
+            		.push('THAAI-NERALU RESIDENCY');
+            		applicationNameList4
+            		.push('M/S ISHANYA BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/230726/010448'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/230726/010448');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/170826/008868');
+            		applicationNameList3
+            		.push('Gardens of Brindavanam ');
+            		applicationNameList4
+            		.push('M/s SAMPADA HOMES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/230726/010447'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/230726/010447');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/020926/008904');
+            		applicationNameList3
+            		.push('SUNSHINE GREEN');
+            		applicationNameList4
+            		.push('SURYAKALA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/230726/010445'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/230726/010445');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/110926/008937');
+            		applicationNameList3
+            		.push('M5 ECHELON');
+            		applicationNameList4
+            		.push('Mahendra Homes Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/220726/010443'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/220726/010443');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/250826/008890');
+            		applicationNameList3
+            		.push('GOLDEN GLOW');
+            		applicationNameList4
+            		.push('AFZAL AHAMED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/220726/010442'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/220726/010442');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/040926/008911');
+            		applicationNameList3
+            		.push('SIGNATURE REGAL');
+            		applicationNameList4
+            		.push('SIGNATURE DWELLINGS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/220726/010441'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/220726/010441');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/270726/008848');
+            		applicationNameList3
+            		.push('DS MAX SKYSAMPURN');
+            		applicationNameList4
+            		.push('DS MAX PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/220726/010439'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/220726/010439');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/070826/008862');
+            		applicationNameList3
+            		.push('Assetz Mizu &amp; Ki');
+            		applicationNameList4
+            		.push('APG SKYWARDS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/210726/010438'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/210726/010438');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/240726/008841');
+            		applicationNameList3
+            		.push('GREEN MEADOWS');
+            		applicationNameList4
+            		.push('CENTENARY LIFESPACES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/210726/010437'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/210726/010437');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/230726/008836');
+            		applicationNameList3
+            		.push('DASARA UTSAV');
+            		applicationNameList4
+            		.push('DASARA DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/210726/010436'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/210726/010436');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/250826/008889');
+            		applicationNameList3
+            		.push('GAJANANA LAYOUT');
+            		applicationNameList4
+            		.push('Rajanna T G, Lathashree T R, Manjunath, Ananda R and Uday Kumar H H');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/210726/010435'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/210726/010435');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/030926/008906');
+            		applicationNameList3
+            		.push('GURU PUNVAANII EKA PHASE-3');
+            		applicationNameList4
+            		.push('GURU PUNVAANII PROPERTIES HOLDING LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/200726/010433'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/200726/010433');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/200826/008881');
+            		applicationNameList3
+            		.push('T G AURA');
+            		applicationNameList4
+            		.push('TG PRIME REALTY PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/180726/010430'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/180726/010430');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/170826/008865');
+            		applicationNameList3
+            		.push('ARANYA ONE');
+            		applicationNameList4
+            		.push('MANASOUBHAGYA VENTURES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/170726/010429'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/170726/010429');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/230726/008835');
+            		applicationNameList3
+            		.push('AMBERSTONE VECTRA');
+            		applicationNameList4
+            		.push('AMBERSTONE VENTURES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/170726/010427'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/170726/010427');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/220726/008831');
+            		applicationNameList3
+            		.push('ASSETZ KVN NIWA &amp; NEO');
+            		applicationNameList4
+            		.push('Elite Projects');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/170726/010426'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/170726/010426');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/200826/008879');
+            		applicationNameList3
+            		.push('VR ROYAL TOWNSHIP 2');
+            		applicationNameList4
+            		.push('VR BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/170726/010425'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/170726/010425');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/290726/008855');
+            		applicationNameList3
+            		.push('Sthanikam Nagabhushan Balaji Residency');
+            		applicationNameList4
+            		.push('Medhabalaji Builders (Prop. J R Balaji Naidu)');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/140726/010416'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/140726/010416');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/180826/008871');
+            		applicationNameList3
+            		.push('SUYUG&#039;S THE SHALLOT MARQUE');
+            		applicationNameList4
+            		.push('SUYUG VENTURES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/130726/010413'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/130726/010413');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/170726/008819');
+            		applicationNameList3
+            		.push('THE ROOTS BY ELEGANCE INFRA');
+            		applicationNameList4
+            		.push('PIONIER DEVELOPMENTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/130726/010412'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/130726/010412');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/250826/008888');
+            		applicationNameList3
+            		.push('SAI RADHA NITHYADHAM PHASE 2');
+            		applicationNameList4
+            		.push('SAI RADHA DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/130726/010411'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/130726/010411');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/100926/008929');
+            		applicationNameList3
+            		.push('ANAND SOMU ASPIRE');
+            		applicationNameList4
+            		.push('M/s ANAND GROUP AND C SOMASHEKAR');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/130726/010410'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/130726/010410');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/230726/008837');
+            		applicationNameList3
+            		.push('MAITHRI SPRINGWOODS');
+            		applicationNameList4
+            		.push('MAITHRI DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/120726/010409'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/120726/010409');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/150726/008810');
+            		applicationNameList3
+            		.push('Godrej Regent Park');
+            		applicationNameList4
+            		.push('GODREJ PROPERTIES LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/100726/010405'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/100726/010405');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/130826/008863');
+            		applicationNameList3
+            		.push('BHAVANI BASILS');
+            		applicationNameList4
+            		.push('T VEERANNA ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/100726/010404'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/100726/010404');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/180826/008869');
+            		applicationNameList3
+            		.push('C B LAYOUT');
+            		applicationNameList4
+            		.push('C B SUSHILAMMA ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/100726/010403'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/100726/010403');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/180826/008870');
+            		applicationNameList3
+            		.push('PARKVIEW LAYOUT');
+            		applicationNameList4
+            		.push('DEEPIKA KRISHNAMURTHY');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/100726/010402'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/100726/010402');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/170726/008822');
+            		applicationNameList3
+            		.push('ANANTHA SOVEREIGN');
+            		applicationNameList4
+            		.push('SOVEREIGN REALTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/100726/010401'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/100726/010401');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/170726/008818');
+            		applicationNameList3
+            		.push('PADMASHREE SOVEREIGN');
+            		applicationNameList4
+            		.push('SOVEREIGN PROPERTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/100726/010400'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/100726/010400');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/180826/008872');
+            		applicationNameList3
+            		.push('AMPLE WHITE');
+            		applicationNameList4
+            		.push('AMPLE INFRACON LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/100726/010399'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/100726/010399');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/170826/008866');
+            		applicationNameList3
+            		.push('SLV GARDENS');
+            		applicationNameList4
+            		.push('B Murali, N Santhosh Kumar and V Madhusudhan');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/090726/010396'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/090726/010396');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/290726/008856');
+            		applicationNameList3
+            		.push('HARMONY HOMES');
+            		applicationNameList4
+            		.push('Gali Jagadish Chandra Prakash ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/080726/010393'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/080726/010393');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/100726/008806');
+            		applicationNameList3
+            		.push('Brigade Misty Greens');
+            		applicationNameList4
+            		.push('Brigade Enterprises Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/080726/010392'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/080726/010392');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/010926/008899');
+            		applicationNameList3
+            		.push('SAGARIKA ENCLAVE');
+            		applicationNameList4
+            		.push('SAGARIKA DIVAKAR');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/070726/010391'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/070726/010391');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/270726/008847');
+            		applicationNameList3
+            		.push('URBAN GREENS');
+            		applicationNameList4
+            		.push('VARUN INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/070726/010390'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/070726/010390');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/270726/008845');
+            		applicationNameList3
+            		.push('INFINITY EAST BAY GARDENS');
+            		applicationNameList4
+            		.push('INFINITY INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/060726/010389'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/060726/010389');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/180926/008946');
+            		applicationNameList3
+            		.push(' HILLS RESIDENCY LAYOUT');
+            		applicationNameList4
+            		.push('LAKSHMINARASIMHAIAH, MAHESH K, LOKESH K AND K MANJUNATHA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/030726/010383'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/030726/010383');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/050826/008859');
+            		applicationNameList3
+            		.push('Ranka Amber');
+            		applicationNameList4
+            		.push('DRA REALTY PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/030726/010382'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/030726/010382');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/100926/008932');
+            		applicationNameList3
+            		.push('SKANDA AURA');
+            		applicationNameList4
+            		.push('SKANDA LIVING SPACE LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/030726/010381'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/030726/010381');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/090726/008800');
+            		applicationNameList3
+            		.push('ARVIND SYLVA');
+            		applicationNameList4
+            		.push('ARVIND SMARTHOMES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/030726/010378'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/030726/010378');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/190826/008877');
+            		applicationNameList3
+            		.push('BELVOIR');
+            		applicationNameList4
+            		.push('KINGLIFE INFRA PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/020726/010376'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/020726/010376');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/240726/008838');
+            		applicationNameList3
+            		.push('Bhavya Triora');
+            		applicationNameList4
+            		.push('Bhavya Constructions ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/020726/010375'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/020726/010375');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180726/008824');
+            		applicationNameList3
+            		.push('SHREE GRUHA KALPA');
+            		applicationNameList4
+            		.push('SRR DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1254/461/PR/010726/010373'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1254/461/PR/010726/010373');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1254/461/PR/090726/008798');
+            		applicationNameList3
+            		.push('AXIS ASHOKAM');
+            		applicationNameList4
+            		.push('AXIS CONCEPT CONSTRUCTION PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/010726/010372'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/010726/010372');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/140726/008808');
+            		applicationNameList3
+            		.push('RIVIERA SKY ');
+            		applicationNameList4
+            		.push('GSG REALTY');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/010726/010371'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/010726/010371');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/100926/008927');
+            		applicationNameList3
+            		.push('KBR AISHWARYA LAYOUT');
+            		applicationNameList4
+            		.push('M/s KBR ESTATES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/010726/010370'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/010726/010370');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/200726/008829');
+            		applicationNameList3
+            		.push('Fiorana@Beaumont Estate(Phase-1)');
+            		applicationNameList4
+            		.push('Lodha Developers Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/300626/010368'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/300626/010368');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/010926/008898');
+            		applicationNameList3
+            		.push('Hoysala Vemana');
+            		applicationNameList4
+            		.push('Hoysala Lifespace LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/300626/010367'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/300626/010367');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/160726/008812');
+            		applicationNameList3
+            		.push('RUCHIRA THE RISE');
+            		applicationNameList4
+            		.push('Ruchira Developers LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/300626/010366'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/300626/010366');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/090726/008801');
+            		applicationNameList3
+            		.push('Purva Heritage');
+            		applicationNameList4
+            		.push('Puravankara Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1248/469/PR/300626/010365'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1248/469/PR/300626/010365');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1248/469/PR/170726/008817');
+            		applicationNameList3
+            		.push('SHAMI ORCHARDS');
+            		applicationNameList4
+            		.push('ARRYA PRO INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1248/469/PR/300626/010364'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1248/469/PR/300626/010364');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1248/469/PR/170726/008816');
+            		applicationNameList3
+            		.push('SRI CHENNA BASAVESWARA BADAVANE');
+            		applicationNameList4
+            		.push('ARRYA PRO INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/290626/010363'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/290626/010363');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/090726/008799');
+            		applicationNameList3
+            		.push('VASUNDRA SS VALLEY');
+            		applicationNameList4
+            		.push('VASUNDRA CONSTRUCTIONS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/290626/010362'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/290626/010362');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/280726/008853');
+            		applicationNameList3
+            		.push('Rashi Vistara Phase -2');
+            		applicationNameList4
+            		.push('Rashi Developers');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/290626/010361'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/290626/010361');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/170726/008823');
+            		applicationNameList3
+            		.push('MAHAVEER CREST');
+            		applicationNameList4
+            		.push('REDDY STRUCTURES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/250626/010359'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/250626/010359');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/140726/008807');
+            		applicationNameList3
+            		.push('LOTUS ENCLAVE');
+            		applicationNameList4
+            		.push('S R DEVELOPERS AND PROMOTERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'TOR/ACK/KA/RERA/1271/486/PR/260625/010358'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('TOR/ACK/KA/RERA/1271/486/PR/260625/010358');
+            		applicationNameList2
+            		.push('TOR/PRM/KA/RERA/1271/486/PR/260910/007505');
+            		applicationNameList3
+            		.push('LAGANA SKYLINE');
+            		applicationNameList4
+            		.push('L Sathyanarayana Rao, Mahalakshmi Bai, D C Nirmala, P K Sujatha, M Narayana Rao');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1254/460/PR/250626/010356'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1254/460/PR/250626/010356');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1254/460/PR/240726/008840');
+            		applicationNameList3
+            		.push('Dream Villas');
+            		applicationNameList4
+            		.push('LB Luxe Haven Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/240626/010354'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/240626/010354');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/270726/008846');
+            		applicationNameList3
+            		.push('ZOLAAH');
+            		applicationNameList4
+            		.push('HOUSE OF JINDAL ESTATES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/240626/010353'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/240626/010353');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/280826/008895');
+            		applicationNameList3
+            		.push('SRI SAI SAMRUDHI');
+            		applicationNameList4
+            		.push('SRI SAI VENTURES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/240626/010352'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/240626/010352');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/160726/008814');
+            		applicationNameList3
+            		.push('AMPLE LOTUS');
+            		applicationNameList4
+            		.push('AMPLE INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/230626/010351'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/230626/010351');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/180726/008826');
+            		applicationNameList3
+            		.push('SANJEEVINI HELICONIA');
+            		applicationNameList4
+            		.push('Sanjeevini Projects');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/220626/010349'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/220626/010349');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/070926/008915');
+            		applicationNameList3
+            		.push('Spectra Mira');
+            		applicationNameList4
+            		.push('Spectra Constructions Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/210626/010347'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/210626/010347');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/250826/008886');
+            		applicationNameList3
+            		.push('KAIVALYA');
+            		applicationNameList4
+            		.push('MK Infra Holdings Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/190626/010345'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/190626/010345');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/300626/008780');
+            		applicationNameList3
+            		.push('Assetz City of Palms');
+            		applicationNameList4
+            		.push('ASSETZ INVESTMENTS AND HOLDINGS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/180626/010342'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/180626/010342');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/200726/008830');
+            		applicationNameList3
+            		.push('GRC SAPPHIRE SPRING PHASE II');
+            		applicationNameList4
+            		.push('GRC Infra Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/180626/010339'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/180626/010339');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/020926/008903');
+            		applicationNameList3
+            		.push('SAMRUDDHI');
+            		applicationNameList4
+            		.push('SPW Estates LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/479/PR/170626/010337'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/479/PR/170626/010337');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/479/PR/170726/008821');
+            		applicationNameList3
+            		.push('Shriya Symphony Heights');
+            		applicationNameList4
+            		.push('Shriya BDP Properties');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/410/PR/170626/010336'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/410/PR/170626/010336');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/410/PR/070726/008795');
+            		applicationNameList3
+            		.push('SAI ARYAN APARTMENT');
+            		applicationNameList4
+            		.push('VANISHREE BUILDERS ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1248/469/PR/170626/010335'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1248/469/PR/170626/010335');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1248/469/PR/250626/008755');
+            		applicationNameList3
+            		.push('PREETHI ESTATES');
+            		applicationNameList4
+            		.push('PREETHI ESTATES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/170626/010334'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/170626/010334');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/240626/008751');
+            		applicationNameList3
+            		.push('ABISH EVARA');
+            		applicationNameList4
+            		.push('ABISH BUILDERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/170626/010332'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/170626/010332');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/230626/008749');
+            		applicationNameList3
+            		.push('INLAND TIARA');
+            		applicationNameList4
+            		.push('INLAND INFRASTRUCTURE DEVELOPERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/301/PR/160626/010329'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/301/PR/160626/010329');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/301/PR/040726/008791');
+            		applicationNameList3
+            		.push('WINDSOR HILLSIDE');
+            		applicationNameList4
+            		.push('VIHANA PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/160626/010326'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/160626/010326');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/280726/008852');
+            		applicationNameList3
+            		.push('GOKULA SQUARE');
+            		applicationNameList4
+            		.push('SAI BHARATHI RESORTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/130626/010325'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/130626/010325');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/250826/008887');
+            		applicationNameList3
+            		.push('ABHEE CITY URBAN GLENN PHASE I');
+            		applicationNameList4
+            		.push('ABHEE VENTURES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/120626/010323'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/120626/010323');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/300626/008779');
+            		applicationNameList3
+            		.push('AAROHANA ADIRA');
+            		applicationNameList4
+            		.push('AAROHANA PROJECTS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/120626/010322'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/120626/010322');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/270726/008844');
+            		applicationNameList3
+            		.push('JAI SKYWAY');
+            		applicationNameList4
+            		.push(' JAI SHELTERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/120626/010321'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/120626/010321');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/220626/008741');
+            		applicationNameList3
+            		.push('VAYUPUTRA LAYOUT');
+            		applicationNameList4
+            		.push('YOGISH S P, BABU S C AND PARAMESHA S B ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/339/PR/120626/010319'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/339/PR/120626/010319');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/339/PR/040926/008910');
+            		applicationNameList3
+            		.push('INCHARA ROYAL ENCLAVE');
+            		applicationNameList4
+            		.push('SIDDALINGAIAH B');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/110626/010317'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/110626/010317');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180726/008827');
+            		applicationNameList3
+            		.push('ASTRO CITY BOULEVARDS PHASE 2');
+            		applicationNameList4
+            		.push('ASTRO LAND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/110626/010316'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/110626/010316');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/130826/008864');
+            		applicationNameList3
+            		.push('BVL GREENS');
+            		applicationNameList4
+            		.push('EVO SAROJ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/110626/010315'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/110626/010315');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/220626/008740');
+            		applicationNameList3
+            		.push('CONCORDE SIENNA');
+            		applicationNameList4
+            		.push('Concorde Housing Corporation Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/110626/010314'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/110626/010314');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/230626/008746');
+            		applicationNameList3
+            		.push('SRINIKETHAN');
+            		applicationNameList4
+            		.push('SHREE NIDHI INFRASTRUCTURES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/110626/010313'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/110626/010313');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/030826/008857');
+            		applicationNameList3
+            		.push('VAINAVI SERENIA');
+            		applicationNameList4
+            		.push(' VAINAVI DEVELOPERS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1263/419/PR/110626/010312'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1263/419/PR/110626/010312');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1263/419/PR/090726/008797');
+            		applicationNameList3
+            		.push('REVA-RESIDENCY');
+            		applicationNameList4
+            		.push('M/S KALPAVRUKSHA DEVELOPERS ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1267/374/PR/100626/010309'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1267/374/PR/100626/010309');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1267/374/PR/100626/008716');
+            		applicationNameList3
+            		.push('SOBHA BOULEVARD');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/090626/010307'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/090626/010307');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/230626/008748');
+            		applicationNameList3
+            		.push('ZENITH HEIGHTS');
+            		applicationNameList4
+            		.push('DWARAKAMAI BUILDERS AND DEVELOPERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/090626/010305'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/090626/010305');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/020726/008781');
+            		applicationNameList3
+            		.push('SERENE SAGARA');
+            		applicationNameList4
+            		.push('TORAS DEVELOPERS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/080626/010303'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/080626/010303');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/200626/008731');
+            		applicationNameList3
+            		.push('SAMBHAV RISE OF AURA');
+            		applicationNameList4
+            		.push('SAMBHAV BULOKE REALTY LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/080626/010302'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/080626/010302');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/100726/008805');
+            		applicationNameList3
+            		.push('ZED MANOR');
+            		applicationNameList4
+            		.push('ZED ENTERPRISES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/070626/010300'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/070626/010300');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/250626/008756');
+            		applicationNameList3
+            		.push('MERUSRI SIENNA II');
+            		applicationNameList4
+            		.push('Merusri Estate Holdings Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1264/439/PR/070626/010299'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1264/439/PR/070626/010299');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1264/439/PR/110926/008933');
+            		applicationNameList3
+            		.push('AVANTHII PROPERTIES ');
+            		applicationNameList4
+            		.push('CHANNAVEERIAH HARRIESH ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/341/PR/060626/010298'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/341/PR/060626/010298');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/341/PR/270726/008843');
+            		applicationNameList3
+            		.push('V M NANDANA GARDENS');
+            		applicationNameList4
+            		.push('VM BUILDER AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1267/374/PR/060626/010297'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1267/374/PR/060626/010297');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1267/374/PR/280726/008851');
+            		applicationNameList3
+            		.push('GRAVITY ONE INFOCITY-II');
+            		applicationNameList4
+            		.push('Gravity One Living Space Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/060626/010296'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/060626/010296');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/100626/008718');
+            		applicationNameList3
+            		.push('THE NINTH BY AMBERSTONE');
+            		applicationNameList4
+            		.push('AMBERSTONE PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/307/PR/060626/010295'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/307/PR/060626/010295');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/307/PR/110926/008935');
+            		applicationNameList3
+            		.push('JYOTHI GODHULI');
+            		applicationNameList4
+            		.push('SRI BYRAVESHWARA ELITE PROPERTIES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/040626/010292'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/040626/010292');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/100626/008719');
+            		applicationNameList3
+            		.push('Naveen Layout');
+            		applicationNameList4
+            		.push('Sowmya S N');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/040626/010290'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/040626/010290');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/220626/008737');
+            		applicationNameList3
+            		.push('ROAHA VIVARA');
+            		applicationNameList4
+            		.push('LANDCAPITAL INFRASTRUCTURE PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1270/300/PR/030626/010289'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1270/300/PR/030626/010289');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1270/300/PR/040726/008786');
+            		applicationNameList3
+            		.push('MAHAN LAKE PRIME');
+            		applicationNameList4
+            		.push('M Chandra and C Viswa Mega');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1267/484/PR/020626/010288'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1267/484/PR/020626/010288');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1267/484/PR/170726/008820');
+            		applicationNameList3
+            		.push('Development of sites &amp; service at Elechakanahally');
+            		applicationNameList4
+            		.push('Karnataka Housing Board');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1261/314/PR/010626/010287'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1261/314/PR/010626/010287');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1261/314/PR/090726/008796');
+            		applicationNameList3
+            		.push('HILL TOP PHASE-1');
+            		applicationNameList4
+            		.push('MYSORE REALTY PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/381/PR/290526/010285'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/381/PR/290526/010285');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/381/PR/050626/008701');
+            		applicationNameList3
+            		.push('RR ENCLAVE');
+            		applicationNameList4
+            		.push('M/S.RAJARAJESHWARI DEVELOPERS AND PROMOTERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1669/440/PR/290526/010284'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1669/440/PR/290526/010284');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1669/440/PR/080926/008918');
+            		applicationNameList3
+            		.push('NANDAKAM APARTMENT');
+            		applicationNameList4
+            		.push('SLV CONSTRUCTIONS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1249/447/PR/290526/010283'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1249/447/PR/290526/010283');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1249/447/PR/200826/008880');
+            		applicationNameList3
+            		.push('SCHEPPER PRIME');
+            		applicationNameList4
+            		.push('SCHEPPER BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/280526/010280'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/280526/010280');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180926/008949');
+            		applicationNameList3
+            		.push('VRUKSHA GROVE');
+            		applicationNameList4
+            		.push('JAYALAKSHMI EXPORTS AND IMPORTS PRIVATE LIMITED ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/270526/010279'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/270526/010279');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/080626/008710');
+            		applicationNameList3
+            		.push('J K R ENCLAVE');
+            		applicationNameList4
+            		.push('Rajeev Raju');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/301/PR/260526/010276'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/301/PR/260526/010276');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/301/PR/170726/008815');
+            		applicationNameList3
+            		.push('Zuari KinetiX');
+            		applicationNameList4
+            		.push('SSK INFINITY VENTURES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/333/PR/260526/010275'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/333/PR/260526/010275');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/333/PR/120626/008722');
+            		applicationNameList3
+            		.push('LOTUS GOWRISHANKAR');
+            		applicationNameList4
+            		.push('PRANAVA BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/250526/010272'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/250526/010272');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/110926/008936');
+            		applicationNameList3
+            		.push('THE NORTHERN CHIMES');
+            		applicationNameList4
+            		.push('SKYBERG ECOINNOVATE PROJECTS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/240526/010271'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/240526/010271');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/280726/008850');
+            		applicationNameList3
+            		.push('KONIG MARVEL COUNTY');
+            		applicationNameList4
+            		.push('KONIG ESTATES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/230526/010269'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/230526/010269');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/040626/008694');
+            		applicationNameList3
+            		.push('PRATHAM DWARKA');
+            		applicationNameList4
+            		.push('S. S. PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/210526/010267'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/210526/010267');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/260526/008686');
+            		applicationNameList3
+            		.push('Nambiar District 25 Phase 3');
+            		applicationNameList4
+            		.push('Nambiar EnsembleResidential Projects LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/210526/010266'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/210526/010266');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/160726/008813');
+            		applicationNameList3
+            		.push('COSMOS');
+            		applicationNameList4
+            		.push('CORBITAL BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/210526/010265'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/210526/010265');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/090626/008713');
+            		applicationNameList3
+            		.push('NTD LAVENDER');
+            		applicationNameList4
+            		.push('NATURE TRAIL DEVELOPERS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/200526/010263'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/200526/010263');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/040626/008696');
+            		applicationNameList3
+            		.push('PRASHADIPNA');
+            		applicationNameList4
+            		.push('PRASHANTH S.M');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/200526/010262'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/200526/010262');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/040626/008697');
+            		applicationNameList3
+            		.push('BHARATHI SITARA');
+            		applicationNameList4
+            		.push('BHARATHI BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/190526/010261'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/190526/010261');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/080626/008708');
+            		applicationNameList3
+            		.push('LS MARK IX');
+            		applicationNameList4
+            		.push('LIVING STRUCTURES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/410/PR/190526/010260'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/410/PR/190526/010260');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/410/PR/100626/008717');
+            		applicationNameList3
+            		.push('SAI PREM APARTMENT');
+            		applicationNameList4
+            		.push('VANISHREE BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/180526/010258'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/180526/010258');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/220626/008739');
+            		applicationNameList3
+            		.push('KNS AADRIKA PHASE III');
+            		applicationNameList4
+            		.push('KNS Infrastructure Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1261/314/PR/180526/010256'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1261/314/PR/180526/010256');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1261/314/PR/080626/008707');
+            		applicationNameList3
+            		.push('Kaira');
+            		applicationNameList4
+            		.push('Vibez Estates Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1267/374/PR/160526/010254'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1267/374/PR/160526/010254');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1267/374/PR/020726/008785');
+            		applicationNameList3
+            		.push('MMG RISING CITY');
+            		applicationNameList4
+            		.push('SJ PINNACLE PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/160526/010255'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/160526/010255');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/230626/008747');
+            		applicationNameList3
+            		.push('Havena by KSR');
+            		applicationNameList4
+            		.push('KSR BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/160526/010252'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/160526/010252');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/210526/008671');
+            		applicationNameList3
+            		.push('LEAFY AVENUE');
+            		applicationNameList4
+            		.push('LEAFY REALTY LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/160526/010251'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/160526/010251');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/210526/008669');
+            		applicationNameList3
+            		.push('LEAFY SERENE');
+            		applicationNameList4
+            		.push('LEAFY REALTY LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/140526/010249'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/140526/010249');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/250526/008680');
+            		applicationNameList3
+            		.push('GRANDUS 118');
+            		applicationNameList4
+            		.push('GRANDUS PROJECTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/140526/010248'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/140526/010248');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/020626/008693');
+            		applicationNameList3
+            		.push('ARE RESERVE');
+            		applicationNameList4
+            		.push('ARE REALTY');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/140526/010247'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/140526/010247');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/250526/008681');
+            		applicationNameList3
+            		.push('S Nanjundappa Layout');
+            		applicationNameList4
+            		.push('S Nanjundappa');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/140526/010246'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/140526/010246');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/050626/008700');
+            		applicationNameList3
+            		.push('Bhoo Siri Garden');
+            		applicationNameList4
+            		.push('19 Bhoo Ventures');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/130526/010245'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/130526/010245');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/020626/008692');
+            		applicationNameList3
+            		.push('96 Brick wood Avenue');
+            		applicationNameList4
+            		.push('Cinoti ventures LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/120526/010244'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/120526/010244');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/150526/008658');
+            		applicationNameList3
+            		.push('COREZEAL GOLDEN LAWNS');
+            		applicationNameList4
+            		.push('HARSHITH.B AND VARSHITH.S');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/339/PR/120526/010243'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/339/PR/120526/010243');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/339/PR/270726/008842');
+            		applicationNameList3
+            		.push('V R DOLLARCITY PHASE-2');
+            		applicationNameList4
+            		.push('VR BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/110526/010241'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/110526/010241');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/200626/008734');
+            		applicationNameList3
+            		.push('CNM APEX CITY MADARAGALLI PH1');
+            		applicationNameList4
+            		.push('Navin Kumar Gupta');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/110526/010240'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/110526/010240');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/200626/008735');
+            		applicationNameList3
+            		.push('CNM APEX CITY MADARAGALLI PH2');
+            		applicationNameList4
+            		.push('Navin Kumar Gupta');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/518/PR/090526/010237'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/518/PR/090526/010237');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/518/PR/150526/008660');
+            		applicationNameList3
+            		.push('AMSHUL AVENUE');
+            		applicationNameList4
+            		.push('PRAVEEN BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/090526/010236'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/090526/010236');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/040626/008695');
+            		applicationNameList3
+            		.push('PARIPOORNA ');
+            		applicationNameList4
+            		.push('PRATHIK U RAO &amp; POORNIMA P RAO');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/080526/010235'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/080526/010235');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/130526/008653');
+            		applicationNameList3
+            		.push('Godrej Vanantara');
+            		applicationNameList4
+            		.push('GODREJ IRISMARK PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/080526/010234'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/080526/010234');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/150526/008661');
+            		applicationNameList3
+            		.push('RAMA RANGA');
+            		applicationNameList4
+            		.push('V.P BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/378/PR/080526/010233'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/378/PR/080526/010233');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/378/PR/210526/008670');
+            		applicationNameList3
+            		.push('HERBAL PEARLS - 2');
+            		applicationNameList4
+            		.push('GSS PROJECT CONSULTANTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/070526/010232'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/070526/010232');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/080626/008705');
+            		applicationNameList3
+            		.push('PRESTIGE GARDENIA ESTATE PHASE 2');
+            		applicationNameList4
+            		.push('PRESTIGE ESTATES PROJECTS LTD');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1254/460/PR/070526/010231'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1254/460/PR/070526/010231');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1254/460/PR/060826/008861');
+            		applicationNameList3
+            		.push('NANDHAKEE GREENS');
+            		applicationNameList4
+            		.push('NANDHAKEE BUILDERS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/070526/010230'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/070526/010230');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/280726/008849');
+            		applicationNameList3
+            		.push('Elements of Nature Happy Hive Phase - 2');
+            		applicationNameList4
+            		.push('URBAN FIELDS REALTY LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/070526/010229'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/070526/010229');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/150626/008723');
+            		applicationNameList3
+            		.push('SUMADHURA PANORAMA PHASE-II');
+            		applicationNameList4
+            		.push('SUMADHUARA EMPIRE ESTATES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/380/PR/060526/010226'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/380/PR/060526/010226');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/380/PR/160526/008664');
+            		applicationNameList3
+            		.push('HEMANTH LAYOUT');
+            		applicationNameList4
+            		.push('H M MANJUNATHA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/060526/010225'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/060526/010225');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/220526/008674');
+            		applicationNameList3
+            		.push('Greybrick -Talking to the Clouds');
+            		applicationNameList4
+            		.push('GREYBRICK PROJECTS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/060526/010224'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/060526/010224');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/200626/008729');
+            		applicationNameList3
+            		.push('Allure Avani Phase 2');
+            		applicationNameList4
+            		.push('Allure Awani Private Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/410/PR/040526/010220'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/410/PR/040526/010220');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/410/PR/050626/008699');
+            		applicationNameList3
+            		.push('Pacific Vihar');
+            		applicationNameList4
+            		.push('PACIFIC PROPERTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/040526/010219'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/040526/010219');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/150526/008657');
+            		applicationNameList3
+            		.push('AGRAJA ATLANTIC');
+            		applicationNameList4
+            		.push('AGRAJA MANJUSHREE');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1249/447/PR/040526/010218'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1249/447/PR/040526/010218');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1249/447/PR/210526/008668');
+            		applicationNameList3
+            		.push('THE OLIVE PEARL');
+            		applicationNameList4
+            		.push(' MANGALMURTI HOMES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/040526/010217'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/040526/010217');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/070926/008912');
+            		applicationNameList3
+            		.push('WAVES AND WHIMSY');
+            		applicationNameList4
+            		.push('ISTA SPACES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/030526/010216'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/030526/010216');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/010926/008897');
+            		applicationNameList3
+            		.push('HIGHGROVE');
+            		applicationNameList4
+            		.push('SAMANVI ESTATES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/030526/010215'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/030526/010215');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/060526/008625');
+            		applicationNameList3
+            		.push('ORCHID SOUTH PARK');
+            		applicationNameList4
+            		.push('GOYAL HARIYANA CONSTRUCTIONS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/020526/010214'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/020526/010214');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/020726/008784');
+            		applicationNameList3
+            		.push('SJ CLASSIQUE');
+            		applicationNameList4
+            		.push('SJ CONSTRUCTIONS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/010526/010213'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/010526/010213');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/180726/008825');
+            		applicationNameList3
+            		.push('AASHRITHAA  DIVINE  PHASE III');
+            		applicationNameList4
+            		.push('AASHRITHAA PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'TOR/ACK/KA/RERA/1251/446/PR/260430/010212'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('TOR/ACK/KA/RERA/1251/446/PR/260430/010212');
+            		applicationNameList2
+            		.push('TOR/PRM/KA/RERA/1251/446/PR/260615/008348');
+            		applicationNameList3
+            		.push('MAHINDRA BLOSSOM');
+            		applicationNameList4
+            		.push('MAHINDRA BLOSSOM DEVELOPERS LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/300426/010210'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/300426/010210');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/080626/008704');
+            		applicationNameList3
+            		.push('Heritage Enclave');
+            		applicationNameList4
+            		.push('IG3 Infra Limited');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/479/PR/300426/010209'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/479/PR/300426/010209');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/479/PR/220526/008676');
+            		applicationNameList3
+            		.push('MADHUBAN DIVINITY');
+            		applicationNameList4
+            		.push('Horizon Constructions ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/300426/010208'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/300426/010208');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/230626/008744');
+            		applicationNameList3
+            		.push('VISTARA SUNSHINE');
+            		applicationNameList4
+            		.push('VISTARA INFRA DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/290426/010206'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/290426/010206');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/250526/008679');
+            		applicationNameList3
+            		.push('JRC KANSO');
+            		applicationNameList4
+            		.push('M/s JRC Projects');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1248/469/PR/290426/010204'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1248/469/PR/290426/010204');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1248/469/PR/170626/008727');
+            		applicationNameList3
+            		.push('BRINDAVAN GARDENS');
+            		applicationNameList4
+            		.push('B S R BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010202'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010202');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008639');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph6 W12,13,14');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010201'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010201');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008638');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph5 W9,10,11');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010200'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010200');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008636');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph4 W7 and 8');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010199'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010199');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008635');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph3 W5 and 6');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010198'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010198');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008637');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph2 W3 and 4');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/280426/010197'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/280426/010197');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/080526/008634');
+            		applicationNameList3
+            		.push('ONE RESIDENCES AT SOBHA ONE WORLD Ph1 W1 and 2');
+            		applicationNameList4
+            		.push('SOBHA LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/280426/010196'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/280426/010196');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/200526/008667');
+            		applicationNameList3
+            		.push('CASAGRAND MOONDANCE');
+            		applicationNameList4
+            		.push('CASA GRANDE GARDEN CITY BUILDERS PVT LTD');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/280426/010195'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/280426/010195');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/050526/008622');
+            		applicationNameList3
+            		.push('DS MAX SKY SUKHINO');
+            		applicationNameList4
+            		.push('DS MAX PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/270426/010193'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/270426/010193');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/100626/008714');
+            		applicationNameList3
+            		.push('Yafa Zinnia');
+            		applicationNameList4
+            		.push('Yafa Properties');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/270426/010192'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/270426/010192');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/270526/008689');
+            		applicationNameList3
+            		.push('S S PRAKRUTHI MEADOWS');
+            		applicationNameList4
+            		.push('M/s. S.S. PROJECTS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1268/381/PR/270426/010190'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1268/381/PR/270426/010190');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1268/381/PR/220526/008675');
+            		applicationNameList3
+            		.push('Cauvery Elite - 2');
+            		applicationNameList4
+            		.push('KALPATARU PROPERTY DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/260426/010189'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/260426/010189');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/220626/008738');
+            		applicationNameList3
+            		.push('Innovative Nakshathra Enclave');
+            		applicationNameList4
+            		.push('ATHIRA DEVELOPERS AND PROMOTERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/250426/010188'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/250426/010188');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/050526/008623');
+            		applicationNameList3
+            		.push('UNDER THE SILVERMOON ');
+            		applicationNameList4
+            		.push('SURYA SUNSHINE DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1255/323/PR/240426/010187'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1255/323/PR/240426/010187');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1255/323/PR/040726/008792');
+            		applicationNameList3
+            		.push('Site and Service Scheme at Mudigere ');
+            		applicationNameList4
+            		.push('Housing Commissioner, Karnataka Housing Board, Bengaluru.');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/240426/010185'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/240426/010185');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/070526/008631');
+            		applicationNameList3
+            		.push('VRUSHABADRI WINTER PARK');
+            		applicationNameList4
+            		.push('VRUSHABADRI DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1274/352/PR/230426/010184'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1274/352/PR/230426/010184');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1274/352/PR/150526/008659');
+            		applicationNameList3
+            		.push('Nisarga Vastu City');
+            		applicationNameList4
+            		.push('MUNAF MOHAMMED SAB LANDAKANALLI');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/230426/010183'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/230426/010183');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/140526/008655');
+            		applicationNameList3
+            		.push('BLAR 21');
+            		applicationNameList4
+            		.push('BLIAR SURYA LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/220426/010182'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/220426/010182');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/220526/008677');
+            		applicationNameList3
+            		.push('Sumadhura Elysium Phase-I');
+            		applicationNameList4
+            		.push('SUMADHURA BUILDWELL PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/339/PR/210426/010181'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/339/PR/210426/010181');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/339/PR/120626/008721');
+            		applicationNameList3
+            		.push('H P LAYOUT');
+            		applicationNameList4
+            		.push('HOLALI PRAKASH');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/210426/010180'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/210426/010180');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/200626/008730');
+            		applicationNameList3
+            		.push(' Samanvitha Siena Terra');
+            		applicationNameList4
+            		.push('SAMANVITHA PROJECTS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/210426/010179'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/210426/010179');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/230626/008743');
+            		applicationNameList3
+            		.push('ADIDHAN PLATINUM');
+            		applicationNameList4
+            		.push('DYUTI REALTY ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/210426/010178'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/210426/010178');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/260526/008684');
+            		applicationNameList3
+            		.push('CASPER VALLEY');
+            		applicationNameList4
+            		.push('AURA WAVE ESTATES LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/200426/010177'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/200426/010177');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/020526/008616');
+            		applicationNameList3
+            		.push('MIZAR');
+            		applicationNameList4
+            		.push('NAGARJUNA STRUCTURAL CORPORATION PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/200426/010176'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/200426/010176');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/300426/008613');
+            		applicationNameList3
+            		.push('ALCOR');
+            		applicationNameList4
+            		.push('NAGARJUNA STRUCTURAL CORPORATION PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1267/374/PR/190426/010175'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1267/374/PR/190426/010175');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1267/374/PR/230626/008745');
+            		applicationNameList3
+            		.push('The Riverine - Phase 1');
+            		applicationNameList4
+            		.push(' ACERS2BRICKS PRIVATE LIMITED ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/170426/010174'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/170426/010174');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/130526/008643');
+            		applicationNameList3
+            		.push('GANGADHARAPPA LAYOUT');
+            		applicationNameList4
+            		.push('GANGADHARAPPA G R ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/170426/010173'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/170426/010173');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/110526/008642');
+            		applicationNameList3
+            		.push('SRINIVAS MURTHY LAYOUT');
+            		applicationNameList4
+            		.push('A N SRINIVAS MURTHY ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/170426/010172'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/170426/010172');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/170626/008728');
+            		applicationNameList3
+            		.push('VAIBHAV VENTURES');
+            		applicationNameList4
+            		.push('ANNADANAIAH R');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/150426/010171'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/150426/010171');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/100626/008715');
+            		applicationNameList3
+            		.push('P V R Layout');
+            		applicationNameList4
+            		.push('Yashodamma and P Ravikumar');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/130426/010169'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/130426/010169');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/090626/008712');
+            		applicationNameList3
+            		.push('THE WOODLAND FOREST');
+            		applicationNameList4
+            		.push('BLUESTONE PROPERTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/110426/010167'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/110426/010167');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/160526/008663');
+            		applicationNameList3
+            		.push('L C Layout');
+            		applicationNameList4
+            		.push('A C Narayan Das and Lakshmidevamma');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/100426/010166'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/100426/010166');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/130526/008650');
+            		applicationNameList3
+            		.push('Assetz Mizumi Reserve Tower A3 A5');
+            		applicationNameList4
+            		.push('APG COMMUNITY DEVELOPMENT PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/100426/010165'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/100426/010165');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/290526/008691');
+            		applicationNameList3
+            		.push('LEMON TREE');
+            		applicationNameList4
+            		.push('LEGEND PROPERTIES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/090426/010162'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/090426/010162');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/270426/008604');
+            		applicationNameList3
+            		.push('BOLLINENI VIENNA');
+            		applicationNameList4
+            		.push('KRISHNAIAH PROJECTS PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/090426/010161'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/090426/010161');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/080626/008706');
+            		applicationNameList3
+            		.push('APARNA WONDERWOODS');
+            		applicationNameList4
+            		.push('APARNA CONSTRUCTIONS AND ESTATES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/339/PR/090426/010160'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/339/PR/090426/010160');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/339/PR/290726/008854');
+            		applicationNameList3
+            		.push('M. V. ROYAL PARK');
+            		applicationNameList4
+            		.push('SAANVI DEVELOPERS ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1272/394/PR/080426/010159'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1272/394/PR/080426/010159');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1272/394/PR/020926/008902');
+            		applicationNameList3
+            		.push('Jayaganga Layout');
+            		applicationNameList4
+            		.push('D S Venu Gopala');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1274/353/PR/080426/010158'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1274/353/PR/080426/010158');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1274/353/PR/150526/008656');
+            		applicationNameList3
+            		.push('NAWAYATH RESIDENCY');
+            		applicationNameList4
+            		.push('HASMAI BUILDERS &amp; DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1265/347/PR/070426/010157'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1265/347/PR/070426/010157');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1265/347/PR/210426/008596');
+            		applicationNameList3
+            		.push('GURUKULAM NEST');
+            		applicationNameList4
+            		.push('YASH VALUE SPACES');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1259/479/PR/060426/010156'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1259/479/PR/060426/010156');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1259/479/PR/070526/008632');
+            		applicationNameList3
+            		.push('KING&#039;S COURT');
+            		applicationNameList4
+            		.push('Bhoomi Developers');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/060426/010155'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/060426/010155');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/070526/008629');
+            		applicationNameList3
+            		.push(' Nikoo Homes 8, Bhartiya Garden Enclave, Phase-2');
+            		applicationNameList4
+            		.push('Bhartiya Urban Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/060426/010154'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/060426/010154');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/070526/008628');
+            		applicationNameList3
+            		.push('Nikoo Homes 8, Bhartiya Garden Enclave, Phase-1');
+            		applicationNameList4
+            		.push('Bhartiya Urban Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/060426/010153'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/060426/010153');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/220426/008598');
+            		applicationNameList3
+            		.push('BALDOTA SUMMIT');
+            		applicationNameList4
+            		.push('BALDOTA BUILDERS AND DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/050426/010151'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/050426/010151');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/240626/008750');
+            		applicationNameList3
+            		.push('PAVANI MIRABILIA PHASE III');
+            		applicationNameList4
+            		.push('Sai Sravanthi Infra Projects Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/050426/010150'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/050426/010150');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/090626/008711');
+            		applicationNameList3
+            		.push('NATURE&#039;S NEST');
+            		applicationNameList4
+            		.push('NPS DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/472/PR/030426/010148'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/472/PR/030426/010148');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/472/PR/250626/008754');
+            		applicationNameList3
+            		.push('Hanging Gardens');
+            		applicationNameList4
+            		.push('Graviti Living Spaces (India) Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/020426/010144'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/020426/010144');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/200726/008828');
+            		applicationNameList3
+            		.push('RSD ROYALS-1');
+            		applicationNameList4
+            		.push('VINAY.R');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1257/334/PR/020426/010143'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1257/334/PR/020426/010143');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1257/334/PR/180526/008665');
+            		applicationNameList3
+            		.push('POONAM AVENUE');
+            		applicationNameList4
+            		.push('POONAM BUILDERS &amp; YENMARK BUILDERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1271/486/PR/010426/010142'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1271/486/PR/010426/010142');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1271/486/PR/130526/008645');
+            		applicationNameList3
+            		.push('Pratishta gardenia-phase 1');
+            		applicationNameList4
+            		.push('Pratishta developers ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/010426/010141'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/010426/010141');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/130526/008649');
+            		applicationNameList3
+            		.push('MGR BRINDAVAN');
+            		applicationNameList4
+            		.push('MGR INFRA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/304/PR/010426/010140'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/304/PR/010426/010140');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/304/PR/270526/008688');
+            		applicationNameList3
+            		.push('VIVANTA GREEN MEADOWS');
+            		applicationNameList4
+            		.push('VIVANTA DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/310326/010139'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/310326/010139');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/290426/008607');
+            		applicationNameList3
+            		.push('THE ARBOUR RESIDENCES');
+            		applicationNameList4
+            		.push('F4 Estates LLP and G Corp Housing Pvt Ltd');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/310/PR/310326/010138'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/310/PR/310326/010138');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/240426/008602');
+            		applicationNameList3
+            		.push('MEMCO SKYLINE - JUTAKU');
+            		applicationNameList4
+            		.push('MEMCO SKYLINE PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/310326/010136'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/310326/010136');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/040526/008619');
+            		applicationNameList3
+            		.push('Willow One AURALIS');
+            		applicationNameList4
+            		.push('Willow 1 infrastructures Private Limited ');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/300326/010133'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/300326/010133');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/300626/008778');
+            		applicationNameList3
+            		.push('DHRUVIJA GOPURA');
+            		applicationNameList4
+            		.push('DHRUVIJA GOPURA');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/300326/010130'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/300326/010130');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/070526/008630');
+            		applicationNameList3
+            		.push('Habulus Oasis Grove');
+            		applicationNameList4
+            		.push('HABULUS HOMES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1273/318/PR/280326/010129'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1273/318/PR/280326/010129');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1273/318/PR/160426/008587');
+            		applicationNameList3
+            		.push('OPULENCE');
+            		applicationNameList4
+            		.push('ONYX ASSETS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/270326/010128'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/270326/010128');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/290626/008767');
+            		applicationNameList3
+            		.push('Aratt-Escapes Phase 2');
+            		applicationNameList4
+            		.push('ARATT CITY TOWERS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/260326/010127'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/260326/010127');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/040426/008572');
+            		applicationNameList3
+            		.push('TVS EMERALD ALTURA');
+            		applicationNameList4
+            		.push('EMERALD HAVEN PROPERTIES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/250326/010126'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/250326/010126');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/310/PR/310326/008560');
+            		applicationNameList3
+            		.push('HEART OF HARMONY');
+            		applicationNameList4
+            		.push('CKPC RESIDENCES PRIVATE LIMITED');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/309/PR/250326/010125'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/309/PR/250326/010125');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/309/PR/180426/008593');
+            		applicationNameList3
+            		.push('UMIYA PRISM');
+            		applicationNameList4
+            		.push('UMIYA BUILDTEK');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1250/303/PR/250326/010124'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1250/303/PR/250326/010124');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1250/303/PR/310326/008559');
+            		applicationNameList3
+            		.push('SUMMERS AT ORCHID NIRVANA');
+            		applicationNameList4
+            		.push('MANGO DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1258/404/PR/250326/010123'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1258/404/PR/250326/010123');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1258/404/PR/260526/008683');
+            		applicationNameList3
+            		.push('SHIVAGANGA ENCLAVE');
+            		applicationNameList4
+            		.push('SHIVAGANGA CONTRACTORS LLP');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/446/PR/240326/010121'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/446/PR/240326/010121');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/446/PR/080526/008640');
+            		applicationNameList3
+            		.push('Sumukha Nature&#039;s Symphony');
+            		applicationNameList4
+            		.push('Sumukha Ventures');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1251/308/PR/240326/010120'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1251/308/PR/240326/010120');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1251/308/PR/220526/008673');
+            		applicationNameList3
+            		.push('PERLITE PREMIER');
+            		applicationNameList4
+            		.push('M/s. PERLITE DEVELOPERS');
+            	}
+            	applicationArray.push(localObj);
+            	
+
+            	var localObj = {
+            		appNo : 'ACK/KA/RERA/1249/362/PR/230326/010119'
+            	};
+            	var count = 0;
+            	count = count + 1;
+            	if (count < 10){
+            		applicationNameList
+            		.push('ACK/KA/RERA/1249/362/PR/230326/010119');
+            		applicationNameList2
+            		.push('PRM/KA/RERA/1249/362/PR/230626/008742');
+            		applicationNameList3
+            		.push('KULKARNI LAYOUT');
+            		applicationNameList4
+            		.push('KIRAN PANDITRAO KULKARNI AND OTHERS');
+           
+<!-- TRUNCATED by the spike: full response was 6393119 bytes -->
