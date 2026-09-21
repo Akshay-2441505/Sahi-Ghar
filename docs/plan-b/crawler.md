@@ -48,7 +48,7 @@ Gets: project registration number, name, promoter name, district; original regis
 
 Also gets, from the registration application (as tokens, never displayed): the organization's PAN, its members' PANs, and the business address (organizations only). That is what lets the pages say two companies are one builder ("same PAN") or share members.
 
-Read from the application but **not stored or shown yet**: each builder's **declared past projects** (original proposed and actual completion dates: the "4 of 9 delivered on time" record) and each project's declared status, proposed and revised completion dates and litigation flag. These are the promoter's own declarations, and are the obvious next feature.
+Also gets, from the application: each builder's **declared past projects** (original proposed and actual completion dates). These are stored, shown as the "Declared delivery record" (every row links to its source) and scored as "Declared delivery" (needs at least 2 completed projects; a group's repeated listings are counted once). They are the promoter's own declarations, labelled "not verified", and the score does not separate blanket extensions (e.g. COVID) from the promoter's own delays. The project's declared status, revised completion date and litigation flag are read but not yet stored or shown.
 
 Still **not** available from open pages: quarterly progress reports, and the registration status changes that happen after the application (revoked, lapsed). The status lists on the main site (revoked, suspended, NCLT projects) are the next thing to test.
 
