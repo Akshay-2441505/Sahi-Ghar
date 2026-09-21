@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Find out how MahaRERA data can legitimately be obtained (slice 0), and build everything in slice 1 that does not depend on MahaRERA's actual page format: raw store, schema, ingest runner, promoter grouping, trust score v1, API, and the search + trust-page frontend, proven end to end on fixture data.
+**Goal:** Build everything in slice 1 that does not depend on which files MahaRERA eventually provides (slice 0, the access spike, is already done and decided the data path): raw store, schema, ingest runner, promoter grouping, trust score v1, API, and the search + trust-page frontend, proven end to end on fixture data.
 
 **Architecture:** Source-agnostic adapters yield raw documents; a runner stores them raw-first (content-addressed) and parses them into Postgres with every row tagged by its `source_document_id`. Grouping and scoring are pure functions over those rows; a FastAPI service serves a trust payload where every figure resolves to a stored source; a React page renders it. The MahaRERA adapter itself is deliberately **not** in this plan (see "Plan B").
 
 **Tech Stack:** Python 3.11+ (uv), FastAPI, SQLAlchemy 2, Alembic, PostgreSQL (SQLite for unit tests), rapidfuzz, httpx; React 19 + Vite + Tailwind 4 + React Router, Vitest + Testing Library.
 
-**Spec:** `docs/superpowers/specs/2026-09-21-sahi-ghar-design.md` (amended 2026-09-21 with the refinements this plan implements: `discover()`/`parse()` adapter interface, `source_document.kind`, projects-only `/search`, PAN-grouping caveat).
+**Spec:** `docs/superpowers/specs/2026-09-21-sahi-ghar-design.md` (amended 2026-09-21; this plan implements the amended version: `discover()`/`parse()` adapter interface, official-data-only path, registration-end-date schedule, complaint stages, address+name grouping rule, projects-only `/search`).
 
 ## Global Constraints
 
@@ -16,17 +16,18 @@ Every task's requirements implicitly include these (copied from the spec).
 
 - Stack: Python + FastAPI + PostgreSQL backend; React + Vite + Tailwind frontend.
 - **No CAPTCHA solving or bypass, ever.** If a page is CAPTCHA-gated, the spike records it and stops on that page.
-- Spike requests: one at a time, at least 3 seconds apart, identifiable User-Agent, never stress-tested.
+- **Official data only: no code in this repository fetches from any RERA website** (owner decision 2026-09-21). Data enters through the file-import adapter (Plan B) or test fixtures.
 - Every parsed row carries `source_document_id`; every figure on the trust page links to its source document; every page states "data as of" a date.
 - Adapters never touch the database; `parse()` is a pure function of the raw document (no network, no database).
 - Fields a source does not publish stay nullable, and rules that depend on them degrade gracefully.
-- Grouping: `filing_confirmed` (same PAN) links feed delivery history and the score; `possible` links are shown separately, labelled "not counted in this score", and never counted.
-- Lateness is measured against the **original** completion date; a revised date is shown beside it, never used to hide a delay.
+- Grouping: `filing_confirmed` (same PAN) links feed the registration schedule and the score; `possible` links (partner overlap plus address or name; or same address plus similar name) are shown separately, labelled "not counted in this score", and never counted.
+- The registration schedule is measured against the **original** registration end date; an extension date is shown beside it, never used to hide it. Never call a project "late" or "delayed": open data has no completion status, an extension is not necessarily the promoter's fault, and a project past its end date may already be complete.
+- Complaint statuses are stored exactly as published; the stage mapping (`complaint_stage`) is the only interpretation, unknown statuses map to `other`, and the source's year and month are never turned into a day.
 - Trust score v1 is a scored checklist, not ML; every tunable number lives in `backend/sahighar/scoring/v1.py`. The overall number is never shown without its breakdown.
 - Wording is neutral and stays within what RERA data says: no verdicts, no ads, no "featured" builders.
 - All `DateTime` columns store naive UTC (`sahighar.util.utcnow`).
 - Dev API port is **8010** (8000 is used by another project on this machine); the frontend calls `/api/...` and the Vite dev proxy strips `/api`.
-- **No GitHub repo, remote or push is created by the agent.** The user supplies a repo at the end of the project; anything that needs GitHub (Actions runs, the weekly ingest workflow) is queued until then.
+- **No GitHub repo, remote or push is created by the agent.** The user supplies a repo at the end of the project; anything that needs GitHub (for example CI) is queued until then.
 - Commit messages end with `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>` when Claude makes the commit.
 
 ## Environment notes
@@ -39,8 +40,8 @@ Every task's requirements implicitly include these (copied from the spec).
 ## File structure
 
 ```
-spike/                          THROWAWAY (Tasks 1-4): probe.py, test_probe.py, samples/
-docs/spikes/2026-09-maharera-access.md      the spike report (Tasks 2-5)
+spike/                          THROWAWAY, already committed: probe.py, test_probe.py, samples/
+docs/spikes/2026-09-maharera-access.md      the spike report and decision (done)
 backend/
   pyproject.toml
   alembic.ini, alembic/                     migrations (Task 8)
@@ -63,328 +64,19 @@ frontend/
 
 ## Plan B (written after the spike, NOT in this plan)
 
-The MahaRERA adapter (parsers + fixtures from `spike/samples/`), the weekly ingest workflow (written locally, activated only once the user supplies a GitHub repo), the runner-reachability check (Task 3 Step 3), the S3-compatible `RawStore`, deployment (Neon/Render/Vercel/R2), and the three-builder manual cross-check. They depend on the spike's chosen data-access path and field lists, so writing them now would target an unverified source.
+The file-import adapter for the data the owner obtains (parsers and fixtures modelled on the real formats in `spike/samples/`, plus a draft data request or RTI naming the fields the spike found), the S3-compatible `RawStore` that streams large bodies to disk, deployment (Neon/Render/Vercel/R2), and the three-builder manual cross-check. There is no scheduled scraper. They depend on what data actually arrives, so writing them now would target an unknown format.
 
 ---
 
-## Part 1 — Slice 0: Access spike
-
-Throwaway investigation. Output is a report and a decision, not shipped code. Tasks 2-4 are research tasks (evidence gathering; Task 3 only records a deferral), so their steps are commands and observations rather than red/green tests.
-
-### Task 1: Spike probe tool
-
-**Files:**
-- Create: `spike/probe.py`
-- Test: `spike/test_probe.py`
-
-**Interfaces:**
-- Produces: `python spike/probe.py URL [URL ...]` prints one dict per URL (`status`, `content_type`, `bytes`, `mentions_captcha`, `forms`, `saved`) and saves each response body under `spike/samples/`. `mentions_captcha(html: str) -> bool` is a hint, not a verdict.
-
-- [ ] **Step 1: Write the failing test**
-
-Create `spike/test_probe.py`:
-
-```python
-from probe import mentions_captcha
-
-
-def test_detects_captcha_markers():
-    assert mentions_captcha('<img src="/captcha.jpg">')
-    assert mentions_captcha('<div class="g-recaptcha"></div>')
-    assert not mentions_captcha("<form><input name='q'></form>")
-```
-
-- [ ] **Step 2: Run it to verify it fails**
-
-Run: `uv run --with httpx --with pytest pytest spike/test_probe.py -q -p no:cacheprovider`
-Expected: FAIL with `ModuleNotFoundError: No module named 'probe'`
-
-- [ ] **Step 3: Write the probe**
-
-Create `spike/probe.py`:
-
-```python
-"""THROWAWAY spike tooling for docs/spikes/. Not imported by backend/.
-
-Usage (from the repo root):
-    SPIKE_CONTACT=<address-or-url> uv run --with httpx python spike/probe.py URL [URL ...]
-
-Politeness: one request at a time, DELAY_SECONDS apart, identifiable User-Agent.
-It only fetches and records. It never solves, works around or skips a CAPTCHA.
-"""
-import hashlib
-import os
-import re
-import sys
-import time
-from pathlib import Path
-
-import httpx
-
-DELAY_SECONDS = 3
-SAMPLES = Path(__file__).parent / "samples"
-CAPTCHA_HINTS = re.compile(r"captcha|g-recaptcha|hcaptcha|turnstile", re.I)
-
-
-def mentions_captcha(html: str) -> bool:
-    """A hint, not a verdict: a script bundle can mention 'captcha' without the page needing one."""
-    return bool(CAPTCHA_HINTS.search(html))
-
-
-def probe(client: httpx.Client, url: str) -> dict:
-    response = client.get(url)
-    SAMPLES.mkdir(exist_ok=True)
-    slug = re.sub(r"[^a-z0-9]+", "-", url.lower()).strip("-")[:80]
-    saved = SAMPLES / f"{slug}-{hashlib.sha256(response.content).hexdigest()[:8]}.html"
-    saved.write_bytes(response.content)
-    return {
-        "url": url,
-        "final_url": str(response.url),
-        "status": response.status_code,
-        "content_type": response.headers.get("content-type", ""),
-        "bytes": len(response.content),
-        "mentions_captcha": mentions_captcha(response.text),
-        "forms": len(re.findall(r"<form", response.text, re.I)),
-        "saved": str(saved),
-    }
-
-
-def main(urls: list[str]) -> None:
-    headers = {"User-Agent": f"SahiGharSpike/0.1 (research; {os.environ['SPIKE_CONTACT']})"}
-    with httpx.Client(headers=headers, timeout=30, follow_redirects=True) as client:
-        for i, url in enumerate(urls):
-            if i:
-                time.sleep(DELAY_SECONDS)
-            try:
-                print(probe(client, url), flush=True)
-            except httpx.HTTPError as exc:
-                print({"url": url, "error": f"{type(exc).__name__}: {exc}"}, flush=True)
-
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
-```
-
-- [ ] **Step 4: Run the test, then smoke-test the tool on a harmless URL**
-
-Run: `uv run --with httpx --with pytest pytest spike/test_probe.py -q -p no:cacheprovider`
-Expected: `1 passed`
-
-Run: `SPIKE_CONTACT=<a contact string you are comfortable putting in a User-Agent> uv run --with httpx python spike/probe.py https://example.com/`
-Expected: one dict with `'status': 200`, `'mentions_captcha': False`. Then `rm -rf spike/samples`.
-(`SPIKE_CONTACT` is the user's choice; ask them for it. Do not reuse their account email unprompted.)
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add spike/probe.py spike/test_probe.py
-git commit -m "spike: add polite probe tool (throwaway)"
-```
-
-### Task 2: MahaRERA findings
-
-**Files:**
-- Create: `docs/spikes/2026-09-maharera-access.md`
-- Create: `spike/samples/*` (generated by the probe; kept as evidence and later parser fixtures)
-
-**Interfaces:**
-- Consumes: `spike/probe.py` from Task 1.
-- Produces: the report file with a filled findings table (questions 1-5, 7, 8 from the spec) that Tasks 3-5 extend and that Plan B is written from.
-
-- [ ] **Step 1: Create the report skeleton**
-
-Create `docs/spikes/2026-09-maharera-access.md` with exactly this content:
-
-```markdown
-# MahaRERA access spike
-
-Run on: (fill: date)   By: (fill)   From: (fill: network/location)
-Spec: docs/superpowers/specs/2026-09-21-sahi-ghar-design.md §3
-
-## Findings (MahaRERA)
-
-| # | Question | Finding | Evidence (file / URL / quote) |
-|---|----------|---------|-------------------------------|
-| 1 | Project search, promoter search, promoter complaint report reachable without a CAPTCHA? (one row per page) | (fill) | (fill) |
-| 2 | How is data delivered (server-rendered HTML, XHR/JSON, PDF)? Endpoint URLs and methods | (fill) | (fill) |
-| 3 | Pagination and filtering; can all projects be enumerated? | (fill) | (fill) |
-| 4 | Fields per project / promoter / complaint. PAN? address? partners/directors? promoter past-experience or other-projects disclosure? | (fill) | (fill) |
-| 5 | Original completion date, revised completion date, completion status present? | (fill) | (fill) |
-| 6 | Reachable from a GitHub Actions runner? | (see Task 3) | |
-| 7 | Request rate tolerated (at the polite rate used) | (fill) | (fill) |
-| 8 | robots.txt and terms of use on automated access | (fill) | (fill) |
-| 9 | rera-india review | (see Task 4) | |
-
-## Karnataka and Telangana (shallow check)
-
-(see Task 4)
-
-## Decision
-
-(see Task 5)
-```
-
-- [ ] **Step 2: Probe robots.txt, terms and the three data pages**
-
-Run (from the repo root; one command so the 3-second spacing applies):
-
-```bash
-SPIKE_CONTACT=<contact> uv run --with httpx python spike/probe.py \
-  https://maharera.maharashtra.gov.in/robots.txt \
-  https://maharera.maharashtra.gov.in/ \
-  https://maharera.maharashtra.gov.in/projects-search-result \
-  https://maharera.maharashtra.gov.in/promoters-search-result \
-  https://maharera.maharashtra.gov.in/promoter-complaint-report
-```
-
-Read the output. A row with `error` (e.g. socket closed, 403, timeout) is itself a finding: record it, and try once more later in a normal browser before concluding anything. Open `spike/samples/*robots*` and read what it permits. From the saved home page, find the site's terms / disclaimer / privacy links and read them for anything about automated access. Fill question 8.
-
-- [ ] **Step 3: Inspect the three pages in a normal browser session**
-
-Open each of the three pages in a normal browser (the in-app browser tools are fine), with DevTools Network open. For each, run **one** ordinary search or open one report, and record:
-- Is a CAPTCHA presented before results appear? If yes: record it (screenshot or quoted text) and **stop on that page**. Do not attempt OCR, solving services, replaying tokens, or any other workaround.
-- When results do load: is it a server-rendered page, or an XHR call? Copy the request URL, method, and a short sample of the response into `spike/samples/` (e.g. `maharera-projects-xhr-sample.json`).
-- How does paging work (page number parameter, "next" link, total count)? Is there a way to filter by state district or registration number?
-- What fields appear per result and on one project detail page: promoter name, promoter ID, PAN, registered address, partners/directors, original and revised completion dates, completion status, and any "past experience" / "other projects by promoter" section.
-
-Do not click through more than a handful of records, and keep at least 3 seconds between page loads.
-
-- [ ] **Step 4: Fill questions 1-5, 7, 8 in the report**
-
-Replace each `(fill)` in those rows with the finding and its evidence pointer. Write "not determined" with a reason rather than guessing. Fill "Run on / By / From" at the top.
-
-- [ ] **Step 5: Verify no cell in rows 1-5, 7, 8 was left blank**
-
-Run: `grep -n "(fill" docs/spikes/2026-09-maharera-access.md`
-Expected: only lines belonging to rows 6 and 9, the Karnataka/Telangana section and the Decision section remain (they are completed in Tasks 3-5).
-
-- [ ] **Step 6: Commit**
-
-```bash
-git add docs/spikes spike/samples
-git commit -m "spike: MahaRERA access findings"
-```
-
-### Task 3: Runner reachability (deferred until the user supplies a GitHub repo)
-
-The user will provide the GitHub repo once the project is done. **Do not create a repo, add a remote, or push anything.** Until then question 6 cannot be answered, so this task only records that fact; the real check is queued for the end (Step 3).
-
-**Files:**
-- Modify: `docs/spikes/2026-09-maharera-access.md` (question 6)
-
-**Interfaces:**
-- Produces: question 6 recorded as deferred, so Task 5 can mark Path A "conditional on the runner check" and the scheduled runner as undecided.
-
-- [ ] **Step 1: Record question 6 as deferred**
-
-In the report, replace row 6's `(see Task 3)` with: `Not determined: deferred until the user supplies a GitHub repo (they will provide it at the end of the project). Risk: Indian government sites sometimes block cloud/datacenter IPs, so a laptop-reachable page may still fail from a GitHub runner.`
-
-- [ ] **Step 2: Commit**
-
-```bash
-git add docs/spikes
-git commit -m "spike: defer GitHub runner reachability until a repo exists"
-```
-
-- [ ] **Step 3: Queued for the end: run the check once the user provides the repo**
-
-Not part of the spike now. When the user hands over a GitHub repo and asks to wire it up, add this workflow as `.github/workflows/spike-reachability.yml`, commit and push it to **their** repo (confirm with them first), set the repository variable `SPIKE_CONTACT` to the contact string from Task 1, then run it with `gh workflow run spike-reachability.yml`, `gh run watch`, `gh run view --log`:
-
-```yaml
-name: spike-reachability
-on: workflow_dispatch
-jobs:
-  probe:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - name: Probe the MahaRERA pages (polite, one at a time)
-        env:
-          SPIKE_CONTACT: ${{ vars.SPIKE_CONTACT }}
-        run: >
-          uv run --with httpx python spike/probe.py
-          https://maharera.maharashtra.gov.in/projects-search-result
-          https://maharera.maharashtra.gov.in/promoters-search-result
-          https://maharera.maharashtra.gov.in/promoter-complaint-report
-```
-
-A `403`, timeout or connection error in the log means the runner is likely blocked. Then update row 6 and the Decision's scheduled-runner line, and weigh fallbacks: a self-hosted runner on this machine, a small always-on VM, or running the weekly job locally.
-
-### Task 4: Karnataka, Telangana and rera-india
-
-**Files:**
-- Modify: `docs/spikes/2026-09-maharera-access.md` (question 9 and the shallow-check section)
-
-**Interfaces:**
-- Consumes: `spike/probe.py`.
-- Produces: enough information to confirm the adapter interface will not need reshaping for slice 2, and a reuse/discard call on `rera-india`.
-
-- [ ] **Step 1: Shallow-probe Karnataka and Telangana**
-
-```bash
-SPIKE_CONTACT=<contact> uv run --with httpx python spike/probe.py \
-  https://rera.karnataka.gov.in/ \
-  https://rera.karnataka.gov.in/promoterComplaintReport \
-  https://rera.telangana.gov.in/
-```
-
-Open the project search and the complaints/litigation pages of each in a normal browser and, for each state, write one short paragraph in "Karnataka and Telangana (shallow check)": reachable? CAPTCHA before results (yes/no, stop if yes)? data format? are promoter PAN, complaints and quarterly progress reports visible? Does anything suggest `discover()` + `parse()` (spec §4) cannot express this source?
-
-- [ ] **Step 2: Review rera-india**
-
-Open `https://github.com/mukuldas77-web/rera-india`. Record in question 9: what states and data it covers, whether it ships data or scrapers, its licence, last activity, and a reuse / learn-from / discard call. Do not copy code without confirming the licence permits it.
-
-- [ ] **Step 3: Verify and commit**
-
-Run: `grep -n "(fill" docs/spikes/2026-09-maharera-access.md`
-Expected: only the Decision section remains.
-
-```bash
-git add docs/spikes spike/samples
-git commit -m "spike: Karnataka/Telangana shallow check and rera-india review"
-```
-
-### Task 5: Decision and review gate
-
-**Files:**
-- Modify: `docs/spikes/2026-09-maharera-access.md` (Decision section)
-
-**Interfaces:**
-- Produces: the recorded data-access path per data type (spec §3 decision rule), which Plan B is written from.
-
-- [ ] **Step 1: Apply the spec's decision rule**
-
-For each of project data, promoter data and complaint data choose exactly one:
-- **Path A** — reachable without a CAPTCHA and terms do not prohibit automated access. Runner reachability (Task 3) is deferred, so mark Path A as "conditional on the runner check" and name the fallback runner (this machine, or a small VM) if that check later fails.
-- **Path B** — official data or assisted import: official downloads, the Unified RERA Portal, an RTI or data request to MahaRERA, or a human-assisted import tool that ingests files the user obtains manually.
-- **Mixed** — Path A for open pages, Path B for gated ones.
-
-- [ ] **Step 2: Write the Decision section**
-
-Replace the "Decision" placeholder with:
-
-```markdown
-## Decision
-
-- Project data: Path A | Path B | Mixed  (pick one; cite the table row)
-- Promoter data: (same)
-- Complaint data: (same)
-- Scheduled runner: undecided until the runner check runs (Task 3 Step 3) | (or the alternative chosen and why)
-- Rationale: 2-3 sentences citing rows 1-8
-- Consequences for the Plan B adapter: which fields exist for grouping (PAN, address, partners/directors, past-experience disclosure) and scoring (original/revised/actual dates, completion status), and which are missing
-```
-
-Replace the text in the parentheses and the choices with the actual decision. Run `grep -n "(fill\|(pick\|(same" docs/spikes/2026-09-maharera-access.md`; expected: no output.
-
-- [ ] **Step 3: Commit, then STOP for the user**
-
-```bash
-git add docs/spikes
-git commit -m "spike: record MahaRERA data-access decision"
-```
-
-Show the user the report's Decision section and the field list. **Do not start Part 2 or Plan B until they confirm.** If a field the grouping or scoring rules need (spec §6, §7) turns out not to exist at all, raise it with the user instead of improvising a substitute.
+## Part 1 — Slice 0: Access spike — COMPLETED 2026-09-21
+
+Tasks 1-5 (probe tool, MahaRERA findings, runner check, Karnataka/Telangana/rera-india, decision) are done and committed on the local branch `slice0-spike-and-core`. **Do not redo them.** Read `docs/spikes/2026-09-maharera-access.md` first; the outcome that shapes everything below:
+
+- **Path B, by the owner's decision: official data only. No code in this repository fetches from any RERA website.** The first real adapter is a file-import adapter for data the owner obtains by data request or RTI (Plan B).
+- Maharashtra's open pages showed which fields exist (registration and extension end dates from certificates, complaints with status and non-execution flags, promoter name and registered office). The CAPTCHA-gated detail app (PAN, partners, completion status) is off-limits.
+- **Delivery metric:** registration end dates (registered until; extended by N months or not extended), never "on time / late". **Complaints:** the site's stages (order issued, pending) plus non-execution requests. **Grouping:** PAN and partner rules stay (dormant without that data), plus a same-address and similar-name rule.
+- Task 3 (GitHub runner reachability) is **obsolete**: there is no scheduled scrape.
+- `spike/` (probe tool and `samples/`) stays in the repo as throwaway evidence. `spike/samples/` shows the real page formats and can seed test fixtures for Plan B's parsers.
 
 ---
 
@@ -525,7 +217,7 @@ git commit -m "backend: scaffold project and add content-addressed raw store"
 - Consumes: `sahighar.util.utcnow` (test only).
 - Produces: ORM classes `Base`, `SourceDocument`, `Promoter`, `PromoterGroup`, `GroupMembership`, `Project`, `Complaint`, `ScoreSnapshot` with the columns shown below; `get_session()` FastAPI dependency reading `DATABASE_URL`; a pytest fixture `session` (in-memory SQLite, tables created).
 
-Before writing: open the spike report's field list (Task 5). If the source publishes something the grouping or scoring rules depend on that these models lack, stop and raise it with the user rather than improvising.
+Before writing: skim the field lists in `docs/spikes/2026-09-maharera-access.md` (rows 4-5). The models below already follow the owner's decisions recorded there; if a field the scoring or grouping rules need is missing from them, stop and raise it with the user rather than improvising.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -571,9 +263,9 @@ def test_natural_keys_are_unique(session):
     pr = Promoter(state="MH", rera_promoter_ref="P1", name="X", source_document_id=sd.id)
     session.add(pr)
     session.flush()
-    session.add(Project(state="MH", rera_reg_no="R1", promoter_id=pr.id, name="A", status="ongoing", source_document_id=sd.id))
+    session.add(Project(state="MH", rera_reg_no="R1", promoter_id=pr.id, name="A", source_document_id=sd.id))
     session.flush()
-    session.add(Project(state="MH", rera_reg_no="R1", promoter_id=pr.id, name="B", status="ongoing", source_document_id=sd.id))
+    session.add(Project(state="MH", rera_reg_no="R1", promoter_id=pr.id, name="B", source_document_id=sd.id))
     with pytest.raises(IntegrityError):
         session.flush()
 ```
@@ -659,10 +351,8 @@ class Project(Base):
     locality: Mapped[str | None]
     configurations: Mapped[list | None] = mapped_column(Json)
     carpet_area_range: Mapped[str | None]
-    original_completion_date: Mapped[date | None]
-    revised_completion_date: Mapped[date | None]
-    actual_completion_date: Mapped[date | None]
-    status: Mapped[str]  # completed | ongoing | other
+    registration_end_date: Mapped[date | None]  # end of the original registration validity
+    extended_end_date: Mapped[date | None]  # only when an extension certificate exists
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
 
@@ -674,9 +364,11 @@ class Complaint(Base):
     promoter_id: Mapped[int] = mapped_column(ForeignKey("promoter.id"))
     project_id: Mapped[int | None] = mapped_column(ForeignKey("project.id"))
     complaint_ref: Mapped[str]
-    status: Mapped[str]  # open | resolved
-    filed_on: Mapped[date | None]
-    resolved_on: Mapped[date | None]
+    status: Mapped[str]  # raw text as published
+    stage: Mapped[str]  # order_issued | pending | other
+    non_execution_applied: Mapped[bool] = mapped_column(default=False)
+    filed_year: Mapped[int | None]
+    filed_month: Mapped[int | None]
     order_url: Mapped[str | None]
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
@@ -801,7 +493,7 @@ git commit -m "backend: add Alembic with initial schema migration"
 **Interfaces:**
 - Consumes: models from Task 7, `RawStore` from Task 6.
 - Produces:
-  - `RawDoc(origin, kind, url, fetched_at, content_type, data)`, `PromoterRec`, `ProjectRec`, `ComplaintRec`, `ParsedRecords`, `Adapter` protocol (`state`, `origin`, `discover() -> Iterable[RawDoc]`, `parse(doc) -> ParsedRecords`).
+  - `RawDoc(origin, kind, url, fetched_at, content_type, data)`, `PromoterRec`, `ProjectRec` (with `registration_end`, `extended_end`), `ComplaintRec` (raw `status`, `stage`, `non_execution_applied`, `filed_year`, `filed_month`), `ParsedRecords`, `complaint_stage(status) -> str` ("Order Approved" is `order_issued`; "Hearing Scheduled" and "Roznama Approved" are `pending`; anything else `other`), `Adapter` protocol (`state`, `origin`, `discover() -> Iterable[RawDoc]`, `parse(doc) -> ParsedRecords`).
   - `run_ingest(adapter, session, store, max_failure_rate=0.05) -> IngestSummary(total, ok, failed)`; raises `IngestFailureRateExceeded`.
   - `reparse_all(adapter, session, store, max_failure_rate=0.05) -> IngestSummary`.
   - Test double `tests.fakes.FakeAdapter(payloads: dict[str, dict])`.
@@ -814,7 +506,7 @@ Create `backend/tests/fakes.py`:
 import json
 from datetime import date
 
-from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc
+from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
 from sahighar.util import utcnow
 
 
@@ -840,13 +532,10 @@ class FakeAdapter:
         return ParsedRecords(
             promoters=[PromoterRec(**x) for x in d.get("promoters", [])],
             projects=[
-                ProjectRec(**{**x, **{k: _d(x.get(k)) for k in ("original_completion", "revised_completion", "actual_completion")}})
+                ProjectRec(**{**x, "registration_end": _d(x.get("registration_end")), "extended_end": _d(x.get("extended_end"))})
                 for x in d.get("projects", [])
             ],
-            complaints=[
-                ComplaintRec(**{**x, **{k: _d(x.get(k)) for k in ("filed_on", "resolved_on")}})
-                for x in d.get("complaints", [])
-            ],
+            complaints=[ComplaintRec(**{**x, "stage": complaint_stage(x["status"])}) for x in d.get("complaints", [])],
         )
 ```
 
@@ -863,11 +552,10 @@ from tests.fakes import FakeAdapter
 
 GOOD = {
     "promoters": [{"ref": "P1", "name": "Shree Realty LLP"}],
-    "projects": [{"reg_no": "R1", "promoter_ref": "P1", "name": "Heights", "status": "completed",
-                  "original_completion": "2022-01-01", "actual_completion": "2021-12-01"}],
-    "complaints": [{"ref": "C1", "promoter_ref": "P1", "status": "open", "project_reg_no": "R1"}],
+    "projects": [{"reg_no": "R1", "promoter_ref": "P1", "name": "Heights", "registration_end": "2022-01-01"}],
+    "complaints": [{"ref": "C1", "promoter_ref": "P1", "status": "Hearing Scheduled", "project_reg_no": "R1"}],
 }
-ORPHAN = {"projects": [{"reg_no": "R9", "promoter_ref": "NOPE", "name": "Ghost", "status": "ongoing"}]}
+ORPHAN = {"projects": [{"reg_no": "R9", "promoter_ref": "NOPE", "name": "Ghost"}]}
 
 
 def test_ingest_stores_raw_and_tags_every_row_with_its_source(session, tmp_path):
@@ -955,24 +643,24 @@ class ProjectRec:
     reg_no: str
     promoter_ref: str
     name: str
-    status: str  # completed | ongoing | other
     city: str | None = None
     locality: str | None = None
     configurations: list[str] | None = None
     carpet_area_range: str | None = None
-    original_completion: date | None = None
-    revised_completion: date | None = None
-    actual_completion: date | None = None
+    registration_end: date | None = None  # end of the original registration validity
+    extended_end: date | None = None  # new end date, only if an extension certificate exists
 
 
 @dataclass
 class ComplaintRec:
     ref: str
     promoter_ref: str
-    status: str  # open | resolved
+    status: str  # raw text exactly as published, e.g. "Order Approved"
+    stage: str  # order_issued | pending | other  (see complaint_stage)
+    non_execution_applied: bool = False  # a buyer asked to enforce an order that was not complied with
     project_reg_no: str | None = None
-    filed_on: date | None = None
-    resolved_on: date | None = None
+    filed_year: int | None = None  # the source publishes year and month only
+    filed_month: int | None = None
     order_url: str | None = None
 
 
@@ -981,6 +669,14 @@ class ParsedRecords:
     promoters: list[PromoterRec] = field(default_factory=list)
     projects: list[ProjectRec] = field(default_factory=list)
     complaints: list[ComplaintRec] = field(default_factory=list)
+
+
+_STAGES = {"order approved": "order_issued", "hearing scheduled": "pending", "roznama approved": "pending"}
+
+
+def complaint_stage(status: str) -> str:
+    """Map a published complaint status to a stage. Unknown statuses are 'other', never guessed."""
+    return _STAGES.get(status.strip().lower(), "other")
 
 
 class Adapter(Protocol):
@@ -1058,10 +754,8 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
             session, Project, {"state": state, "rera_reg_no": j.reg_no},
             {"promoter_id": _promoter_id(session, state, j.promoter_ref), "name": j.name,
              "city": j.city, "locality": j.locality, "configurations": j.configurations,
-             "carpet_area_range": j.carpet_area_range, "status": j.status,
-             "original_completion_date": j.original_completion,
-             "revised_completion_date": j.revised_completion,
-             "actual_completion_date": j.actual_completion, "source_document_id": sd_id},
+             "carpet_area_range": j.carpet_area_range, "registration_end_date": j.registration_end,
+             "extended_end_date": j.extended_end, "source_document_id": sd_id},
         )
     for c in parsed.complaints:
         promoter_id = _promoter_id(session, state, c.promoter_ref)
@@ -1072,8 +766,9 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
             )
         _upsert(
             session, Complaint, {"promoter_id": promoter_id, "complaint_ref": c.ref},
-            {"project_id": project_id, "status": c.status, "filed_on": c.filed_on,
-             "resolved_on": c.resolved_on, "order_url": c.order_url, "source_document_id": sd_id},
+            {"project_id": project_id, "status": c.status, "stage": c.stage,
+             "non_execution_applied": c.non_execution_applied, "filed_year": c.filed_year,
+             "filed_month": c.filed_month, "order_url": c.order_url, "source_document_id": sd_id},
         )
 
 
@@ -1162,7 +857,7 @@ git commit -m "backend: add adapter interface and raw-first ingest runner"
 - Test: `backend/tests/test_scoring.py`
 
 **Interfaces:**
-- Produces: `ProjectFacts(status, original_completion, actual_completion)`; `classify(p, today) -> (outcome, months_late | None)` with outcome in `on_time | late | overdue | in_progress | unknown`; `score(projects, open_complaints, resolved_complaints, today) -> dict` with keys `delivery`, `complaints`, `progress`, `overall` (shapes visible in the code below and consumed verbatim by the frontend `Score` type in Task 14).
+- Produces: `ProjectFacts(registration_end, extended_end)`; `ComplaintFacts(stage, non_execution_applied)`; `classify(p, today) -> (outcome, months_extended | None)` with outcome in `extended | not_extended | within_registration | unknown`; `score(projects, complaints, today) -> dict` with keys `schedule`, `complaints`, `progress`, `overall` (shapes visible in the code below and consumed verbatim by the frontend `Score` type in Task 14).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1171,58 +866,65 @@ Create `backend/tests/test_scoring.py`:
 ```python
 from datetime import date
 
+from sahighar.adapters.base import complaint_stage
+from sahighar.scoring.v1 import ComplaintFacts as C
 from sahighar.scoring.v1 import ProjectFacts as P
 from sahighar.scoring.v1 import classify, score
 
 TODAY = date(2026, 9, 1)
 
 
-def test_classify_completed():
-    assert classify(P("completed", date(2024, 1, 1), date(2023, 12, 1)), TODAY) == ("on_time", None)
-    assert classify(P("completed", date(2024, 1, 1), date(2024, 1, 1)), TODAY) == ("on_time", None)
-    assert classify(P("completed", date(2024, 1, 1), date(2025, 1, 1)), TODAY) == ("late", 12.0)
+def test_classify_is_measured_against_the_original_end_date():
+    assert classify(P(date(2022, 1, 1), date(2023, 1, 1)), TODAY) == ("extended", 12.0)
+    assert classify(P(date(2022, 1, 1), None), TODAY) == ("not_extended", None)
+    assert classify(P(date(2027, 1, 1), None), TODAY) == ("within_registration", None)
 
 
-def test_classify_ongoing_uses_original_date():
-    assert classify(P("ongoing", date(2026, 3, 1), None), TODAY) == ("overdue", 6.0)
-    assert classify(P("ongoing", date(2027, 1, 1), None), TODAY) == ("in_progress", None)
+def test_extension_counts_even_if_the_original_date_has_not_passed():
+    assert classify(P(date(2027, 1, 1), date(2027, 7, 1)), TODAY)[0] == "extended"
 
 
-def test_classify_unknown_when_data_missing():
-    assert classify(P("completed", date(2024, 1, 1), None), TODAY)[0] == "unknown"
-    assert classify(P("ongoing", None, None), TODAY)[0] == "unknown"
-    assert classify(P("other", date(2020, 1, 1), None), TODAY)[0] == "unknown"
+def test_unknown_when_data_missing_or_nonsensical():
+    assert classify(P(None, None), TODAY) == ("unknown", None)
+    assert classify(P(date(2022, 1, 1), date(2021, 1, 1)), TODAY)[0] == "not_extended"  # "extension" that moves earlier
+
+
+def test_complaint_stage_maps_known_statuses_and_never_guesses():
+    assert complaint_stage("Order Approved") == "order_issued"
+    assert complaint_stage("  hearing scheduled ") == "pending"
+    assert complaint_stage("Roznama Approved") == "pending"
+    assert complaint_stage("Something New") == "other"
 
 
 def test_score_with_history_and_complaints():
-    projects = [
-        P("completed", date(2024, 1, 1), date(2023, 12, 1)),
-        P("completed", date(2024, 1, 1), date(2023, 12, 1)),
-        P("completed", date(2024, 1, 1), date(2025, 1, 1)),
-    ]
-    s = score(projects, open_complaints=1, resolved_complaints=2, today=TODAY)
-    assert s["delivery"]["score"] == 67 and s["delivery"]["late"] == 1
-    assert s["complaints"]["score"] == 67 and s["complaints"]["resolved"] == 2
+    projects = [P(date(2022, 1, 1), None), P(date(2022, 1, 1), None), P(date(2022, 1, 1), date(2023, 1, 1))]
+    complaints = [C("pending", False), C("order_issued", False), C("order_issued", True)]
+    s = score(projects, complaints, TODAY)
+    assert s["schedule"]["score"] == 67 and s["schedule"]["extended"] == 1 and s["schedule"]["median_months_extended"] == 12.0
+    assert s["complaints"]["unresolved"] == 2  # one pending, one order not executed
+    assert (s["complaints"]["total"], s["complaints"]["pending"], s["complaints"]["order_issued"],
+            s["complaints"]["order_not_executed"]) == (3, 1, 2, 1)
+    assert s["complaints"]["score"] == 33  # 100 * (1 - 2/3)
     assert s["progress"]["available"] is False
-    assert s["overall"] == 67
+    assert s["overall"] == 50
+
+
+def test_pending_and_not_executed_on_one_complaint_count_once():
+    s = score([P(date(2022, 1, 1), None)], [C("pending", True)], TODAY)
+    assert s["complaints"]["unresolved"] == 1 and s["complaints"]["score"] == 0
 
 
 def test_insufficient_history_still_scores_complaints():
-    projects = [P("completed", date(2024, 1, 1), date(2023, 12, 1)), P("ongoing", date(2027, 1, 1), None)]
-    s = score(projects, open_complaints=0, resolved_complaints=0, today=TODAY)
-    assert s["delivery"]["available"] is False and s["delivery"]["reason"] == "insufficient_history"
+    projects = [P(date(2022, 1, 1), None), P(date(2027, 1, 1), None)]
+    s = score(projects, [], TODAY)
+    assert s["schedule"]["available"] is False and s["schedule"]["reason"] == "insufficient_history"
     assert s["complaints"]["score"] == 100
     assert s["overall"] == 100
 
 
 def test_no_projects_means_not_enough_data():
-    s = score([], 0, 0, TODAY)
+    s = score([], [], TODAY)
     assert s["overall"] is None and s["complaints"]["reason"] == "no_projects"
-
-
-def test_median_months_late_includes_overdue():
-    projects = [P("completed", date(2024, 1, 1), date(2025, 1, 1)), P("ongoing", date(2026, 3, 1), None)]
-    assert score(projects, 0, 0, TODAY)["delivery"]["median_months_late"] == 9.0
 ```
 
 - [ ] **Step 2: Run it to verify it fails**
@@ -1238,21 +940,28 @@ Create empty `backend/sahighar/scoring/__init__.py`. Create `backend/sahighar/sc
 """Trust score v1: a scored checklist, not ML. All tunable numbers live here.
 
 Every sub-score is shown with its inputs; the overall number is never shown alone.
+Wording is neutral: an extension is not necessarily the promoter's fault, and a project past
+its end date without an extension may simply have been completed, so neither is called "late".
 """
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date
 from statistics import mean, median
 
-MIN_KNOWN_OUTCOMES = 2  # fewer projects with a known outcome -> "insufficient history"
+MIN_EVALUATED_PROJECTS = 2  # fewer evaluated projects -> "insufficient history"
 DAYS_PER_MONTH = 30.4375
 
 
 @dataclass(frozen=True)
 class ProjectFacts:
-    status: str  # completed | ongoing | other
-    original_completion: date | None
-    actual_completion: date | None
+    registration_end: date | None  # end of the original registration validity
+    extended_end: date | None  # new end date, only if an extension certificate exists
+
+
+@dataclass(frozen=True)
+class ComplaintFacts:
+    stage: str  # order_issued | pending | other
+    non_execution_applied: bool
 
 
 def _months(days: int) -> float:
@@ -1260,57 +969,54 @@ def _months(days: int) -> float:
 
 
 def classify(p: ProjectFacts, today: date) -> tuple[str, float | None]:
-    """Return (outcome, months_late). Outcome is on_time | late | overdue | in_progress | unknown.
+    """Return (outcome, months_extended). Outcome: extended | not_extended | within_registration | unknown.
 
-    Lateness is always measured against the ORIGINAL completion date; an approved revised
-    date is shown next to it elsewhere but never hides the delay.
+    Measured against the ORIGINAL registration end date: an extension never hides in the numbers.
     """
-    original = p.original_completion
-    if p.status == "completed":
-        if original is None or p.actual_completion is None:
-            return "unknown", None
-        if p.actual_completion <= original:
-            return "on_time", None
-        return "late", _months((p.actual_completion - original).days)
-    if p.status == "ongoing" and original is not None:
-        if original < today:
-            return "overdue", _months((today - original).days)
-        return "in_progress", None
-    return "unknown", None
+    if p.registration_end is None:
+        return "unknown", None
+    if p.extended_end is not None and p.extended_end > p.registration_end:
+        return "extended", _months((p.extended_end - p.registration_end).days)
+    if p.registration_end < today:
+        return "not_extended", None
+    return "within_registration", None
 
 
-def score(projects: list[ProjectFacts], open_complaints: int, resolved_complaints: int, today: date) -> dict:
+def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date) -> dict:
     outcomes = [classify(p, today) for p in projects]
     counts = Counter(outcome for outcome, _ in outcomes)
-    known = counts["on_time"] + counts["late"] + counts["overdue"]
-    delays = [months for _, months in outcomes if months is not None]
-    delivery_ok = known >= MIN_KNOWN_OUTCOMES
-    delivery = {
-        "available": delivery_ok,
-        "reason": None if delivery_ok else "insufficient_history",
-        "score": round(100 * counts["on_time"] / known) if delivery_ok else None,
-        "on_time": counts["on_time"],
-        "late": counts["late"],
-        "overdue": counts["overdue"],
-        "in_progress": counts["in_progress"],
+    evaluated = counts["extended"] + counts["not_extended"]
+    months = [m for outcome, m in outcomes if outcome == "extended"]
+    schedule_ok = evaluated >= MIN_EVALUATED_PROJECTS
+    schedule = {
+        "available": schedule_ok,
+        "reason": None if schedule_ok else "insufficient_history",
+        "score": round(100 * counts["not_extended"] / evaluated) if schedule_ok else None,
+        "extended": counts["extended"],
+        "not_extended": counts["not_extended"],
+        "within_registration": counts["within_registration"],
         "unknown": counts["unknown"],
-        "median_months_late": median(delays) if delays else None,
+        "median_months_extended": median(months) if months else None,
     }
 
     n = len(projects)
-    complaints = {
+    unresolved = sum(c.stage == "pending" or c.non_execution_applied for c in complaints)
+    complaint_summary = {
         "available": n > 0,
         "reason": None if n > 0 else "no_projects",
-        "score": round(100 * max(0.0, 1 - open_complaints / n)) if n > 0 else None,
-        "open": open_complaints,
-        "resolved": resolved_complaints,
+        "score": round(100 * max(0.0, 1 - unresolved / n)) if n > 0 else None,
+        "total": len(complaints),
+        "pending": sum(c.stage == "pending" for c in complaints),
+        "order_issued": sum(c.stage == "order_issued" for c in complaints),
+        "order_not_executed": sum(c.non_execution_applied for c in complaints),
+        "unresolved": unresolved,
         "project_count": n,
     }
 
-    available = [c["score"] for c in (delivery, complaints) if c["available"]]
+    available = [c["score"] for c in (schedule, complaint_summary) if c["available"]]
     return {
-        "delivery": delivery,
-        "complaints": complaints,
+        "schedule": schedule,
+        "complaints": complaint_summary,
         "progress": {"available": False, "reason": "not_yet_available", "score": None},
         "overall": round(mean(available)) if available else None,
     }
@@ -1319,7 +1025,7 @@ def score(projects: list[ProjectFacts], open_complaints: int, resolved_complaint
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `cd backend && uv run pytest tests/test_scoring.py -v`
-Expected: `7 passed`
+Expected: `8 passed`
 
 - [ ] **Step 5: Commit**
 
@@ -1380,6 +1086,17 @@ def test_partner_overlap_plus_similar_name_is_possible():
     assert (2, "possible") in types(groups[0])
 
 
+def test_same_address_plus_similar_name_is_possible_without_any_partner_data():
+    groups = resolve_groups([
+        P(1, "Shree Realty LLP", address="12 MG Road, Pune"),
+        P(2, "Shree Realty Phase 2 LLP", address="12 MG ROAD PUNE"),
+        P(3, "Unrelated Builders", address="12 MG Road Pune"),
+    ])
+    assert (2, "possible") in types(groups[0])
+    assert groups[0].members[1].evidence == {"shared_partners": [], "same_address": True, "name_similarity": 100}
+    assert all(m.promoter_id != 3 for g in groups[:2] for m in g.members if m.link_type == "possible")
+
+
 def test_single_weak_signal_creates_no_link():
     only_partner = resolve_groups([P(1, "Alpha", partners=["Ramesh Shah"]), P(2, "Beta", partners=["Ramesh Shah"])])
     assert all(len(g.members) == 1 for g in only_partner)
@@ -1415,6 +1132,10 @@ def _norm(text: str | None) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", (text or "").lower())).strip()
 
 
+def _partners(p: Promoter) -> set[str]:
+    return {_norm(n) for n in (p.partners_or_directors or [])} - {""}
+
+
 @dataclass
 class Link:
     promoter_id: int
@@ -1431,7 +1152,8 @@ def resolve_groups(promoters: list[Promoter]) -> list[GroupResult]:
     """Rule-based grouping. Pure: takes Promoter objects, returns groups; touches no database.
 
     filing_confirmed: same PAN (union-find, so links are transitive).
-    possible: overlapping named partner/director AND (same normalised address OR similar name).
+    possible: (overlapping named partner/director AND (same normalised address OR similar name))
+              OR (same normalised address AND similar name).
     A single weak signal alone never links anything.
     """
     parent = {p.id: p.id for p in promoters}
@@ -1461,26 +1183,34 @@ def resolve_groups(promoters: list[Promoter]) -> list[GroupResult]:
         evidence = {"basis": "pan", "pan": pan} if len(members) > 1 else {"basis": "single_entity"}
         groups[root] = GroupResult([Link(m.id, "filing_confirmed", dict(evidence)) for m in members])
 
-    # Candidate pairs come only from shared partner/director names (every `possible` rule needs one).
+    # Every `possible` rule needs a shared partner or a shared address, so candidate pairs are
+    # built from those two indexes only. ponytail: a very common address (a co-working space) makes
+    # O(k^2) pairs; cap or skip oversized buckets if that ever shows up in real data.
     by_partner: dict[str, list[Promoter]] = {}
+    by_address: dict[str, list[Promoter]] = {}
     for p in promoters:
-        for name in {_norm(n) for n in (p.partners_or_directors or [])} - {""}:
+        for name in _partners(p):
             by_partner.setdefault(name, []).append(p)
-    shared: dict[tuple[int, int], set[str]] = {}
-    for name, people in by_partner.items():
-        for i, a in enumerate(people):
-            for b in people[i + 1:]:
-                if find(a.id) != find(b.id):
-                    shared.setdefault((min(a.id, b.id), max(a.id, b.id)), set()).add(name)
+        if _norm(p.registered_address):
+            by_address.setdefault(_norm(p.registered_address), []).append(p)
+    pairs: set[tuple[int, int]] = set()
+    for index in (by_partner, by_address):
+        for people in index.values():
+            for i, a in enumerate(people):
+                for b in people[i + 1:]:
+                    if find(a.id) != find(b.id):
+                        pairs.add((min(a.id, b.id), max(a.id, b.id)))
 
     by_id = {p.id: p for p in promoters}
-    for (a_id, b_id), names in shared.items():
+    for a_id, b_id in pairs:
         a, b = by_id[a_id], by_id[b_id]
+        shared = sorted(_partners(a) & _partners(b))
         same_address = bool(_norm(a.registered_address)) and _norm(a.registered_address) == _norm(b.registered_address)
         similarity = fuzz.token_set_ratio(_norm(a.name), _norm(b.name))
-        if not (same_address or similarity >= NAME_SIMILARITY_THRESHOLD):
+        similar_name = similarity >= NAME_SIMILARITY_THRESHOLD
+        if not ((shared and (same_address or similar_name)) or (same_address and similar_name)):
             continue
-        evidence = {"shared_partners": sorted(names), "same_address": same_address, "name_similarity": round(similarity)}
+        evidence = {"shared_partners": shared, "same_address": same_address, "name_similarity": round(similarity)}
         for host, guest in ((a, b), (b, a)):
             group = groups[find(host.id)]
             if all(m.promoter_id != guest.id for m in group.members):
@@ -1509,7 +1239,7 @@ def rebuild_groups(session: Session) -> int:
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `cd backend && uv run pytest tests/test_grouping.py -v`
-Expected: `4 passed`
+Expected: `5 passed`
 
 - [ ] **Step 5: Commit**
 
@@ -1543,15 +1273,16 @@ DOC_1 = {
         {"ref": "P2", "name": "Shree Homes LLP", "pan": "AAAPA0001A"},
     ],
     "projects": [
-        {"reg_no": "MH-1", "promoter_ref": "P1", "name": "Shree Heights", "status": "completed", "city": "Pune",
-         "original_completion": "2022-01-01", "actual_completion": "2021-12-01"},
-        {"reg_no": "MH-2", "promoter_ref": "P2", "name": "Shree Gardens", "status": "completed",
-         "original_completion": "2022-01-01", "actual_completion": "2023-01-01"},
+        {"reg_no": "MH-1", "promoter_ref": "P1", "name": "Shree Heights", "city": "Pune",
+         "registration_end": "2022-01-01"},
+        {"reg_no": "MH-2", "promoter_ref": "P2", "name": "Shree Gardens",
+         "registration_end": "2022-01-01", "extended_end": "2023-01-01"},
     ],
     "complaints": [
-        {"ref": "C1", "promoter_ref": "P1", "status": "open", "project_reg_no": "MH-1"},
-        {"ref": "C2", "promoter_ref": "P2", "status": "resolved", "project_reg_no": "MH-2",
-         "order_url": "https://example.test/order/C2.pdf"},
+        {"ref": "C1", "promoter_ref": "P1", "status": "Hearing Scheduled", "project_reg_no": "MH-1",
+         "filed_year": 2024, "filed_month": 3},
+        {"ref": "C2", "promoter_ref": "P2", "status": "Order Approved", "project_reg_no": "MH-2",
+         "filed_year": 2023, "filed_month": 11, "order_url": "https://example.test/order/C2.pdf"},
     ],
 }
 DOC_2 = {
@@ -1561,9 +1292,8 @@ DOC_2 = {
         {"ref": "P4", "name": "Zenith Constructions", "pan": "CCCPC0003C"},
     ],
     "projects": [
-        {"reg_no": "MH-3", "promoter_ref": "P3", "name": "Shree Towers", "status": "ongoing",
-         "original_completion": "2027-01-01"},
-        {"reg_no": "MH-4", "promoter_ref": "P4", "name": "Zenith One", "status": "ongoing", "original_completion": "2027-06-01"},
+        {"reg_no": "MH-3", "promoter_ref": "P3", "name": "Shree Towers", "registration_end": "2027-01-01"},
+        {"reg_no": "MH-4", "promoter_ref": "P4", "name": "Zenith One", "registration_end": "2027-06-01"},
     ],
 }
 ```
@@ -1591,7 +1321,7 @@ def test_refresh_scores_each_group_from_confirmed_members_only(session, tmp_path
     group_id = session.scalar(select(GroupMembership.group_id).where(
         GroupMembership.promoter_id == p1.id, GroupMembership.link_type == "filing_confirmed"))
     snapshot = session.scalar(select(ScoreSnapshot).where(ScoreSnapshot.group_id == group_id))
-    assert snapshot.breakdown["delivery"]["score"] == 50  # P3's ongoing project is not counted
+    assert snapshot.breakdown["schedule"]["score"] == 50  # P3's project (a possible link) is not counted
     assert snapshot.breakdown["overall"] == 50
     assert p1.source_document_id in snapshot.input_source_document_ids
 
@@ -1622,7 +1352,7 @@ from sqlalchemy.orm import Session
 
 from sahighar.db.models import Complaint, GroupMembership, Project, Promoter, ScoreSnapshot
 from sahighar.resolve.grouping import rebuild_groups
-from sahighar.scoring.v1 import ProjectFacts, score
+from sahighar.scoring.v1 import ComplaintFacts, ProjectFacts, score
 from sahighar.util import utcnow
 
 
@@ -1643,10 +1373,9 @@ def compute_scores(session: Session, today: date) -> int:
     for group_id, promoter_ids in members.items():
         ps = [p for pid in promoter_ids for p in projects[pid]]
         cs = [c for pid in promoter_ids for c in complaints[pid]]
-        open_count = sum(c.status == "open" for c in cs)
         breakdown = score(
-            [ProjectFacts(p.status, p.original_completion_date, p.actual_completion_date) for p in ps],
-            open_count, len(cs) - open_count, today,
+            [ProjectFacts(p.registration_end_date, p.extended_end_date) for p in ps],
+            [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
         )
         sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs)}
         session.add(ScoreSnapshot(group_id=group_id, computed_at=now, breakdown=breakdown,
@@ -1664,7 +1393,7 @@ def refresh(session: Session, today: date | None = None) -> int:
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `cd backend && uv run pytest -v`
-Expected: `20 passed`
+Expected: `22 passed`
 
 - [ ] **Step 5: Commit**
 
@@ -1681,7 +1410,7 @@ git commit -m "backend: add refresh service (group then score)"
 
 **Interfaces:**
 - Consumes: `refresh` (Task 12), `classify`/`ProjectFacts` (Task 10), `get_session` (Task 7).
-- Produces: FastAPI `app` with `GET /search?q=` (projects only), `GET /projects/{id}`, `GET /promoters/{id}`. The trust payload keys are: `data_as_of`, `score_computed_at`, `score`, `group_promoters`, `delivery_history`, `complaints`, `possibly_related`, `sources` (keyed by stringified source document id); the project response adds `project`, the promoter response adds `promoter`. Every record carries `source_document_id`.
+- Produces: FastAPI `app` with `GET /search?q=` (projects only), `GET /projects/{id}`, `GET /promoters/{id}`. The trust payload keys are: `data_as_of`, `score_computed_at`, `score`, `group_promoters`, `schedule`, `complaints`, `possibly_related`, `sources` (keyed by stringified source document id); the project response adds `project`, the promoter response adds `promoter`. Every record carries `source_document_id`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1722,18 +1451,18 @@ def test_trust_page_payload(client, session):
     body = r.json()
     assert body["project"]["name"] == "Shree Heights"
     assert {p["name"] for p in body["group_promoters"]} == {"Shree Realty LLP", "Shree Homes LLP"}
-    assert body["score"]["delivery"]["score"] == 50
+    assert body["score"]["schedule"]["score"] == 50
     assert body["score"]["complaints"]["score"] == 50
     assert body["score"]["overall"] == 50
     assert [p["name"] for p in body["possibly_related"]] == ["Shree Realty Phase 2 LLP"]
     assert body["possibly_related"][0]["evidence"]["same_address"] is True
-    assert len(body["delivery_history"]) == 2  # possibly-related project is NOT counted
+    assert len(body["schedule"]) == 2  # possibly-related project is NOT counted
     assert body["data_as_of"] and body["score_computed_at"]
 
 
 def test_every_record_links_to_a_source(client, session):
     body = client.get(f"/projects/{_project_id(session, 'MH-1')}").json()
-    records = body["delivery_history"] + body["complaints"] + body["possibly_related"] + body["group_promoters"]
+    records = body["schedule"] + body["complaints"] + body["possibly_related"] + body["group_promoters"]
     assert records
     for record in records:
         assert str(record["source_document_id"]) in body["sources"]
@@ -1799,20 +1528,18 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
     )
     scored_on = snapshot.computed_at.date() if snapshot else date.today()
 
-    delivery_history = []
+    schedule = []
     for p in session.scalars(select(Project).where(Project.promoter_id.in_(confirmed_ids)).order_by(Project.id)):
-        outcome, months_late = classify(
-            ProjectFacts(p.status, p.original_completion_date, p.actual_completion_date), scored_on
-        )
-        delivery_history.append({
-            "project_id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no, "status": p.status,
-            "original_completion_date": p.original_completion_date, "revised_completion_date": p.revised_completion_date,
-            "actual_completion_date": p.actual_completion_date, "outcome": outcome, "months_late": months_late,
-            "source_document_id": p.source_document_id,
+        outcome, months_extended = classify(ProjectFacts(p.registration_end_date, p.extended_end_date), scored_on)
+        schedule.append({
+            "project_id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no,
+            "registration_end_date": p.registration_end_date, "extended_end_date": p.extended_end_date,
+            "outcome": outcome, "months_extended": months_extended, "source_document_id": p.source_document_id,
         })
     complaints = [
-        {"complaint_ref": c.complaint_ref, "project_id": c.project_id, "status": c.status, "filed_on": c.filed_on,
-         "resolved_on": c.resolved_on, "order_url": c.order_url, "source_document_id": c.source_document_id}
+        {"complaint_ref": c.complaint_ref, "project_id": c.project_id, "status": c.status, "stage": c.stage,
+         "non_execution_applied": c.non_execution_applied, "filed_year": c.filed_year, "filed_month": c.filed_month,
+         "order_url": c.order_url, "source_document_id": c.source_document_id}
         for c in session.scalars(select(Complaint).where(Complaint.promoter_id.in_(confirmed_ids)).order_by(Complaint.id))
     ]
     possibly_related = [
@@ -1825,14 +1552,14 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         for pid in confirmed_ids
     ]
 
-    source_ids = {r["source_document_id"] for r in (*delivery_history, *complaints, *possibly_related, *group_promoters)}
+    source_ids = {r["source_document_id"] for r in (*schedule, *complaints, *possibly_related, *group_promoters)}
     docs = session.scalars(select(SourceDocument).where(SourceDocument.id.in_(source_ids))).all()
     return {
         "data_as_of": max((d.fetched_at for d in docs), default=None),
         "score_computed_at": snapshot.computed_at if snapshot else None,
         "score": snapshot.breakdown if snapshot else None,
         "group_promoters": group_promoters,
-        "delivery_history": delivery_history,
+        "schedule": schedule,
         "complaints": complaints,
         "possibly_related": possibly_related,
         "sources": {str(d.id): {"url": d.url, "origin": d.origin, "fetched_at": d.fetched_at} for d in docs},
@@ -1865,7 +1592,7 @@ def search(q: str = Query(min_length=2), session: Session = Depends(get_session)
         .order_by(Project.name).limit(25)
     ).all()
     return {"projects": [{"id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city,
-                          "status": p.status, "promoter_id": p.promoter_id, "promoter_name": name}
+                          "promoter_id": p.promoter_id, "promoter_name": name}
                          for p, name in rows]}
 
 
@@ -1877,10 +1604,8 @@ def project(project_id: int, session: Session = Depends(get_session)):
     promoter = session.get(Promoter, p.promoter_id)
     return {
         "project": {"id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city, "locality": p.locality,
-                    "configurations": p.configurations, "carpet_area_range": p.carpet_area_range, "status": p.status,
-                    "original_completion_date": p.original_completion_date,
-                    "revised_completion_date": p.revised_completion_date,
-                    "actual_completion_date": p.actual_completion_date,
+                    "configurations": p.configurations, "carpet_area_range": p.carpet_area_range,
+                    "registration_end_date": p.registration_end_date, "extended_end_date": p.extended_end_date,
                     "promoter_id": promoter.id, "promoter_name": promoter.name,
                     "source_document_id": p.source_document_id},
         **trust_payload(session, promoter),
@@ -1898,7 +1623,7 @@ def promoter(promoter_id: int, session: Session = Depends(get_session)):
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `cd backend && uv run pytest -v`
-Expected: `24 passed`. Two harmless deprecation warnings from Starlette's test client are expected.
+Expected: `26 passed`. Two harmless deprecation warnings from Starlette's test client are expected.
 
 - [ ] **Step 5: Commit**
 
@@ -1914,7 +1639,7 @@ git commit -m "backend: add search and trust-payload API"
 - Modify: `frontend/vite.config.ts`, `frontend/package.json` (test script), `frontend/index.html` (title), `frontend/src/index.css`, `frontend/src/main.tsx`
 
 **Interfaces:**
-- Produces: TypeScript types `Score`, `HistoryItem`, `ComplaintItem`, `RelatedItem`, `ProjectPayload`, `SearchResult`, `Source` mirroring the API; `searchProjects(q) -> Promise<SearchResult[]>`; `getProject(id) -> Promise<ProjectPayload>`; `formatDate(value: string | null): string`; `outcomeText(item): string`. `npm test` runs Vitest; the Vite dev server proxies `/api` to `http://localhost:8010`.
+- Produces: TypeScript types `Score`, `ScheduleItem`, `ComplaintItem`, `RelatedItem`, `ProjectPayload`, `SearchResult`, `Source` mirroring the API; `searchProjects(q) -> Promise<SearchResult[]>`; `getProject(id) -> Promise<ProjectPayload>`; `formatDate(value: string | null): string`; `formatMonthYear(year, month): string` (never shows a day); `outcomeText(item): string`. `npm test` runs Vitest; the Vite dev server proxies `/api` to `http://localhost:8010`.
 
 - [ ] **Step 1: Scaffold and install**
 
@@ -1994,7 +1719,7 @@ Create `frontend/src/format.test.ts`:
 
 ```ts
 import { describe, expect, it } from 'vitest'
-import { formatDate, outcomeText } from './format'
+import { formatDate, formatMonthYear, outcomeText } from './format'
 
 describe('formatDate', () => {
   it('reads naive API datetimes as UTC, not local time', () => {
@@ -2007,10 +1732,19 @@ describe('formatDate', () => {
   })
 })
 
+describe('formatMonthYear', () => {
+  it('never invents a day when the source gives year and month only', () => {
+    expect(formatMonthYear(2024, 3)).toBe('March 2024')
+    expect(formatMonthYear(2024, null)).toBe('2024')
+    expect(formatMonthYear(null, null)).toBe('—')
+  })
+})
+
 describe('outcomeText', () => {
-  it('states lateness against the original date in plain words', () => {
-    expect(outcomeText({ outcome: 'late', months_late: 12 })).toBe('Delivered 12 months after the original date')
-    expect(outcomeText({ outcome: 'unknown', months_late: null })).toBe('Outcome not determinable from the filing')
+  it('states the schedule against the original end date in neutral words', () => {
+    expect(outcomeText({ outcome: 'extended', months_extended: 12 })).toBe('Registration extended by 12 months')
+    expect(outcomeText({ outcome: 'not_extended', months_extended: null })).toBe('Original end date passed; no extension on record')
+    expect(outcomeText({ outcome: 'unknown', months_extended: null })).toBe('No end date in the filing')
   })
 })
 ```
@@ -2029,46 +1763,48 @@ export type Source = { url: string; origin: string; fetched_at: string }
 
 export type Score = {
   overall: number | null
-  delivery: {
+  schedule: {
     available: boolean
     reason: string | null
     score: number | null
-    on_time: number
-    late: number
-    overdue: number
-    in_progress: number
+    extended: number
+    not_extended: number
+    within_registration: number
     unknown: number
-    median_months_late: number | null
+    median_months_extended: number | null
   }
   complaints: {
     available: boolean
     reason: string | null
     score: number | null
-    open: number
-    resolved: number
+    total: number
+    pending: number
+    order_issued: number
+    order_not_executed: number
+    unresolved: number
     project_count: number
   }
   progress: { available: boolean; reason: string | null; score: number | null }
 }
 
-export type HistoryItem = {
+export type ScheduleItem = {
   project_id: number
   name: string
   rera_reg_no: string
-  status: string
-  original_completion_date: string | null
-  revised_completion_date: string | null
-  actual_completion_date: string | null
-  outcome: 'on_time' | 'late' | 'overdue' | 'in_progress' | 'unknown'
-  months_late: number | null
+  registration_end_date: string | null
+  extended_end_date: string | null
+  outcome: 'extended' | 'not_extended' | 'within_registration' | 'unknown'
+  months_extended: number | null
   source_document_id: number
 }
 
 export type ComplaintItem = {
   complaint_ref: string
-  status: 'open' | 'resolved'
-  filed_on: string | null
-  resolved_on: string | null
+  status: string
+  stage: 'order_issued' | 'pending' | 'other'
+  non_execution_applied: boolean
+  filed_year: number | null
+  filed_month: number | null
   order_url: string | null
   source_document_id: number
 }
@@ -2087,7 +1823,8 @@ export type ProjectPayload = {
     rera_reg_no: string
     city: string | null
     locality: string | null
-    status: string
+    registration_end_date: string | null
+    extended_end_date: string | null
     promoter_name: string
     source_document_id: number
   }
@@ -2095,7 +1832,7 @@ export type ProjectPayload = {
   score_computed_at: string | null
   score: Score | null
   group_promoters: { promoter_id: number; name: string; source_document_id: number }[]
-  delivery_history: HistoryItem[]
+  schedule: ScheduleItem[]
   complaints: ComplaintItem[]
   possibly_related: RelatedItem[]
   sources: Record<string, Source>
@@ -2106,7 +1843,6 @@ export type SearchResult = {
   name: string
   rera_reg_no: string
   city: string | null
-  status: string
   promoter_name: string
 }
 
@@ -2125,7 +1861,7 @@ export const getProject = (id: string) => get<ProjectPayload>(`/projects/${encod
 Create `frontend/src/format.ts`:
 
 ```ts
-import type { HistoryItem } from './api'
+import type { ScheduleItem } from './api'
 
 // The API sends naive UTC datetimes (no "Z"); without this the browser reads them as local time.
 const asUtc = (value: string) => (/T[\d:.]+$/.test(value) ? `${value}Z` : value)
@@ -2135,18 +1871,24 @@ export function formatDate(value: string | null): string {
   return new Date(asUtc(value)).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
 
-export function outcomeText(item: Pick<HistoryItem, 'outcome' | 'months_late'>): string {
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+/** The source publishes year and month only, so never show a day. */
+export function formatMonthYear(year: number | null, month: number | null): string {
+  if (!year) return '—'
+  return month ? `${MONTHS[month - 1]} ${year}` : String(year)
+}
+
+export function outcomeText(item: Pick<ScheduleItem, 'outcome' | 'months_extended'>): string {
   switch (item.outcome) {
-    case 'on_time':
-      return 'Delivered on time'
-    case 'late':
-      return `Delivered ${item.months_late} months after the original date`
-    case 'overdue':
-      return `${item.months_late} months past the original date, not yet completed`
-    case 'in_progress':
-      return 'In progress, original date not yet reached'
+    case 'extended':
+      return `Registration extended by ${item.months_extended} months`
+    case 'not_extended':
+      return 'Original end date passed; no extension on record'
+    case 'within_registration':
+      return 'Within the registered period'
     default:
-      return 'Outcome not determinable from the filing'
+      return 'No end date in the filing'
   }
 }
 ```
@@ -2154,7 +1896,7 @@ export function outcomeText(item: Pick<HistoryItem, 'outcome' | 'months_late'>):
 - [ ] **Step 6: Run the tests, then the build**
 
 Run: `cd frontend && npm test`
-Expected: `Tests  3 passed` (3 in format.test.ts)
+Expected: `Tests  4 passed` (4 in format.test.ts)
 
 Also run once with an eastern timezone to prove the UTC handling: `TZ=Asia/Kolkata npm test` — same result.
 
@@ -2189,30 +1931,32 @@ import type { ProjectPayload } from '../api'
 import { TrustPageView } from './TrustPage'
 
 const data: ProjectPayload = {
-  project: { id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', city: 'Pune', locality: null, status: 'completed',
-    promoter_name: 'Shree Realty LLP', source_document_id: 1 },
+  project: { id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', city: 'Pune', locality: null,
+    registration_end_date: '2022-01-01', extended_end_date: null, promoter_name: 'Shree Realty LLP', source_document_id: 1 },
   data_as_of: '2026-09-01T00:00:00',
   score_computed_at: '2026-09-01T00:00:00',
   score: {
-    overall: 50,
-    delivery: { available: true, reason: null, score: 50, on_time: 1, late: 1, overdue: 0, in_progress: 0, unknown: 0, median_months_late: 12 },
-    complaints: { available: true, reason: null, score: 50, open: 1, resolved: 1, project_count: 2 },
+    overall: 25,
+    schedule: { available: true, reason: null, score: 50, extended: 1, not_extended: 1, within_registration: 0, unknown: 0, median_months_extended: 12 },
+    complaints: { available: true, reason: null, score: 0, total: 2, pending: 1, order_issued: 1, order_not_executed: 1, unresolved: 2, project_count: 2 },
     progress: { available: false, reason: 'not_yet_available', score: null },
   },
   group_promoters: [{ promoter_id: 1, name: 'Shree Realty LLP', source_document_id: 1 }],
-  delivery_history: [
-    { project_id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', status: 'completed', original_completion_date: '2022-01-01',
-      revised_completion_date: null, actual_completion_date: '2021-12-01', outcome: 'on_time', months_late: null, source_document_id: 1 },
-    { project_id: 2, name: 'Shree Gardens', rera_reg_no: 'MH-2', status: 'completed', original_completion_date: '2022-01-01',
-      revised_completion_date: '2022-06-01', actual_completion_date: '2023-01-01', outcome: 'late', months_late: 12, source_document_id: 2 },
+  schedule: [
+    { project_id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', registration_end_date: '2022-01-01', extended_end_date: null,
+      outcome: 'not_extended', months_extended: null, source_document_id: 1 },
+    { project_id: 2, name: 'Shree Gardens', rera_reg_no: 'MH-2', registration_end_date: '2022-01-01', extended_end_date: '2023-01-01',
+      outcome: 'extended', months_extended: 12, source_document_id: 2 },
   ],
   complaints: [
-    { complaint_ref: 'C1', status: 'open', filed_on: null, resolved_on: null, order_url: null, source_document_id: 3 },
-    { complaint_ref: 'C2', status: 'resolved', filed_on: null, resolved_on: null, order_url: 'https://example.test/C2.pdf', source_document_id: 3 },
+    { complaint_ref: 'C1', status: 'Hearing Scheduled', stage: 'pending', non_execution_applied: false,
+      filed_year: 2024, filed_month: 3, order_url: null, source_document_id: 3 },
+    { complaint_ref: 'C2', status: 'Order Approved', stage: 'order_issued', non_execution_applied: true,
+      filed_year: 2023, filed_month: 11, order_url: 'https://example.test/C2.pdf', source_document_id: 3 },
   ],
   possibly_related: [
     { promoter_id: 3, name: 'Shree Realty Phase 2 LLP',
-      evidence: { shared_partners: ['ramesh shah'], same_address: true, name_similarity: 85 }, source_document_id: 4 },
+      evidence: { shared_partners: [], same_address: true, name_similarity: 100 }, source_document_id: 4 },
   ],
   sources: {
     '1': { url: 'https://maharera.example/p/1', origin: 'test', fetched_at: '2026-09-01T00:00:00' },
@@ -2226,10 +1970,11 @@ describe('TrustPageView', () => {
   it('shows the breakdown before the overall number, and never the overall alone', () => {
     render(<TrustPageView data={data} />)
     const breakdown = screen.getByRole('region', { name: 'Score breakdown' })
-    expect(within(breakdown).getByText('Delivery history')).toBeInTheDocument()
-    expect(within(breakdown).getByText(/1 of 2 past projects on time; 1 late \(median 12 months\)/)).toBeInTheDocument()
+    expect(within(breakdown).getByText('Registration schedule')).toBeInTheDocument()
+    expect(within(breakdown).getByText(/1 of 2 projects had their registration extended \(median 12 months\); 1 passed the original end date/)).toBeInTheDocument()
+    expect(within(breakdown).getByText(/1 hearing pending, 1 order issued; 1 with a request to enforce/)).toBeInTheDocument()
     expect(within(breakdown).getByText(/Progress vs promise/)).toBeInTheDocument()
-    expect(within(breakdown).getByText(/Overall: 50\/100, the average of the sections above/)).toBeInTheDocument()
+    expect(within(breakdown).getByText(/Overall: 25\/100, the average of the sections above/)).toBeInTheDocument()
   })
 
   it('stamps the data date and states it is not a verdict', () => {
@@ -2238,9 +1983,26 @@ describe('TrustPageView', () => {
     expect(screen.getByText(/not an independent verdict/)).toBeInTheDocument()
   })
 
-  it('puts a source link beside every delivery and complaint row', () => {
+  it('never calls a project late, and says what the dates are', () => {
     render(<TrustPageView data={data} />)
-    for (const name of ['Delivery history', 'Complaints']) {
+    const schedule = screen.getByRole('region', { name: 'Registration schedule' })
+    expect(within(schedule).getByText(/these are dates, not a verdict/)).toBeInTheDocument()
+    expect(within(schedule).getByText('Registration extended by 12 months')).toBeInTheDocument()
+    expect(within(schedule).getByText('Original end date passed; no extension on record')).toBeInTheDocument()
+    expect(screen.queryByText(/\blate\b|delayed/i)).not.toBeInTheDocument()
+  })
+
+  it('shows complaints with the status exactly as published and only month and year', () => {
+    render(<TrustPageView data={data} />)
+    const complaints = screen.getByRole('region', { name: 'Complaints' })
+    expect(within(complaints).getByText('Order Approved')).toBeInTheDocument()
+    expect(within(complaints).getByText('March 2024')).toBeInTheDocument()
+    expect(within(complaints).getByText('Yes, order not complied with')).toBeInTheDocument()
+  })
+
+  it('puts a source link beside every schedule and complaint row', () => {
+    render(<TrustPageView data={data} />)
+    for (const name of ['Registration schedule', 'Complaints']) {
       const rows = within(screen.getByRole('region', { name })).getAllByRole('row').slice(1)
       expect(rows.length).toBeGreaterThan(0)
       for (const row of rows) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
@@ -2253,14 +2015,15 @@ describe('TrustPageView', () => {
     const block = screen.getByRole('region', { name: 'Possibly related entities' })
     expect(within(block).getByText(/not counted in this score/)).toBeInTheDocument()
     expect(within(block).getByText(/Shree Realty Phase 2 LLP/)).toBeInTheDocument()
+    expect(within(block).getByText(/same registered address/)).toBeInTheDocument()
     expect(within(block).getByText(/^Source, fetched/)).toBeInTheDocument()
-    const history = screen.getByRole('region', { name: 'Delivery history' })
-    expect(within(history).queryByText(/Phase 2/)).not.toBeInTheDocument()
+    const schedule = screen.getByRole('region', { name: 'Registration schedule' })
+    expect(within(schedule).queryByText(/Phase 2/)).not.toBeInTheDocument()
   })
 
   it('says so when there is not enough data instead of showing a number', () => {
     const empty = { ...data, score: { ...data.score!, overall: null,
-      delivery: { ...data.score!.delivery, available: false, score: null, reason: 'insufficient_history' } } }
+      schedule: { ...data.score!.schedule, available: false, score: null, reason: 'insufficient_history' } } }
     render(<TrustPageView data={empty} />)
     expect(screen.getByText(/Not enough history to summarise/)).toBeInTheDocument()
   })
@@ -2313,20 +2076,23 @@ function Section({ title, score, children }: { title: string; score: number | nu
 
 /** The overall number is only ever rendered below, and as a summary of, the three sections. */
 export function ScoreBreakdown({ score }: { score: Score }) {
-  const { delivery, complaints, progress } = score
-  const known = delivery.on_time + delivery.late + delivery.overdue
+  const { schedule, complaints, progress } = score
+  const evaluated = schedule.extended + schedule.not_extended
   return (
     <section aria-label="Score breakdown">
       <div className="grid gap-3 sm:grid-cols-3">
-        <Section title="Delivery history" score={delivery.score}>
-          {delivery.available
-            ? `${delivery.on_time} of ${known} past projects on time; ${delivery.late + delivery.overdue} late` +
-              (delivery.median_months_late !== null ? ` (median ${delivery.median_months_late} months).` : '.')
-            : 'Not enough history to summarise (at least 2 completed or overdue projects are needed).'}
+        <Section title="Registration schedule" score={schedule.score}>
+          {schedule.available
+            ? `${schedule.extended} of ${evaluated} projects had their registration extended` +
+              (schedule.median_months_extended !== null ? ` (median ${schedule.median_months_extended} months)` : '') +
+              `; ${schedule.not_extended} passed the original end date with no extension on record.`
+            : 'Not enough history to summarise (at least 2 projects past their original end date or extended are needed).'}
         </Section>
         <Section title="Complaints" score={complaints.score}>
           {complaints.available
-            ? `${complaints.open} open, ${complaints.resolved} resolved, across ${complaints.project_count} registered projects.`
+            ? `${complaints.total} on record: ${complaints.pending} hearing pending, ${complaints.order_issued} order issued; ` +
+              `${complaints.order_not_executed} with a request to enforce an order that was not complied with. ` +
+              `${complaints.unresolved} unresolved across ${complaints.project_count} registered projects.`
             : 'No registered projects on record.'}
         </Section>
         <Section title="Progress vs promise" score={progress.score}>
@@ -2351,7 +2117,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getProject, type ProjectPayload } from '../api'
 import { ScoreBreakdown } from '../components/ScoreBreakdown'
 import { SourceLink } from '../components/SourceLink'
-import { formatDate, outcomeText } from '../format'
+import { formatDate, formatMonthYear, outcomeText } from '../format'
 
 export function TrustPageView({ data }: { data: ProjectPayload }) {
   const { project, sources } = data
@@ -2371,24 +2137,24 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
 
       {data.score ? <ScoreBreakdown score={data.score} /> : <p>No score has been computed for this promoter yet.</p>}
 
-      <section aria-label="Delivery history">
-        <h2 className="text-lg font-semibold text-stone-900">Delivery history</h2>
+      <section aria-label="Registration schedule">
+        <h2 className="text-lg font-semibold text-stone-900">Registration schedule</h2>
         <p className="text-sm text-stone-600">
-          Projects registered by {data.group_promoters.map((p) => p.name).join(', ')}. Lateness is measured against the
-          original completion date; a revised date, if any, is shown beside it.
+          Projects registered by {data.group_promoters.map((p) => p.name).join(', ')}. Dates are the end of each
+          registration, taken from the registration and extension certificates. An extension is not necessarily the
+          promoter's fault, and a project past its end date may already be complete: these are dates, not a verdict.
         </p>
         <div className="mt-2 overflow-x-auto">
         <table className="w-full min-w-[40rem] text-left text-sm">
           <thead className="text-stone-600">
-            <tr><th>Project</th><th>Original date</th><th>Revised date</th><th>Actual</th><th>Outcome</th><th>Source</th></tr>
+            <tr><th>Project</th><th>Registered until</th><th>Extended to</th><th>Outcome</th><th>Source</th></tr>
           </thead>
           <tbody>
-            {data.delivery_history.map((h) => (
+            {data.schedule.map((h) => (
               <tr key={h.project_id} className="border-t border-stone-200 align-top">
                 <td>{h.name} <span className="font-mono text-xs text-stone-500">{h.rera_reg_no}</span></td>
-                <td>{formatDate(h.original_completion_date)}</td>
-                <td>{formatDate(h.revised_completion_date)}</td>
-                <td>{formatDate(h.actual_completion_date)}</td>
+                <td>{formatDate(h.registration_end_date)}</td>
+                <td>{formatDate(h.extended_end_date)}</td>
                 <td>{outcomeText(h)}</td>
                 <td><SourceLink id={h.source_document_id} sources={sources} /></td>
               </tr>
@@ -2404,17 +2170,17 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
           <p className="text-sm text-stone-600">No complaints on record for this promoter.</p>
         ) : (
           <div className="mt-2 overflow-x-auto">
-          <table className="w-full min-w-[36rem] text-left text-sm">
+          <table className="w-full min-w-[40rem] text-left text-sm">
             <thead className="text-stone-600">
-              <tr><th>Reference</th><th>Status</th><th>Filed</th><th>Resolved</th><th>Order</th><th>Source</th></tr>
+              <tr><th>Reference</th><th>Status as published</th><th>Filed</th><th>Enforcement requested</th><th>Order</th><th>Source</th></tr>
             </thead>
             <tbody>
               {data.complaints.map((c) => (
                 <tr key={c.complaint_ref} className="border-t border-stone-200 align-top">
                   <td className="font-mono">{c.complaint_ref}</td>
-                  <td>{c.status === 'open' ? 'Open' : 'Resolved'}</td>
-                  <td>{formatDate(c.filed_on)}</td>
-                  <td>{formatDate(c.resolved_on)}</td>
+                  <td>{c.status}</td>
+                  <td>{formatMonthYear(c.filed_year, c.filed_month)}</td>
+                  <td>{c.non_execution_applied ? 'Yes, order not complied with' : 'No'}</td>
                   <td>
                     {c.order_url ? (
                       <a className="text-blue-800 underline" href={c.order_url} target="_blank" rel="noopener noreferrer">
@@ -2435,14 +2201,18 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         <section aria-label="Possibly related entities" className="rounded border border-dashed border-stone-400 p-4">
           <h2 className="text-lg font-semibold text-stone-900">Possibly related entities</h2>
           <p className="text-sm text-stone-600">
-            Records of possibly related entities (not counted in this score). These are matched on overlapping
-            partners or directors plus a shared address or similar name; the filings do not confirm a link.
+            Records of possibly related entities (not counted in this score). They are matched on details such as a shared
+            registered address, similar name, or overlapping partners or directors; the filings do not confirm a link.
           </p>
           <ul className="mt-2 space-y-1 text-sm">
             {data.possibly_related.map((r) => (
               <li key={r.promoter_id}>
-                {r.name}: shares {r.evidence.shared_partners.join(', ')}
-                {r.evidence.same_address ? '; same registered address' : `; name similarity ${r.evidence.name_similarity}%`}{' '}
+                {r.name}:{' '}
+                {[
+                  r.evidence.shared_partners.length ? `shares ${r.evidence.shared_partners.join(', ')}` : null,
+                  r.evidence.same_address ? 'same registered address' : null,
+                  `name similarity ${r.evidence.name_similarity}%`,
+                ].filter(Boolean).join('; ')}{' '}
                 <SourceLink id={r.source_document_id} sources={sources} />
               </li>
             ))}
@@ -2471,7 +2241,7 @@ export default function TrustPage() {
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `cd frontend && npm test`
-Expected: `Tests  8 passed` (3 format + 5 trust page)
+Expected: `Tests  11 passed` (4 format + 7 trust page)
 
 - [ ] **Step 5: Commit**
 
@@ -2580,7 +2350,7 @@ export default function Search() {
 - [ ] **Step 2: Type-check and build**
 
 Run: `cd frontend && npm run build && npm test`
-Expected: build succeeds; `Tests  8 passed`.
+Expected: build succeeds; `Tests  11 passed`.
 
 - [ ] **Step 3: Commit the functional version**
 
@@ -2690,9 +2460,9 @@ Free tool that shows a homebuilder's RERA track record before you book. Docs: `P
 
 Open `http://localhost:5173`. Search `shree`: three results. Open **Shree Heights** and confirm each of these:
 - Header shows the RERA number, promoter name, and "Data as of <today's date>" with the not-a-verdict sentence.
-- Breakdown shows Delivery history 50/100 ("1 of 2 past projects on time; 1 late (median 12 months)"), Complaints 50/100 ("1 open, 1 resolved, across 2 registered projects"), Progress vs promise "—", then "Overall: 50/100, the average of the sections above that have data."
-- Delivery table lists Shree Heights and Shree Gardens; **Shree Towers is absent**. Each row has a "Source, fetched ..." link to `https://example.test/demo/doc-1`.
-- Complaints table shows C1 (Open) and C2 (Resolved) with an "Original order" link on C2.
+- Breakdown shows Registration schedule 50/100 ("1 of 2 projects had their registration extended (median 12 months); 1 passed the original end date with no extension on record."), Complaints 50/100 ("2 on record: 1 hearing pending, 1 order issued; 0 with a request to enforce an order that was not complied with. 1 unresolved across 2 registered projects."), Progress vs promise "—", then "Overall: 50/100, the average of the sections above that have data."
+- Registration schedule table lists Shree Heights ("Original end date passed; no extension on record") and Shree Gardens ("Registration extended by 12 months"); **Shree Towers is absent**. Each row has a "Source, fetched ..." link to `https://example.test/demo/doc-1`. The words "late" and "delayed" appear nowhere on the page.
+- Complaints table shows C1 ("Hearing Scheduled", March 2024) and C2 ("Order Approved", November 2023) with an "Original order" link on C2; no day of the month is shown anywhere.
 - "Possibly related entities" lists Shree Realty Phase 2 LLP, says "not counted in this score", and shows "same registered address".
 - Search `zzz`: "No registered projects match" message, no crash. Visit `/projects/9999`: "Not found" with a back link.
 - Resize to 375px wide: no horizontal page scroll (tables scroll inside their block).
@@ -2718,7 +2488,7 @@ git commit -m "docs: add README and demo seed; visual pass"
 
 | Spec section | Covered by |
 |---|---|
-| §3 Slice 0 spike (questions 1-9, shallow K/T check, decision rule) | Tasks 1-5; question 6 (runner) deferred until a repo exists |
+| §3 Slice 0 spike (questions 1-9, shallow K/T check, decision rule) | Done before this plan's Part 2; outcome recorded in the spike report (Path B); question 6 (runner) is moot because nothing is scraped |
 | §4 adapter interface, raw store (local impl) | Tasks 6, 9 |
 | §4 S3-compatible raw store | Plan B (deployment) |
 | §5 data model, idempotent upserts, raw-first | Tasks 7, 8, 9 |
@@ -2727,9 +2497,9 @@ git commit -m "docs: add README and demo seed; visual pass"
 | §8 API | Task 13 |
 | §9 frontend | Tasks 14-16 |
 | §11 failure handling (per-document isolation, threshold, re-parse) | Task 9 |
-| §11 weekly workflow, hosting | Plan B |
-| §12 testing (fixtures, unit, contract, e2e) | Tasks 9-13, 15; parser fixture tests and the manual 3-builder check are Plan B |
-| §13 success criteria: slice 0 | Task 5 |
-| §13 success criteria: slice 1 (real MahaRERA data, live cross-check) | Plan B; the core is proven here on fixtures |
+| §11 hosting (no weekly scrape: refresh = a new import) | Plan B |
+| §12 testing (fixtures, unit, contract, e2e) | Tasks 9-13, 15; import-parser tests and the manual 3-builder check are Plan B |
+| §13 success criteria: slice 0 | Done (spike report and decision) |
+| §13 success criteria: slice 1 (real MahaRERA data, cross-check) | Plan B, once data arrives; the core is proven here on fixtures |
 
 **Known limits carried in the code (each marked `ponytail:` where it is a deliberate corner):** grouping and snapshots are rebuilt from scratch on every `refresh` (no history, group ids unstable); `search` is a substring scan (fine at slice-1 volume, add a trigram index if it is not); a complaint whose project is not yet ingested is stored with `project_id = NULL`.
