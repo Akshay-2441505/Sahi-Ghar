@@ -51,6 +51,19 @@ def test_every_record_links_to_a_source(client, session):
     assert body["complaints"][1]["order_url"] == "https://example.test/order/C2.pdf"
 
 
+def test_declared_history_is_listed_once_with_its_source(client, session, tmp_path):
+    past = [{"promoter_ref": "P1", "name": "Shree Old", "original_proposed": "2015-01-01", "actual": "2016-07-01"},
+            {"promoter_ref": "P1", "name": "Shree Older", "original_proposed": "2012-01-01", "actual": "2012-01-01"}]
+    run_ingest(FakeAdapter({"app1": {"past_projects": past}, "app2": {"past_projects": [{**past[0], "promoter_ref": "P2"}]}}),
+               session, LocalRawStore(tmp_path))
+    refresh(session, today=date(2026, 9, 1))
+    body = client.get(f"/projects/{_project_id(session, 'MH-1')}").json()
+    assert [d["name"] for d in body["declared_history"]] == ["Shree Older", "Shree Old"]  # oldest first; same project via P2 counted once
+    assert body["declared_history"][1]["actual_completion_date"] == "2016-07-01"
+    assert str(body["declared_history"][0]["source_document_id"]) in body["sources"]
+    assert body["score"]["declared"]["total"] == 2
+
+
 def test_search_matches_project_promoter_and_reg_no(client):
     def names(q):
         return {p["name"] for p in client.get("/search", params={"q": q}).json()["projects"]}

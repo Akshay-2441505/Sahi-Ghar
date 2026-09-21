@@ -74,6 +74,21 @@ class Project(Base):
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
 
+class PastProject(Base):
+    """A completed project the promoter declared in its registration application: the promoter's own account of
+    proposed versus actual completion. Not verified by this system."""
+    __tablename__ = "past_project"
+    __table_args__ = (UniqueConstraint("promoter_id", "name", "original_proposed_date"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    promoter_id: Mapped[int] = mapped_column(ForeignKey("promoter.id"))
+    name: Mapped[str]
+    project_type: Mapped[str | None]
+    original_proposed_date: Mapped[date]
+    actual_completion_date: Mapped[date]
+    source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
+
+
 class Complaint(Base):
     __tablename__ = "complaint"
     __table_args__ = (UniqueConstraint("promoter_id", "complaint_ref"),)

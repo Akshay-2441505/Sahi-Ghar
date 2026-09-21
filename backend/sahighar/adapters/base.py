@@ -49,10 +49,21 @@ class ComplaintRec:
 
 
 @dataclass
+class PastProjectRec:
+    """A project the promoter DECLARED as completed in its registration application (the promoter's own account)."""
+    promoter_ref: str
+    name: str
+    original_proposed: date
+    actual: date
+    project_type: str | None = None
+
+
+@dataclass
 class ParsedRecords:
     promoters: list[PromoterRec] = field(default_factory=list)
     projects: list[ProjectRec] = field(default_factory=list)
     complaints: list[ComplaintRec] = field(default_factory=list)
+    past_projects: list[PastProjectRec] = field(default_factory=list)
 
 
 _STAGES = {"order approved": "order_issued", "hearing scheduled": "pending", "roznama approved": "pending"}

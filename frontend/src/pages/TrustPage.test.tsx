@@ -12,6 +12,7 @@ const data: ProjectPayload = {
     overall: 25,
     schedule: { available: true, reason: null, score: 50, extended: 1, not_extended: 1, within_registration: 0, unknown: 0, median_months_extended: 12 },
     complaints: { available: true, reason: null, score: 0, total: 2, pending: 1, order_issued: 1, order_not_executed: 1, unresolved: 2, project_count: 2 },
+    declared: { available: true, reason: null, score: 33, total: 3, on_or_before: 1, later: 2, median_months_later: 23.65 },
     progress: { available: false, reason: 'not_yet_available', score: null },
   },
   group_promoters: [{ promoter_id: 1, name: 'Shree Realty LLP', source_document_id: 1 }],
@@ -28,6 +29,10 @@ const data: ProjectPayload = {
     { complaint_ref: 'C2', status: 'Order Approved', stage: 'order_issued', non_execution_applied: true,
       filed_year: 2023, filed_month: 11, order_url: 'https://example.test/C2.pdf', source_document_id: 3 },
   ],
+  declared_history: [
+    { name: 'Shree Old', project_type: 'Residential', original_proposed_date: '2015-01-01', actual_completion_date: '2016-07-01', source_document_id: 5 },
+    { name: 'Shree Older', project_type: null, original_proposed_date: '2012-01-01', actual_completion_date: '2012-01-01', source_document_id: 5 },
+  ],
   possibly_related: [
     { promoter_id: 3, name: 'Shree Realty Phase 2 LLP',
       evidence: { shared_count: 0, same_address: true, name_similarity: 100 }, source_document_id: 4 },
@@ -37,6 +42,7 @@ const data: ProjectPayload = {
     '2': { url: 'https://maharera.example/p/2', origin: 'test', fetched_at: '2026-09-01T00:00:00' },
     '3': { url: 'https://maharera.example/c', origin: 'test', fetched_at: '2026-09-01T00:00:00' },
     '4': { url: 'file:import.csv', origin: 'file-import', fetched_at: '2026-09-01T00:00:00' },
+    '5': { url: 'https://maharera.example/app/1', origin: 'test', fetched_at: '2026-09-01T00:00:00' },
   },
 }
 
@@ -121,6 +127,27 @@ describe('TrustPageView', () => {
     render(<TrustPageView data={shared} />)
     const block = screen.getByRole('region', { name: 'Possibly related entities' })
     expect(within(block).getByText(/shares 2 registered members/)).toBeInTheDocument()
+  })
+
+  it('shows the declared delivery record as the promoter’s own account, with a source per row', () => {
+    render(<TrustPageView data={data} />)
+    const breakdown = screen.getByRole('region', { name: 'Score breakdown' })
+    expect(within(breakdown).getByText(/1 of 3 completed projects were declared finished on or before the proposed date; 2 later \(median 23.7 months\)/)).toBeInTheDocument()
+    const declared = screen.getByRole('region', { name: 'Declared delivery record' })
+    expect(within(declared).getByText(/declared by the promoter, not verified/)).toBeInTheDocument()
+    expect(within(declared).getByText('Shree Old')).toBeInTheDocument()
+    expect(within(declared).getByText('1 Jul 2016')).toBeInTheDocument()
+    const rows = within(declared).getAllByRole('row').slice(1)
+    expect(rows).toHaveLength(2)
+    for (const row of rows) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
+  })
+
+  it('says so when no past projects were declared', () => {
+    const none = { ...data, declared_history: [], score: { ...data.score!,
+      declared: { available: false, reason: 'insufficient_history', score: null, total: 0, on_or_before: 0, later: 0, median_months_later: null } } }
+    render(<TrustPageView data={none} />)
+    expect(screen.getByText(/Not enough declared history/)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Declared delivery record' })).getByText(/No completed projects were declared/)).toBeInTheDocument()
   })
 
   it('says so when there is not enough data instead of showing a number', () => {

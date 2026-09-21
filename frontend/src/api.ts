@@ -23,7 +23,24 @@ export type Score = {
     unresolved: number
     project_count: number
   }
+  declared: {
+    available: boolean
+    reason: string | null
+    score: number | null
+    total: number
+    on_or_before: number
+    later: number
+    median_months_later: number | null
+  }
   progress: { available: boolean; reason: string | null; score: number | null }
+}
+
+export type DeclaredItem = {
+  name: string
+  project_type: string | null
+  original_proposed_date: string
+  actual_completion_date: string
+  source_document_id: number
 }
 
 export type ScheduleItem = {
@@ -74,6 +91,7 @@ export type ProjectPayload = {
   group_basis: string | null
   schedule: ScheduleItem[]
   complaints: ComplaintItem[]
+  declared_history: DeclaredItem[]
   possibly_related: RelatedItem[]
   sources: Record<string, Source>
 }

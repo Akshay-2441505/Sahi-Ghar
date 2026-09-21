@@ -16,7 +16,7 @@ from datetime import date, datetime
 
 from pypdf import PdfReader
 
-from sahighar.adapters.base import ParsedRecords, PromoterRec
+from sahighar.adapters.base import ParsedRecords, PastProjectRec, PromoterRec
 from sahighar.privacy import tokenize
 
 # Bump when extract_application changes what it reads. Stored extracts carry the version they were made with; the raw
@@ -111,6 +111,10 @@ def extract_application_from_html(html: str) -> dict | None:
 
 def parse_application(extract: dict) -> ParsedRecords:
     """Turn a stored extract (plus the promoter_ref and promoter_name the crawler added) into records: tokens only."""
-    return ParsedRecords(promoters=[PromoterRec(
-        extract["promoter_ref"], extract["promoter_name"], pan=extract.get("pan"),
-        registered_address=extract.get("address"), partners_or_directors=extract.get("members") or None)])
+    return ParsedRecords(
+        promoters=[PromoterRec(extract["promoter_ref"], extract["promoter_name"], pan=extract.get("pan"),
+                               registered_address=extract.get("address"),
+                               partners_or_directors=extract.get("members") or None)],
+        past_projects=[PastProjectRec(extract["promoter_ref"], p["name"], date.fromisoformat(p["original_proposed"]),
+                                      date.fromisoformat(p["actual"]), p.get("type"))
+                       for p in extract.get("past_projects", [])])

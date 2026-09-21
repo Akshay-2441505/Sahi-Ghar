@@ -105,3 +105,18 @@ def test_a_thin_project_update_for_an_unknown_project_fails_its_document(session
     summary = run_ingest(FakeAdapter({"u1": thin}), session, LocalRawStore(tmp_path), max_failure_rate=1.0)
     assert summary.failed == 1
     assert "not introduced" in session.scalar(select(SourceDocument.parse_error))
+
+
+def test_declared_past_projects_are_stored_once_however_many_applications_repeat_them(session, tmp_path):
+    from datetime import date
+    from sahighar.db.models import PastProject
+    row = {"promoter_ref": "P1", "name": "Willow Court", "project_type": "Residential",
+           "original_proposed": "2013-11-30", "actual": "2015-04-27"}
+    first = {"promoters": [{"ref": "P1", "name": "Shree Realty LLP"}], "past_projects": [row]}
+    second = {"past_projects": [row, {**row, "name": "Eco Tower", "original_proposed": "2014-08-20", "actual": "2016-11-29"}]}
+    store = LocalRawStore(tmp_path)
+    run_ingest(FakeAdapter({"u1": first, "u2": second}), session, store)
+    rows = session.scalars(select(PastProject).order_by(PastProject.name)).all()
+    assert [(r.name, r.original_proposed_date, r.actual_completion_date) for r in rows] == [
+        ("Eco Tower", date(2014, 8, 20), date(2016, 11, 29)), ("Willow Court", date(2013, 11, 30), date(2015, 4, 27))]
+    assert all(r.promoter_id and r.source_document_id for r in rows)

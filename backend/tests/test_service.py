@@ -51,3 +51,22 @@ def test_a_builder_with_no_complaint_rows_is_unknown_until_complaints_were_colle
     refresh(session, today=date(2026, 9, 1))
     p4 = _complaints_reason(session, "P4")
     assert p4["available"] is True and p4["score"] == 100  # now "no complaints" is a real finding
+
+
+def test_declared_past_projects_are_deduplicated_across_a_groups_applications(session, tmp_path):
+    past = lambda ref, name, o, a: {"promoter_ref": ref, "name": name, "original_proposed": o, "actual": a}
+    doc = {"past_projects": [
+        past("P1", "Willow Court", "2013-11-30", "2015-04-27"), past("P1", "Eco Tower", "2014-08-20", "2014-08-01"),
+        past("P2", "Willow Court", "2013-11-30", "2015-04-27"),  # the same project, listed again by the group's other company
+        past("P2", "Sky Villas", "2016-01-01", "2016-06-30")]}
+    run_ingest(FakeAdapter({"u1": DOC_1, "u2": DOC_2, "u3": doc}), session, LocalRawStore(tmp_path))
+    refresh(session, today=date(2026, 9, 1))
+    declared = _group_breakdown(session, "P1")["declared"]
+    assert (declared["total"], declared["on_or_before"], declared["later"]) == (3, 1, 2)  # 4 rows, 3 distinct projects
+
+
+def _group_breakdown(session, promoter_ref):
+    p = session.scalar(select(Promoter).where(Promoter.rera_promoter_ref == promoter_ref))
+    group_id = session.scalar(select(GroupMembership.group_id).where(
+        GroupMembership.promoter_id == p.id, GroupMembership.link_type == "filing_confirmed"))
+    return session.scalar(select(ScoreSnapshot).where(ScoreSnapshot.group_id == group_id)).breakdown

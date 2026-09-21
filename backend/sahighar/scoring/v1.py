@@ -25,6 +25,16 @@ class ComplaintFacts:
     non_execution_applied: bool
 
 
+@dataclass(frozen=True)
+class DeclaredFacts:
+    """A completed project the promoter declared in its registration application (its own account, not verified)."""
+    original_proposed: date
+    actual: date
+
+
+MIN_DECLARED_PROJECTS = 2
+
+
 def _months(days: int) -> float:
     return round(days / DAYS_PER_MONTH, 1)
 
@@ -43,7 +53,8 @@ def classify(p: ProjectFacts, today: date) -> tuple[str, float | None]:
     return "within_registration", None
 
 
-def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date, complaints_known: bool = True) -> dict:
+def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date, complaints_known: bool = True,
+          declared: list[DeclaredFacts] | None = None) -> dict:
     """complaints_known: False when complaints were never collected for this builder. Then the complaint section is
     unavailable ("not_collected"), because an empty list would otherwise read as a clean record."""
     outcomes = [classify(p, today) for p in projects]
@@ -77,10 +88,25 @@ def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today:
         "project_count": n,
     }
 
-    available = [c["score"] for c in (schedule, complaint_summary) if c["available"]]
+    declared = declared or []
+    later_months = [_months((d.actual - d.original_proposed).days) for d in declared if d.actual > d.original_proposed]
+    on_or_before = sum(d.actual <= d.original_proposed for d in declared)
+    declared_ok = len(declared) >= MIN_DECLARED_PROJECTS
+    declared_summary = {
+        "available": declared_ok,
+        "reason": None if declared_ok else "insufficient_history",
+        "score": round(100 * on_or_before / len(declared)) if declared_ok else None,
+        "total": len(declared),
+        "on_or_before": on_or_before,
+        "later": len(later_months),
+        "median_months_later": median(later_months) if later_months else None,
+    }
+
+    available = [c["score"] for c in (schedule, complaint_summary, declared_summary) if c["available"]]
     return {
         "schedule": schedule,
         "complaints": complaint_summary,
+        "declared": declared_summary,
         "progress": {"available": False, "reason": "not_yet_available", "score": None},
         "overall": round(mean(available)) if available else None,
     }

@@ -12,11 +12,11 @@ function Section({ title, score, children }: { title: string; score: number | nu
 
 /** The overall number is only ever rendered below, and as a summary of, the three sections. */
 export function ScoreBreakdown({ score }: { score: Score }) {
-  const { schedule, complaints, progress } = score
+  const { schedule, complaints, declared, progress } = score
   const evaluated = schedule.extended + schedule.not_extended
   return (
     <section aria-label="Score breakdown">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Section title="Registration schedule" score={schedule.score}>
           {schedule.available
             ? `${schedule.extended} of ${evaluated} projects had their registration extended` +
@@ -32,6 +32,13 @@ export function ScoreBreakdown({ score }: { score: Score }) {
             : complaints.reason === 'not_collected'
               ? 'Not collected for this data set yet. A missing complaint list here does not mean the builder has none.'
               : 'No registered projects on record.'}
+        </Section>
+        <Section title="Declared delivery" score={declared.score}>
+          {declared.available
+            ? `${declared.on_or_before} of ${declared.total} completed projects were declared finished on or before the proposed date; ${declared.later} later` +
+              (declared.median_months_later !== null ? ` (median ${Math.round(declared.median_months_later * 10) / 10} months). ` : '. ') +
+              'The promoter’s own account, not verified.'
+            : 'Not enough declared history (at least 2 completed projects listed in the registration applications are needed).'}
         </Section>
         <Section title="Progress vs promise" score={progress.score}>
           Not yet available. Quarterly progress reports are not included in this version.

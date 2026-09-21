@@ -3,7 +3,8 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from sahighar.db.models import Complaint, GroupMembership, Project, Promoter, ScoreSnapshot, SourceDocument
+from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot, SourceDocument
+from sahighar.scoring.service import distinct_declared
 from sahighar.scoring.v1 import ProjectFacts, classify
 
 
@@ -42,6 +43,12 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
          "order_url": c.order_url, "source_document_id": c.source_document_id}
         for c in session.scalars(select(Complaint).where(Complaint.promoter_id.in_(confirmed_ids)).order_by(Complaint.id))
     ]
+    declared_history = [
+        {"name": d.name, "project_type": d.project_type, "original_proposed_date": d.original_proposed_date,
+         "actual_completion_date": d.actual_completion_date, "source_document_id": d.source_document_id}
+        for d in sorted(distinct_declared(list(session.scalars(select(PastProject).where(PastProject.promoter_id.in_(confirmed_ids))))),
+                        key=lambda d: (d.original_proposed_date, d.name))
+    ]
     possibly_related = [
         {"promoter_id": m.promoter_id, "name": promoters[m.promoter_id].name, "evidence": m.evidence,
          "source_document_id": promoters[m.promoter_id].source_document_id}
@@ -52,7 +59,7 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         for pid in confirmed_ids
     ]
 
-    source_ids = {r["source_document_id"] for r in (*schedule, *complaints, *possibly_related, *group_promoters)}
+    source_ids = {r["source_document_id"] for r in (*schedule, *complaints, *declared_history, *possibly_related, *group_promoters)}
     docs = session.scalars(select(SourceDocument).where(SourceDocument.id.in_(source_ids))).all()
     return {
         "data_as_of": max((d.fetched_at for d in docs), default=None),
@@ -63,6 +70,7 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         "group_basis": "same PAN" if len(confirmed_ids) > 1 else None,
         "schedule": schedule,
         "complaints": complaints,
+        "declared_history": declared_history,  # the promoter's own account from its registration applications
         "possibly_related": possibly_related,
         "sources": {str(d.id): {"url": d.url, "origin": d.origin, "fetched_at": d.fetched_at} for d in docs},
     }

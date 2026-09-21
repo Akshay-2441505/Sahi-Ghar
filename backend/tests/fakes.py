@@ -1,7 +1,7 @@
 import json
 from datetime import date
 
-from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
+from sahighar.adapters.base import ComplaintRec, ParsedRecords, PastProjectRec, ProjectRec, PromoterRec, RawDoc, complaint_stage
 from sahighar.util import utcnow
 
 
@@ -31,4 +31,6 @@ class FakeAdapter:
                 for x in d.get("projects", [])
             ],
             complaints=[ComplaintRec(**{**x, "stage": complaint_stage(x["status"])}) for x in d.get("complaints", [])],
+            past_projects=[PastProjectRec(**{**x, "original_proposed": _d(x["original_proposed"]), "actual": _d(x["actual"])})
+                           for x in d.get("past_projects", [])],
         )

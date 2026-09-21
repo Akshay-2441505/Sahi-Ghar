@@ -81,3 +81,13 @@ def test_a_masked_pan_is_never_tokenised():
     a = extract_application(MASKED)
     assert a["pan"] is None and a["members"] == []  # xxxxxx234A cannot identify anyone
     assert a["org_type"] == "Company" and a["address"] is not None  # the rest is still useful
+
+
+def test_parse_emits_the_declared_past_projects_as_records():
+    from datetime import date
+    extract = extract_application(COMPANY) | {"promoter_ref": "n:acme builders pvt ltd", "promoter_name": "ACME BUILDERS PVT LTD"}
+    past = parse_application(extract).past_projects
+    assert [(p.promoter_ref, p.name, p.project_type, p.original_proposed, p.actual) for p in past][:2] == [
+        ("n:acme builders pvt ltd", "Willow Court", "Residential", date(2013, 11, 30), date(2015, 4, 27)),
+        ("n:acme builders pvt ltd", "Eco Tower", "Commercial", date(2014, 8, 20), date(2016, 11, 29))]
+    assert len(past) == 3

@@ -88,6 +88,36 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         )}
       </section>
 
+      <section aria-label="Declared delivery record">
+        <h2 className="text-lg font-semibold text-stone-900">Declared delivery record</h2>
+        <p className="text-sm text-stone-600">
+          Completed projects the promoter listed in its registration applications, with the completion date it first proposed and
+          the date it reports finishing: declared by the promoter, not verified. Extensions, including blanket ones granted for
+          reasons outside the promoter’s control, are not separated out.
+        </p>
+        {data.declared_history.length === 0 ? (
+          <p className="mt-2 text-sm text-stone-600">No completed projects were declared in the applications collected so far.</p>
+        ) : (
+          <div className="mt-2 overflow-x-auto">
+          <table className="w-full min-w-[40rem] text-left text-sm">
+            <thead className="text-stone-600">
+              <tr><th>Project</th><th>Proposed completion</th><th>Reported completion</th><th>Source</th></tr>
+            </thead>
+            <tbody>
+              {data.declared_history.map((d) => (
+                <tr key={`${d.name}|${d.original_proposed_date}`} className="border-t border-stone-200 align-top">
+                  <td>{d.name}{d.project_type ? <span className="text-xs text-stone-500"> ({d.project_type})</span> : null}</td>
+                  <td>{formatDate(d.original_proposed_date)}</td>
+                  <td>{formatDate(d.actual_completion_date)}</td>
+                  <td><SourceLink id={d.source_document_id} sources={sources} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+        )}
+      </section>
+
       {data.possibly_related.length > 0 && (
         <section aria-label="Possibly related entities" className="rounded border border-dashed border-stone-400 p-4">
           <h2 className="text-lg font-semibold text-stone-900">Possibly related entities</h2>

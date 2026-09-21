@@ -71,3 +71,28 @@ def test_complaints_not_collected_is_unknown_never_clean():
 
 def test_nothing_known_at_all_is_not_enough_data():
     assert score([P(date(2027, 1, 1), None)], [], TODAY, complaints_known=False)["overall"] is None
+
+
+def test_declared_delivery_counts_on_or_before_the_proposed_date_and_measures_the_rest():
+    from sahighar.scoring.v1 import DeclaredFacts as D
+    declared = [D(date(2015, 3, 10), date(2015, 1, 10)), D(date(2013, 11, 30), date(2015, 4, 27)), D(date(2014, 8, 20), date(2014, 8, 20)),
+                D(date(2014, 12, 31), date(2017, 7, 12))]
+    s = score([], [], TODAY, complaints_known=False, declared=declared)["declared"]
+    assert (s["available"], s["total"], s["on_or_before"], s["later"], s["score"]) == (True, 4, 2, 2, 50)
+    assert s["median_months_later"] == 23.65  # 513 days (16.9 months) and 924 days (30.4 months)
+
+
+def test_declared_delivery_needs_at_least_two_completed_projects():
+    from sahighar.scoring.v1 import DeclaredFacts as D
+    one = score([], [], TODAY, complaints_known=False, declared=[D(date(2015, 3, 10), date(2015, 1, 10))])["declared"]
+    assert one["available"] is False and one["reason"] == "insufficient_history" and one["score"] is None
+    none = score([], [], TODAY, complaints_known=False)["declared"]
+    assert none["available"] is False and none["total"] == 0
+
+
+def test_declared_delivery_feeds_the_overall_only_when_available():
+    from sahighar.scoring.v1 import DeclaredFacts as D
+    declared = [D(date(2015, 3, 10), date(2015, 1, 10)), D(date(2014, 8, 20), date(2014, 8, 20))]  # 2 of 2 on or before: 100
+    projects = [P(date(2022, 1, 1), None), P(date(2022, 1, 1), date(2023, 1, 1))]  # schedule score 50
+    s = score(projects, [], TODAY, complaints_known=False, declared=declared)
+    assert s["declared"]["score"] == 100 and s["schedule"]["score"] == 50 and s["overall"] == 75
