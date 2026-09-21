@@ -103,8 +103,9 @@ def test_builder_search_cards_have_no_certificate_link_so_the_id_comes_from_the_
 
 
 def test_where_both_exist_the_certificate_id_equals_the_view_link_id():
-    html = fixture("list_page1.html")
     import re
-    views = re.findall(r"/project/view/(\d+)\"", html)
+    html = fixture("list_page1.html")
+    blocks = html.split('class="row shadow p-3 mb-5 bg-body rounded"')[1:]
+    first_view_ids = [re.search(r"/project/view/(\d+)", b).group(1) for b in blocks]  # each card links its view page twice
     cards = parse_project_list(html).cards
-    assert [c.cert_id for c in cards] == views[: len(cards)]
+    assert [c.cert_id for c in cards] == first_view_ids
