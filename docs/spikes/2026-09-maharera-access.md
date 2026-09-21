@@ -86,3 +86,16 @@ Applied the spec's rule (§3): Path A = open pages fetched by the program; Path 
 - **The realistic official route is a written data request or RTI to each state RERA** (MahaRERA has an RTI section linked from its site). The request should name the fields this spike found: registration number, project name, promoter name and registered office, registration start and end dates, extension certificates and new end dates, complaint number, project number, filing year/month, status, non-execution flags; and, if they are willing, the fields the open pages lack: promoter PAN, partners/directors, actual completion date and status. Draft it once the owner decides who files it.
 - **Open question for the owner:** *human-assisted import*. A person saving pages from the official site in their own browser (for example Karnataka's single-page promoter complaint table and extension table, which hold thousands of rows) and feeding the saved files to the import adapter is a form of Path B in the spec. It is not automated crawling, but it was not covered by the owner's answer, so it is **not** assumed.
 - **Until data arrives, everything is built and tested on fixtures**, including the real page formats captured in `spike/samples/`.
+
+## Follow-up probe, 2026-09-21 (4 requests, owner approved Karnataka and Telangana under the same polite rules)
+
+**Karnataka (`rera.karnataka.gov.in`): three pages hold the delivery record, no PDFs, no CAPTCHA.** Big pages (6, 5 and 17 MB), one request each.
+- `/viewRenewalProjects`, three tables:
+  - **979 approved extensions**: old and new registration number, promoter, project, district, application date, `OLD COMPLETION DATE`, `NEW COMPLETION DATE`, approved date, certificate links.
+  - **69 rejected extension applications**.
+  - **2,859 "Completion Date Expired" projects** with no completion application yet: registration number, promoter, project, district, completion date, further-extension date, and whether an extension was approved (2,450 not applied; 409 extension approved). 409 of the 979 extended projects are also in this list.
+- `/viewAllCompletedProjects`: **3,527 projects that applied for completion**, with `PROPOSED COMPLETION DATE` and `Applied for Completion` (the date). Applied-versus-proposed is a real on-time signal per project, which Maharashtra's open pages do not give. No overlap with the expired list.
+- `/viewAllProjects`: counts and links only (957 applications rejected, 107 withdrawn or revoked; those two lists were not fetched).
+- Not covered by these pages: projects still in progress and not yet expired (the rest of the register). The builder-level delivery record can be built from completed, expired and extended projects; the full register was not mapped. Promoter PAN, quarterly progress and the per-promoter complaint detail were not probed in this round.
+
+**Telangana (`rerait.telangana.gov.in/SearchList/Search`): the certificate error is gone (Windows certificate store), but the page shows a CAPTCHA.** The fetcher stopped, as designed. Nothing was retried or worked around, and none will be. Telangana project data needs another route (an official data request, or another open page if one exists); the crawler will not attempt this page again.
