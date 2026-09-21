@@ -8,3 +8,7 @@ raw_store/
 
 # Personal data from registration applications: never commit
 spike/samples/hsm-application-*
+
+# Local database backups and crawl logs
+backups/
+*.log

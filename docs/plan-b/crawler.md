@@ -47,6 +47,21 @@ Exit code: 0 finished or stopped at its budget, 1 some page failed to parse (nam
 
 Rough cost at 3 s per request: a pincode of about 100 projects with their builders' portfolios is a few hundred requests (tens of minutes). The complaint index is about 540 requests (about 27 minutes) once. All of Maharashtra is about 4,900 list pages plus about 49,000 certificate requests: about two days of fetching.
 
+## Continuing the central Pune crawl (next run)
+
+State after run 1 (2026-09-21): 2,002 projects from 778 builders; about 1,220 certificates stored; **no applications yet**; complaint index complete. Run 2 finishes central Pune (about 2,200 requests, 2 to 2.5 hours, laptop on and plugged in):
+
+    cd backend
+    set -a && . ./.env && set +a
+    export DATABASE_URL="postgresql+psycopg://postgres:dev@localhost:5433/sahighar"
+    uv run python -m sahighar.cli crawl --contact you@example.com --max-requests 3500       --pincode 411001 --pincode 411002 --pincode 411004 --pincode 411005 --pincode 411009       --pincode 411011 --pincode 411030 --pincode 411037 --pincode 411042 --pincode 411044
+
+It resumes where run 1 stopped (list pages, certificates and complaint pages already stored are reused) and completes the largest builders first. Safe to interrupt and rerun. Do not run two crawls against MahaRERA at once.
+
+If the laptop was restarted, start the database first: `docker start sahighar-pg` (it is not set to start by itself). A backup of the trial database is in `backend/backups/` (gitignored); restore with `docker exec -i sahighar-pg pg_restore -U postgres -d sahighar --clean < backend/backups/<file>.dump`. The raw pages in `backend/raw_store/` can rebuild everything with `reparse` (no network), so keep that folder and `.env` (the PII key) together and backed up.
+
+Pincode sizes for all 62 Pune city pincodes are in `pune-pincode-sizes.json` (project counts, one request each, measured 2026-09-21).
+
 ## What you get, and what you do not
 
 Gets: project registration number, name, promoter name, district; original registration end date; extended end date; complaints with status, project number, year and month, and the "applied for non-execution" flag.
