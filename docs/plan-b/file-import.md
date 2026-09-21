@@ -32,6 +32,8 @@ Notes on the rules, so a surprising result is easy to explain:
 - **A complaints table without a promoter id** is fine (the public complaint table has none): each complaint takes the promoter of the project it names. A complaint with neither a known promoter nor a known project fails its file.
 - **A projects-only reply** still imports: promoters are created from the project rows (id and name). A promoters table, when it arrives later, fills in address, PAN and directors without erasing anything.
 - **Order of loading** is projects, then promoters, then complaints, whatever the file names.
+- **A complaints table means "complaints were collected for everyone".** Once one is imported, a builder who is not in it is shown as having no complaints. Without one, complaints show as "not collected" and score nothing. So only import a complaints table that covers all builders in the data; do not import a partial extract.
+- Later imports **add or change** values; they never blank one. A project whose extension was withdrawn would keep the old extension date until corrected by hand.
 - **Complaint status** is stored exactly as written. It is only interpreted into a stage: "Order Approved" is *order issued*; "Hearing Scheduled" and "Roznama Approved" are *pending*; anything else is *other* and is not counted as pending or issued. The site's day of filing is never invented: only year and month are kept unless the file has a full date.
 - **Excel** files: only the first sheet is read.
 

@@ -56,6 +56,12 @@ Does **not** get (these live behind the CAPTCHA, or are not published on open pa
 - The PDF text uses non-breaking spaces; the parser normalises them.
 - Counts drift while you crawl (the complaint index went from 5,382 to 5,384 promoters during the day).
 
+- **A partial crawl must never look clean.** The first trial showed "Complaints 100/100, none on record" for a builder whose complaints had simply never been collected (the complaint index was capped). Now complaints count as *collected* only after the **whole** complaint index has been read (or a complaints table was imported); a builder whose own complaint page was fetched is also known. Otherwise the complaint section says "Not collected for this data set yet", gives no score, and the overall number ignores it. This is recorded in the `coverage` table.
+
+## Trial results (2026-09-21, pincode 411001, Pune)
+
+About 140 requests over three capped runs, 3 seconds apart, no blocks or errors from the site. Result: 42 projects from 16 builders (the pincode itself has 103 projects; builders' other projects were pulled in by the portfolio phase), 41 with an original end date, 10 with an extension. Values were checked against the certificates by hand (for example GAGAN UNO: original 31/12/2019, current 31/12/2027). Complaints were **not** collected in the trial (index capped at 5 of about 540 pages), and the pages say so. Not yet run: the full complaint index scan (about 27 minutes, one-off), and anything larger than one pincode.
+
 ## Known limits
 
 - **Promoter identity is the promoter's name** (case, spacing and punctuation ignored) because the public list gives no promoter id. "Pvt Ltd" and "Private Limited" are different promoters here on purpose; merging is grouping's job, and it says "possibly related". Two unrelated promoters with the same name would be merged.
