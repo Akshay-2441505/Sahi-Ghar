@@ -25,8 +25,8 @@ class PromoterRec:
 @dataclass
 class ProjectRec:
     reg_no: str
-    promoter_ref: str
-    name: str
+    promoter_ref: str | None  # None for a document that only adds dates to an already-introduced project
+    name: str | None
     city: str | None = None
     locality: str | None = None
     configurations: list[str] | None = None

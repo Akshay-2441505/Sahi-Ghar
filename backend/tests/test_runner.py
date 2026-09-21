@@ -85,3 +85,23 @@ def test_complaint_with_no_promoter_and_no_known_project_fails_its_document(sess
     summary = run_ingest(FakeAdapter({"u1": doc}), session, LocalRawStore(tmp_path), max_failure_rate=1.0)
     assert summary.failed == 1
     assert "no promoter ref" in session.scalar(select(SourceDocument.parse_error))
+
+
+def test_a_thin_project_update_adds_dates_and_keeps_the_name_and_promoter(session, tmp_path):
+    from datetime import date
+    store = LocalRawStore(tmp_path)
+    intro = {"promoters": [{"ref": "P1", "name": "Shree Realty LLP"}],
+             "projects": [{"reg_no": "R1", "promoter_ref": "P1", "name": "Heights", "registration_end": "2022-01-01"}]}
+    thin = {"projects": [{"reg_no": "R1", "promoter_ref": None, "name": None, "extended_end": "2023-01-01"}]}
+    run_ingest(FakeAdapter({"u1": intro}), session, store)
+    run_ingest(FakeAdapter({"u2": thin}), session, store)
+    project = session.scalar(select(Project))
+    assert (project.name, project.registration_end_date, project.extended_end_date) == ("Heights", date(2022, 1, 1), date(2023, 1, 1))
+    assert project.promoter_id == session.scalar(select(Promoter.id))
+
+
+def test_a_thin_project_update_for_an_unknown_project_fails_its_document(session, tmp_path):
+    thin = {"projects": [{"reg_no": "R9", "promoter_ref": None, "name": None, "registration_end": "2022-01-01"}]}
+    summary = run_ingest(FakeAdapter({"u1": thin}), session, LocalRawStore(tmp_path), max_failure_rate=1.0)
+    assert summary.failed == 1
+    assert "not introduced" in session.scalar(select(SourceDocument.parse_error))

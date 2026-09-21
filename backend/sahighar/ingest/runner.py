@@ -50,12 +50,16 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
             keep_existing_if_none=True,  # a thinner later document (e.g. a project list) must not erase PAN or address
         )
     for j in parsed.projects:
+        known = session.scalar(select(Project.id).where(Project.state == state, Project.rera_reg_no == j.reg_no))
+        if known is None and (j.promoter_ref is None or j.name is None):
+            raise ValueError(f"project {j.reg_no!r} was not introduced by an earlier document (no name or promoter)")
         _upsert(
             session, Project, {"state": state, "rera_reg_no": j.reg_no},
-            {"promoter_id": _promoter_id(session, state, j.promoter_ref), "name": j.name,
+            {"promoter_id": _promoter_id(session, state, j.promoter_ref) if j.promoter_ref else None, "name": j.name,
              "city": j.city, "locality": j.locality, "configurations": j.configurations,
              "carpet_area_range": j.carpet_area_range, "registration_end_date": j.registration_end,
              "extended_end_date": j.extended_end, "source_document_id": sd_id},
+            keep_existing_if_none=True,  # later documents add or change values; they never blank them
         )
     for c in parsed.complaints:
         project = None
