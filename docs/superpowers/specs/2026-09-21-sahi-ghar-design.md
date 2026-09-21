@@ -3,6 +3,7 @@
 Date: 2026-09-21
 Source docs: `PRD.md`, `DESIGN.md`, `TECH_STACK.md`, `DATA_SOURCES.md`
 Approved plan: `~/.claude/plans/the-folder-contains-all-goofy-stardust.md`
+Amended 2026-09-21 after the spike (`docs/spikes/2026-09-maharera-access.md`): data path is **official data only (no crawling)**, the delivery metric is based on **registration end dates**, complaints use the site's stages, and grouping gains an address+name rule. Sections 3-8 reflect this.
 
 ## 1. Goal and scope
 
@@ -16,7 +17,7 @@ Out of scope for this spec (later slices, see §10): Karnataka and Telangana ada
 Fixed decisions:
 
 1. All three states are the goal. The adapter interface is designed for three states now; only MahaRERA is implemented in slice 1.
-2. The spike precedes any parser code. The adapter interface is source-agnostic (live scrape, file import, or manual seed).
+2. The spike precedes any parser code. The adapter interface is source-agnostic. **Owner decision after the spike: official data only, no automated crawling of any RERA site.** The first real adapter is therefore a file-import adapter, fed by a data request or RTI to the state authority (a person saving pages by hand is a possible variant, not assumed).
 3. **No CAPTCHA solving or bypass, ever.** If a page is CAPTCHA-gated, use another route (§3).
 4. Slice 1 builder grouping is rule-based and uses RERA data only. MCA data is added later as another evidence source.
 5. Stack follows `TECH_STACK.md`: Python + FastAPI + PostgreSQL, React + Vite + Tailwind.
@@ -62,7 +63,7 @@ Fixed decisions:
 - **Path B — official data or assisted import:** any needed page is CAPTCHA-gated or prohibited. Use official downloads, the Unified RERA Portal, an RTI or data request to MahaRERA, or a human-assisted import tool that ingests files the user obtains manually.
 - **Mixed:** use Path A for open pages and Path B for gated ones. The adapter interface supports this (§4).
 
-The choice is written into the spike report. Slice 1's implementation plan is written after it, so no parser code targets an unverified source.
+The choice is written into the spike report. **Outcome (2026-09-21): Path B, by the owner's decision.** The open Maharashtra pages (project list, complaints, registration and extension certificates) were found to be CAPTCHA-free, but the owner chose not to crawl them; the detail app that holds PAN, partners and completion status is CAPTCHA-gated and off-limits regardless. The findings remain the reference for which fields exist.
 
 ## 4. Slice 1 architecture
 
@@ -104,8 +105,8 @@ source (site / file / manual) -> adapter -> raw store + source_document row
 - `source_document(id, origin, url, fetched_at, sha256, content_type, store_key, parse_status, parse_error)`
 - `promoter(id, state, rera_promoter_ref, name, pan, registered_address, partners_or_directors jsonb, source_document_id)`
 - `promoter_group(id)` and `group_membership(group_id, promoter_id, link_type, evidence jsonb)` — `link_type` is `filing_confirmed` or `possible` (§6).
-- `project(id, state, rera_reg_no, promoter_id, name, city, locality, configurations jsonb, carpet_area_range, original_completion_date, revised_completion_date, actual_completion_date, status, source_document_id)`
-- `complaint(id, promoter_id, project_id nullable, complaint_ref, status (open/resolved), filed_on, resolved_on nullable, order_url nullable, source_document_id)`
+- `project(id, state, rera_reg_no, promoter_id, name, city, locality, configurations jsonb, carpet_area_range, registration_end_date, extended_end_date nullable, source_document_id)` — `registration_end_date` is the end of the original registration validity (tied to, but not the same as, the proposed completion date) and is always labelled as such; `extended_end_date` is set only when an extension certificate exists. There is no actual-completion column: open data does not publish one.
+- `complaint(id, promoter_id, project_id nullable, complaint_ref, status (raw text as published), stage (order_issued | pending | other), non_execution_applied bool, filed_year, filed_month, order_url nullable, source_document_id)` — the site publishes year and month only, so no day is invented.
 - `score_snapshot(id, group_id, computed_at, breakdown jsonb, input_source_document_ids)`
 
 Exact column sets are finalised from the spike's field list (question 4 and 5); fields the source does not publish stay nullable and the rules that depend on them degrade gracefully (§6, §7). Every parsed row carries `source_document_id`; this is the mechanism behind "every number links to its source".
@@ -119,8 +120,9 @@ Signals, strongest first. Which are usable is decided by the spike (question 4):
 1. **Same PAN** on two promoter records → `filing_confirmed`.
 2. **Same normalised registered address AND overlapping named partners/directors** → `possible`.
 3. **Fuzzy promoter-name match (token-set ratio ≥ 90) AND overlapping named partners/directors** → `possible`.
+4. **Same normalised registered address AND fuzzy promoter-name match (token-set ratio ≥ 90)**, with no partner data needed → `possible`. (Added after the spike: open data has names and registered-office addresses but no PAN or partners.)
 
-A single weak signal alone (name only, or address only) creates no link. Each link stores its evidence (which fields matched, both source document ids).
+A single weak signal alone (name only, address only, or partners only) creates no link. Each link stores its evidence (which fields matched, both source document ids).
 
 **Known limit of RERA-only grouping.** An SPV is a separate legal entity with its own PAN, so shared-PAN links will mostly catch duplicate registrations of one entity, not sister SPVs. Most cross-SPV links will therefore be `possible` (and excluded from the score) until MCA director evidence lands in slice 5. This is accepted for slice 1 because the alternative is overstating a link. The spike (§3, question 4) checks whether MahaRERA project pages publish a promoter's past-experience or other-projects disclosure, which could close part of the gap from RERA data alone.
 
@@ -128,18 +130,18 @@ Presentation rule: delivery history and the score use **`filing_confirmed` links
 
 ## 7. Trust score v1 (scored checklist, not ML)
 
-Computed per `filing_confirmed` group. All constants live in one file so they can be recalibrated against outcomes (PRD success metric).
+Computed per `filing_confirmed` group. All constants live in one file so they can be recalibrated against outcomes (PRD success metric). Wording stays neutral: an extension is not necessarily the promoter's fault (blanket extensions exist), and a project past its end date without an extension may simply have been completed, so neither is called "late".
 
-- **Delivery history.** Outcomes per project: *delivered on time* (actual ≤ original completion date), *delivered late* (actual > original; months late recorded), *overdue* (not completed and the **original** completion date has passed; any RERA-approved revised date is displayed beside it, not used to hide the lateness), *in progress* (original date not yet reached). A project marked completed with no actual completion date has an unknown outcome and is excluded from the ratio, but listed. Score input = `on_time / (on_time + late + overdue)`. Fewer than 2 projects with a known outcome → "insufficient history", no sub-score. Median months late (over late and overdue projects, overdue measured to the computation date) is displayed alongside.
-- **Complaints.** Open and resolved counts; rate = `open / project_count`; sub-score = `100 × max(0, 1 − rate)`. Zero projects → not computed.
+- **Registration schedule** (the "delivery history" in the design docs, renamed so it does not overclaim). Per project, from `registration_end_date`, `extended_end_date` and the computation date: *extended* (an extension certificate moved the end date later; months extended recorded), *not extended* (the original end date has passed and no extension is on record), *within registration* (original end date not yet reached), *unknown* (no end date). Score input = `not_extended / (extended + not_extended)`. Fewer than 2 evaluated projects (`extended + not_extended`) → "insufficient history", no sub-score. Median months extended (over extended projects) is displayed alongside.
+- **Complaints.** Per complaint: `stage` (order issued, pending, other) and `non_execution_applied` (a buyer asked to enforce an order that was not complied with). *Unresolved* = stage pending, or non-execution applied. rate = `unresolved / project_count`; sub-score = `100 × max(0, 1 − rate)`. The counts (total, pending, order issued, order not executed) are shown. Zero projects → not computed.
 - **Progress vs promise.** Shown as "not yet available" until slice 3 (QPR).
 
-Overall = mean of the available sub-scores, **always displayed with the breakdown**, never alone. If no sub-score is available: "Not enough data". Each sub-score lists its inputs and links to source documents. Everything is stamped with `computed_at` and the underlying data's `fetched_at`.
+Overall = mean of the available sub-scores, **always displayed with the breakdown**, never alone. If no sub-score is available: "Not enough data". Each sub-score lists its inputs and links to source documents. Everything is stamped with `computed_at` and the underlying data's `fetched_at` (for an imported file, the date the file was obtained).
 
 ## 8. API
 
 - `GET /search?q=` (q of at least 2 characters) — returns projects whose name, promoter name or RERA registration number contains the query (case-insensitive, literal match, max 25), each with its promoter's name, so a builder search lands on that builder's projects.
-- `GET /projects/{id}` — trust-page payload: project facts, score breakdown, delivery history, complaints (with order links), grouping evidence (both link types, labelled), source document list, data freshness.
+- `GET /projects/{id}` — trust-page payload: project facts, score breakdown, registration schedule, complaints (with order links), grouping evidence (both link types, labelled), source document list, data freshness.
 - `GET /promoters/{id}` — promoter view of the same.
 
 Errors: unknown id → 404; every response includes `data_as_of`. No auth in slice 1 (read-only public data).
