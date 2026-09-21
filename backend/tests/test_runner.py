@@ -58,3 +58,30 @@ def test_reparse_rebuilds_records_from_stored_raw_without_network(session, tmp_p
     summary = reparse_all(adapter, session, store)
     assert summary.ok == 1
     assert session.scalar(select(Project.rera_reg_no)) == "R1"
+
+
+def test_a_later_document_without_a_value_does_not_erase_an_earlier_one(session, tmp_path):
+    store = LocalRawStore(tmp_path)
+    rich = {"promoters": [{"ref": "P1", "name": "Shree Realty LLP", "pan": "AAAPA0001A", "registered_address": "12 MG Road"}]}
+    thin = {"promoters": [{"ref": "P1", "name": "Shree Realty LLP"}]}
+    run_ingest(FakeAdapter({"u1": rich}), session, store)
+    run_ingest(FakeAdapter({"u2": thin}), session, store)
+    promoter = session.scalar(select(Promoter))
+    assert promoter.pan == "AAAPA0001A" and promoter.registered_address == "12 MG Road"
+
+
+def test_complaint_without_a_promoter_ref_uses_its_projects_promoter(session, tmp_path):
+    doc = {
+        "promoters": [{"ref": "P1", "name": "Shree Realty LLP"}],
+        "projects": [{"reg_no": "R1", "promoter_ref": "P1", "name": "Heights"}],
+        "complaints": [{"ref": "C1", "promoter_ref": None, "status": "Order Approved", "project_reg_no": "R1"}],
+    }
+    run_ingest(FakeAdapter({"u1": doc}), session, LocalRawStore(tmp_path))
+    assert session.scalar(select(Complaint.promoter_id)) == session.scalar(select(Promoter.id))
+
+
+def test_complaint_with_no_promoter_and_no_known_project_fails_its_document(session, tmp_path):
+    doc = {"complaints": [{"ref": "C1", "promoter_ref": None, "status": "Order Approved", "project_reg_no": "NOPE"}]}
+    summary = run_ingest(FakeAdapter({"u1": doc}), session, LocalRawStore(tmp_path), max_failure_rate=1.0)
+    assert summary.failed == 1
+    assert "no promoter ref" in session.scalar(select(SourceDocument.parse_error))

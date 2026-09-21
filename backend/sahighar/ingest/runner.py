@@ -22,12 +22,14 @@ class IngestFailureRateExceeded(Exception):
         self.summary = summary
 
 
-def _upsert(session: Session, model, keys: dict, values: dict):
+def _upsert(session: Session, model, keys: dict, values: dict, keep_existing_if_none: bool = False):
     row = session.scalar(select(model).filter_by(**keys))
     if row is None:
         row = model(**keys)
         session.add(row)
     for name, value in values.items():
+        if value is None and keep_existing_if_none:
+            continue
         setattr(row, name, value)
     return row
 
@@ -45,6 +47,7 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
             session, Promoter, {"state": state, "rera_promoter_ref": p.ref},
             {"name": p.name, "pan": p.pan, "registered_address": p.registered_address,
              "partners_or_directors": p.partners_or_directors, "source_document_id": sd_id},
+            keep_existing_if_none=True,  # a thinner later document (e.g. a project list) must not erase PAN or address
         )
     for j in parsed.projects:
         _upsert(
@@ -55,15 +58,20 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
              "extended_end_date": j.extended_end, "source_document_id": sd_id},
         )
     for c in parsed.complaints:
-        promoter_id = _promoter_id(session, state, c.promoter_ref)
-        project_id = None
+        project = None
         if c.project_reg_no:
-            project_id = session.scalar(
-                select(Project.id).where(Project.state == state, Project.rera_reg_no == c.project_reg_no)
+            project = session.scalar(
+                select(Project).where(Project.state == state, Project.rera_reg_no == c.project_reg_no)
             )
+        if c.promoter_ref:
+            promoter_id = _promoter_id(session, state, c.promoter_ref)
+        elif project is not None:  # the public complaint table gives a project number, not a promoter ID
+            promoter_id = project.promoter_id
+        else:
+            raise ValueError(f"complaint {c.ref!r} has no promoter ref and no known project registration number")
         _upsert(
             session, Complaint, {"promoter_id": promoter_id, "complaint_ref": c.ref},
-            {"project_id": project_id, "status": c.status, "stage": c.stage,
+            {"project_id": project.id if project else None, "status": c.status, "stage": c.stage,
              "non_execution_applied": c.non_execution_applied, "filed_year": c.filed_year,
              "filed_month": c.filed_month, "order_url": c.order_url, "source_document_id": sd_id},
         )

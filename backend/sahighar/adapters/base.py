@@ -38,7 +38,7 @@ class ProjectRec:
 @dataclass
 class ComplaintRec:
     ref: str
-    promoter_ref: str
+    promoter_ref: str | None  # None when the source gives only a project number; the runner then uses the project's promoter
     status: str  # raw text exactly as published, e.g. "Order Approved"
     stage: str  # order_issued | pending | other  (see complaint_stage)
     non_execution_applied: bool = False  # a buyer asked to enforce an order that was not complied with
