@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sahighar.adapters.file_import import FileImportAdapter
 from sahighar.db.models import Complaint, Project, Promoter, ScoreSnapshot, SourceDocument
 from sahighar.ingest.runner import run_ingest
+from sahighar.privacy import tokenize
 from sahighar.rawstore import LocalRawStore
 from sahighar.scoring.service import refresh
 
@@ -68,7 +69,8 @@ def test_promoters_carry_pan_address_and_directors(folder):
     parsed = parse_one(FileImportAdapter(folder), "promoters")
     p1 = next(p for p in parsed.promoters if p.ref == "PR1")
     assert (p1.pan, p1.registered_address, p1.partners_or_directors) == (
-        "AAAPA0001A", "12 MG Road, Pune", ["Ramesh Shah", "Anil Mehta"])
+        tokenize("pan", "AAAPA0001A"), "12 MG Road, Pune", [tokenize("name", "Ramesh Shah"), tokenize("name", "Anil Mehta")])
+    assert "AAAPA0001A" not in str(p1) and "Ramesh" not in str(p1)  # raw identifiers never reach the records
     assert next(p for p in parsed.promoters if p.ref == "PR2").partners_or_directors is None
 
 
@@ -130,7 +132,7 @@ def test_end_to_end_import_scores_and_reports_the_bad_file_without_stopping(sess
     assert (summary.total, summary.ok, summary.failed) == (4, 3, 1)
     assert session.scalar(select(SourceDocument.parse_error).where(SourceDocument.kind == "unknown")).startswith("ValueError")
 
-    assert session.scalar(select(Promoter.pan).where(Promoter.rera_promoter_ref == "PR1")) == "AAAPA0001A"  # enriched, not erased
+    assert session.scalar(select(Promoter.pan).where(Promoter.rera_promoter_ref == "PR1")) == tokenize("pan", "AAAPA0001A")  # enriched, not erased
     assert session.scalar(select(Project.extended_end_date).where(Project.rera_reg_no == "P51700000002")) == date(2020, 6, 30)
     stages = dict(session.execute(select(Complaint.complaint_ref, Complaint.stage)).all())
     assert stages == {"CC001": "pending", "CC002": "order_issued"}

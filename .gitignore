@@ -5,3 +5,6 @@ __pycache__/
 node_modules/
 dist/
 raw_store/
+
+# Personal data from registration applications: never commit
+spike/samples/hsm-application-*

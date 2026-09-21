@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Iterable
 
 from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
+from sahighar.privacy import tokenize
 from sahighar.adapters.tabular import (
     Table, parse_date, parse_month, parse_year, parse_yes_no, read_table, split_names,
 )
@@ -121,10 +122,10 @@ def _promoters(name: str, table: Table) -> ParsedRecords:
         promoter_name = row.get("promoter_name") or row.get("name")
         if not row["promoter_ref"] or not promoter_name:
             raise ValueError("promoter id and promoter name are required")
+        members = [tokenize("name", n) for n in split_names(row.get("partners"))]  # personal names become tokens
         promoters.append(PromoterRec(
-            row["promoter_ref"], promoter_name, pan=(row.get("pan") or "").upper() or None,
-            registered_address=row.get("address") or None,
-            partners_or_directors=split_names(row.get("partners")) or None))
+            row["promoter_ref"], promoter_name, pan=tokenize("pan", row["pan"]) if row.get("pan") else None,
+            registered_address=row.get("address") or None, partners_or_directors=members or None))
 
     _each_row(name, table, handle)
     return ParsedRecords(promoters=promoters)

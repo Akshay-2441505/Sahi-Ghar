@@ -51,7 +51,7 @@ export type ComplaintItem = {
 export type RelatedItem = {
   promoter_id: number
   name: string
-  evidence: { shared_partners: string[]; same_address: boolean; name_similarity: number }
+  evidence: { shared_count: number; same_address: boolean; name_similarity: number }
   source_document_id: number
 }
 

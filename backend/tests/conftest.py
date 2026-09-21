@@ -6,6 +6,11 @@ from sqlalchemy.pool import StaticPool
 from sahighar.db.models import Base
 
 
+@pytest.fixture(autouse=True)
+def pii_key(monkeypatch):
+    monkeypatch.setenv("SAHIGHAR_PII_KEY", "test-key")
+
+
 @pytest.fixture
 def session():
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)

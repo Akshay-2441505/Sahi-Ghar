@@ -92,7 +92,8 @@ def resolve_groups(promoters: list[Promoter]) -> list[GroupResult]:
         similar_name = similarity >= NAME_SIMILARITY_THRESHOLD
         if not ((shared and (same_address or similar_name)) or (same_address and similar_name)):
             continue
-        evidence = {"shared_partners": shared, "same_address": same_address, "name_similarity": round(similarity)}
+        # only a count: partners and directors are personal data, used to match and never shown
+        evidence = {"shared_count": len(shared), "same_address": same_address, "name_similarity": round(similarity)}
         for host, guest in ((a, b), (b, a)):
             group = groups[find(host.id)]
             if all(m.promoter_id != guest.id for m in group.members):

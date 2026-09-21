@@ -29,7 +29,7 @@ const data: ProjectPayload = {
   ],
   possibly_related: [
     { promoter_id: 3, name: 'Shree Realty Phase 2 LLP',
-      evidence: { shared_partners: [], same_address: true, name_similarity: 100 }, source_document_id: 4 },
+      evidence: { shared_count: 0, same_address: true, name_similarity: 100 }, source_document_id: 4 },
   ],
   sources: {
     '1': { url: 'https://maharera.example/p/1', origin: 'test', fetched_at: '2026-09-01T00:00:00' },
@@ -104,6 +104,13 @@ describe('TrustPageView', () => {
     const complaints = screen.getByRole('region', { name: 'Complaints' })
     expect(within(complaints).getByText(/not been collected/)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Score breakdown' })).getByText(/Not collected for this data set/)).toBeInTheDocument()
+  })
+
+  it('says how many partners or directors are shared, never who', () => {
+    const shared = { ...data, possibly_related: [{ ...data.possibly_related[0], evidence: { shared_count: 2, same_address: false, name_similarity: 91 } }] }
+    render(<TrustPageView data={shared} />)
+    const block = screen.getByRole('region', { name: 'Possibly related entities' })
+    expect(within(block).getByText(/shares 2 partners or directors/)).toBeInTheDocument()
   })
 
   it('says so when there is not enough data instead of showing a number', () => {

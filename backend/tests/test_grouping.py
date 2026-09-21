@@ -27,6 +27,15 @@ def test_partner_overlap_plus_same_address_is_possible_only():
     assert groups[0].members[1].evidence["same_address"] is True
 
 
+def test_the_evidence_counts_shared_members_and_never_names_them():
+    groups = resolve_groups([
+        P(1, "Shree Realty LLP", address="A", partners=["Ramesh Shah", "Anil Mehta"]),
+        P(2, "Shree Realty Phase 2 LLP", address="B", partners=["ramesh shah", "anil mehta", "Zed Q"]),
+    ])
+    evidence = groups[0].members[1].evidence
+    assert evidence["shared_count"] == 2 and "Ramesh" not in str(evidence) and "shared_partners" not in evidence
+
+
 def test_partner_overlap_plus_similar_name_is_possible():
     groups = resolve_groups([
         P(1, "Shree Realty LLP", address="A", partners=["Ramesh Shah"]),
@@ -42,7 +51,7 @@ def test_same_address_plus_similar_name_is_possible_without_any_partner_data():
         P(3, "Unrelated Builders", address="12 MG Road Pune"),
     ])
     assert (2, "possible") in types(groups[0])
-    assert groups[0].members[1].evidence == {"shared_partners": [], "same_address": True, "name_similarity": 100}
+    assert groups[0].members[1].evidence == {"shared_count": 0, "same_address": True, "name_similarity": 100}
     assert all(m.promoter_id != 3 for g in groups[:2] for m in g.members if m.link_type == "possible")
 
 

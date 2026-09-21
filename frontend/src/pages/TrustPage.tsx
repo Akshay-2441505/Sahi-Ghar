@@ -99,7 +99,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
               <li key={r.promoter_id}>
                 {r.name}:{' '}
                 {[
-                  r.evidence.shared_partners.length ? `shares ${r.evidence.shared_partners.join(', ')}` : null,
+                  r.evidence.shared_count ? `shares ${r.evidence.shared_count} partner${r.evidence.shared_count > 1 ? 's' : ''} or director${r.evidence.shared_count > 1 ? 's' : ''}` : null,
                   r.evidence.same_address ? 'same registered address' : null,
                   `name similarity ${r.evidence.name_similarity}%`,
                 ].filter(Boolean).join('; ')}{' '}
