@@ -41,7 +41,7 @@ Fixed decisions:
 | 1 | Are project search, promoter search and the promoter complaint report reachable without a CAPTCHA? | Per page: yes/no, with a screenshot or response sample |
 | 2 | How is data delivered (server-rendered HTML, XHR/JSON, PDF)? | Request/response samples, endpoint URLs |
 | 3 | How does pagination and filtering work; can we enumerate all projects? | Query parameters, page counts, total results |
-| 4 | Which fields exist per project, promoter and complaint? Is PAN, address, or director/partner data published? | Field list per record type (drives the grouping rules in §6) |
+| 4 | Which fields exist per project, promoter and complaint? Is PAN, address, or director/partner data published? Do project pages carry a promoter past-experience / other-projects disclosure? | Field list per record type (drives the grouping rules in §6) |
 | 5 | Are original and revised completion dates and completion status both present? | Sample records (drives the delay calculation in §7) |
 | 6 | Are the pages reachable from a GitHub Actions runner, not just a laptop? | One workflow run's result |
 | 7 | What request rate is tolerated without errors? | Observed at a deliberately low rate, never stress-tested |
@@ -91,15 +91,13 @@ source (site / file / manual) -> adapter -> raw store + source_document row
 
 **Adapter interface** (one per state, one implementation per source path):
 
-- `list_projects() -> Iterable[RawDoc]`
-- `fetch_project(project_ref) -> RawDoc`
-- `fetch_promoter(promoter_ref) -> RawDoc`
-- `list_complaints(promoter_ref) -> Iterable[RawDoc]`
-- `parse(raw_doc) -> ParsedRecords` — pure function of the raw document, so re-parsing stored raw pages needs no network.
+- `state` (`MH` | `KA` | `TG`) and `origin` (label such as `maharera-web` or `file-import`).
+- `discover() -> Iterable[RawDoc]` — yields every raw document the source provides. How it traverses (paging, per-promoter complaint lists, reading a folder of files) is the adapter's own business. Contract: a promoter is introduced (as a `PromoterRec` in that document or an earlier one) before any project or complaint that references it.
+- `parse(raw_doc) -> ParsedRecords` — pure function of the raw document (no network, no database), so re-parsing stored raw pages needs no network. `ParsedRecords` holds `PromoterRec`, `ProjectRec` and `ComplaintRec` lists keyed by natural RERA references.
 
-`RawDoc` = url or origin label, fetched_at, bytes, content type. Adapters do not touch the database; the runner does. A file-import adapter and a scraper adapter implement the same interface, which is how Path B and mixed sources fit.
+`RawDoc` = origin, kind (`project` | `promoter` | `complaints`), url (`file:<name>` for imports), fetched_at, content type, bytes. Adapters do not touch the database; the runner does. A file-import adapter and a scraper adapter implement the same interface, which is how Path B and mixed sources fit. (This refines the earlier four-method sketch: one `discover()` generator lets each adapter keep its own crawl state.)
 
-**Raw store:** content-addressed (sha256), gzip-compressed, behind a small `RawStore` interface with two implementations: local directory (dev) and S3-compatible object storage (prod, e.g. Cloudflare R2), because free-tier Postgres (~0.5 GB) is too small for raw pages. `source_document` rows hold url, fetched_at, sha256, content type, and store key.
+**Raw store:** content-addressed (sha256), gzip-compressed, behind a small `RawStore` interface (`put(bytes) -> key`, `get(key) -> bytes`). The local-directory implementation is built in slice 1 core; the S3-compatible implementation (prod, e.g. Cloudflare R2, because free-tier Postgres at ~0.5 GB is too small for raw pages) is added in the deployment plan. `source_document` rows hold origin, kind, url, fetched_at, sha256, content type, store key, and parse status/error; `(url, sha256)` is unique, and re-fetching unchanged content only moves `fetched_at`.
 
 ## 5. Data model (PostgreSQL)
 
@@ -124,13 +122,15 @@ Signals, strongest first. Which are usable is decided by the spike (question 4):
 
 A single weak signal alone (name only, or address only) creates no link. Each link stores its evidence (which fields matched, both source document ids).
 
+**Known limit of RERA-only grouping.** An SPV is a separate legal entity with its own PAN, so shared-PAN links will mostly catch duplicate registrations of one entity, not sister SPVs. Most cross-SPV links will therefore be `possible` (and excluded from the score) until MCA director evidence lands in slice 5. This is accepted for slice 1 because the alternative is overstating a link. The spike (§3, question 4) checks whether MahaRERA project pages publish a promoter's past-experience or other-projects disclosure, which could close part of the gap from RERA data alone.
+
 Presentation rule: delivery history and the score use **`filing_confirmed` links only**. `possible` links are shown separately: "Records of possibly related entities (not counted in this score)", listing evidence. This keeps the score defensible and the grouping honest. If PAN is not published for Maharashtra, the score falls back to the single promoter entity and possible links still display.
 
 ## 7. Trust score v1 (scored checklist, not ML)
 
 Computed per `filing_confirmed` group. All constants live in one file so they can be recalibrated against outcomes (PRD success metric).
 
-- **Delivery history.** Outcomes per project: *delivered on time* (actual ≤ original completion date), *delivered late* (actual > original; months late recorded), *overdue* (not completed and the **original** completion date has passed; any RERA-approved revised date is displayed beside it, not used to hide the lateness), *in progress* (original date not yet reached). A project marked completed with no actual completion date has an unknown outcome and is excluded from the ratio, but listed. Score input = `on_time / (on_time + late + overdue)`. Fewer than 2 projects with a known outcome → "insufficient history", no sub-score. Median months late is displayed alongside.
+- **Delivery history.** Outcomes per project: *delivered on time* (actual ≤ original completion date), *delivered late* (actual > original; months late recorded), *overdue* (not completed and the **original** completion date has passed; any RERA-approved revised date is displayed beside it, not used to hide the lateness), *in progress* (original date not yet reached). A project marked completed with no actual completion date has an unknown outcome and is excluded from the ratio, but listed. Score input = `on_time / (on_time + late + overdue)`. Fewer than 2 projects with a known outcome → "insufficient history", no sub-score. Median months late (over late and overdue projects, overdue measured to the computation date) is displayed alongside.
 - **Complaints.** Open and resolved counts; rate = `open / project_count`; sub-score = `100 × max(0, 1 − rate)`. Zero projects → not computed.
 - **Progress vs promise.** Shown as "not yet available" until slice 3 (QPR).
 
@@ -138,7 +138,7 @@ Overall = mean of the available sub-scores, **always displayed with the breakdow
 
 ## 8. API
 
-- `GET /search?q=` — matches project name, promoter name, RERA registration number.
+- `GET /search?q=` (q of at least 2 characters) — returns projects whose name, promoter name or RERA registration number contains the query (case-insensitive, literal match, max 25), each with its promoter's name, so a builder search lands on that builder's projects.
 - `GET /projects/{id}` — trust-page payload: project facts, score breakdown, delivery history, complaints (with order links), grouping evidence (both link types, labelled), source document list, data freshness.
 - `GET /promoters/{id}` — promoter view of the same.
 
