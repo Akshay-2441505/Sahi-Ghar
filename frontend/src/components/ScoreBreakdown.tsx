@@ -47,7 +47,7 @@ export function ScoreBreakdown({ score }: { score: Score }) {
       </div>
       <p className="mt-3 text-sm text-stone-700">
         {score.overall === null
-          ? 'Overall: not enough data.'
+          ? 'Overall: not shown until at least two sections above have data.'
           : `Overall: ${score.overall}/100, the average of the sections above that have data.`}
       </p>
     </section>

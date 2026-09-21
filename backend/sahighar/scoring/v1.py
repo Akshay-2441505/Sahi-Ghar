@@ -10,6 +10,7 @@ from datetime import date
 from statistics import mean, median
 
 MIN_EVALUATED_PROJECTS = 2  # fewer evaluated projects -> "insufficient history"
+MIN_SECTIONS_FOR_OVERALL = 2  # one section alone (e.g. "no complaints on record") must not read as a 100/100 record
 DAYS_PER_MONTH = 30.4375
 
 
@@ -129,5 +130,5 @@ def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today:
         "complaints": complaint_summary,
         "declared": declared_summary,
         "progress": {"available": False, "reason": "not_yet_available", "score": None},
-        "overall": round(mean(available)) if available else None,
+        "overall": round(mean(available)) if len(available) >= MIN_SECTIONS_FOR_OVERALL else None,
     }

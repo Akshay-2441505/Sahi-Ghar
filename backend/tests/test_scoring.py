@@ -53,7 +53,7 @@ def test_insufficient_history_still_scores_complaints():
     s = score(projects, [], TODAY)
     assert s["schedule"]["available"] is False and s["schedule"]["reason"] == "insufficient_history"
     assert s["complaints"]["score"] == 100
-    assert s["overall"] == 100
+    assert s["overall"] is None  # one section alone (here: no complaints on record) is not a reason to show 100/100
 
 
 def test_no_projects_means_not_enough_data():
@@ -66,7 +66,15 @@ def test_complaints_not_collected_is_unknown_never_clean():
     s = score(projects, [], TODAY, complaints_known=False)
     assert s["complaints"]["available"] is False and s["complaints"]["reason"] == "not_collected"
     assert s["complaints"]["score"] is None
-    assert s["overall"] == s["schedule"]["score"]  # the overall uses only what is actually known
+    assert s["schedule"]["score"] == 50 and s["overall"] is None  # one known section is shown as itself, not as an overall
+
+
+def test_overall_needs_at_least_two_sections_with_data():
+    from sahighar.scoring.v1 import DeclaredFacts as D
+    projects = [P(date(2022, 1, 1), None), P(date(2022, 1, 1), date(2023, 1, 1))]
+    declared = [D(date(2015, 3, 10), date(2015, 1, 10)), D(date(2014, 8, 20), date(2014, 8, 20))]
+    assert score(projects, [], TODAY, complaints_known=False)["overall"] is None
+    assert score(projects, [], TODAY, complaints_known=False, declared=declared)["overall"] == 75
 
 
 def test_nothing_known_at_all_is_not_enough_data():
