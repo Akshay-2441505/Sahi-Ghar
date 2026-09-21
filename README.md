@@ -15,6 +15,15 @@ Data path: official data only. Nothing in this repository fetches from a RERA we
     # in another terminal
     cd frontend && npm install && npm run dev
 
+## Import real data
+
+When an authority's data files arrive (the RTI request draft is in `docs/plan-b/`), load them with:
+
+    cd backend
+    uv run python -m sahighar.cli import <folder> --obtained-on YYYY-MM-DD
+
+See `docs/plan-b/file-import.md` for the expected tables and rules.
+
 ## Tests
 
     cd backend && uv run pytest
