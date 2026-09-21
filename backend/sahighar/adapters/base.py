@@ -65,6 +65,7 @@ class ProjectFlagRec:
     reg_no: str
     kind: str  # abeyance | nclt
     detail: dict | None = None
+    promoter_ref: str | None = None  # the promoter as named on the list (name only: these lists carry no promoter id)
 
 
 @dataclass

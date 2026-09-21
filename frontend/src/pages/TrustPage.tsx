@@ -98,7 +98,14 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
               {data.status_notices.map((n) => (
                 <tr key={`${n.rera_reg_no}|${n.kind}`} className="border-t border-stone-200 align-top">
                   <td>{n.project_name} <span className="font-mono text-xs text-stone-500">{n.rera_reg_no}</span></td>
-                  <td>{noticeText(n)}</td>
+                  <td>
+                    {noticeText(n)}
+                    {!n.in_our_project_list && (
+                      <span className="mt-1 block text-xs text-stone-500">
+                        Not among the projects returned by MahaRERA’s project search; matched to this builder by name only.
+                      </span>
+                    )}
+                  </td>
                   <td><SourceLink id={n.source_document_id} sources={sources} /></td>
                 </tr>
               ))}

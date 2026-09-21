@@ -236,13 +236,16 @@ class MahaReraWebAdapter:
             return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end,
                                                       extended_end=extended, extension_history=history)])
         if doc.kind == "status_abeyance":
-            return ParsedRecords(project_flags=[ProjectFlagRec(no, "abeyance") for no in parse_abeyance_list(text)])
+            return ParsedRecords(project_flags=[
+                ProjectFlagRec(r.reg_no, "abeyance", {"promoter_name": r.promoter_name, "project_name": r.project_name, "district": r.district},
+                               promoter_ref(r.promoter_name)) for r in parse_abeyance_list(text)])
         if doc.kind == "status_nclt":
             return ParsedRecords(project_flags=[
                 ProjectFlagRec(r.reg_no, "nclt", {
+                    "promoter_name": r.promoter_name, "project_name": r.project_name, "district": r.district,
                     "status": r.status, "status_as_of": r.status_as_of.isoformat() if r.status_as_of else None,
                     "proposed_completion": r.proposed_completion.isoformat() if r.proposed_completion else None,
-                    "form4_uploaded": r.form4_uploaded}) for r in parse_nclt_list(text)])
+                    "form4_uploaded": r.form4_uploaded}, promoter_ref(r.promoter_name)) for r in parse_nclt_list(text)])
         if doc.kind == "application":
             return parse_application(json.loads(text))
         if doc.kind == "complaint_list":

@@ -208,8 +208,11 @@ def test_status_lists_become_regulator_notices_on_projects_by_registration_numbe
     run_ingest(adapter(FakeFetcher()), session, LocalRawStore(tmp_path))
     flags = {(f.rera_reg_no, f.kind): f.detail for f in session.scalars(select(ProjectFlag))}
     assert ("P52100005326", "abeyance") in flags and ("P51800012235", "abeyance") in flags
-    assert flags[("P51800008635", "nclt")] == {"status": "Lapsed", "status_as_of": "2025-01-31",
-                                               "proposed_completion": "2021-12-30", "form4_uploaded": False}
+    assert flags[("P52100005326", "abeyance")] == {"promoter_name": "SATISH BORA AND ASSOCIATES", "project_name": "CRYSTAL HEIGHTS", "district": "Pune"}
+    nclt = flags[("P51800008635", "nclt")]
+    assert (nclt["status"], nclt["status_as_of"], nclt["proposed_completion"], nclt["form4_uploaded"]) == ("Lapsed", "2025-01-31", "2021-12-30", False)
+    assert nclt["promoter_name"] == "A A Estates Pvt Ltd"
+    assert {f.promoter_ref for f in session.scalars(select(ProjectFlag)) if f.rera_reg_no == "P52100005326"} == {"n:satish bora and associates"}
     assert len([k for k in flags if k[1] == "nclt"]) == 4
 
 

@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, ProjectFlag, Promoter, ScoreSnapshot, SourceDocument
@@ -53,11 +53,16 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
                         key=lambda d: (d.original_proposed_date, d.name))
     ]
     names = {p["rera_reg_no"]: p["name"] for p in schedule}
+    # A notice belongs to this group if it names one of its projects, or (the lists carry no promoter id) one of its
+    # promoters by name. Projects kept in abeyance can be absent from the site's project search, so the second route
+    # is how they are found at all; `in_our_project_list` says which is which.
+    refs = [promoters[pid].rera_promoter_ref for pid in confirmed_ids]
     status_notices = [
-        {"rera_reg_no": f.rera_reg_no, "project_name": names[f.rera_reg_no], "kind": f.kind, "detail": f.detail,
-         "source_document_id": f.source_document_id}
-        for f in session.scalars(select(ProjectFlag).where(ProjectFlag.state == promoter.state, ProjectFlag.rera_reg_no.in_(names))
-                                 .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind))
+        {"rera_reg_no": f.rera_reg_no, "project_name": names.get(f.rera_reg_no) or (f.detail or {}).get("project_name") or f.rera_reg_no,
+         "kind": f.kind, "detail": f.detail, "in_our_project_list": f.rera_reg_no in names, "source_document_id": f.source_document_id}
+        for f in session.scalars(select(ProjectFlag).where(
+            ProjectFlag.state == promoter.state, or_(ProjectFlag.rera_reg_no.in_(names), ProjectFlag.promoter_ref.in_(refs)))
+            .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind))
     ]
     listed = dict(session.execute(select(SourceDocument.kind, func.max(SourceDocument.fetched_at)).where(
         SourceDocument.kind.in_(["status_abeyance", "status_nclt"]), SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all())

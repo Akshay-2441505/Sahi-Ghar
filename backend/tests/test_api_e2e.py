@@ -65,14 +65,16 @@ def test_declared_history_is_listed_once_with_its_source(client, session, tmp_pa
 
 
 def test_regulator_notices_are_listed_for_the_groups_projects_only_with_their_source(client, session, tmp_path):
-    notices = [{"reg_no": "MH-1", "kind": "abeyance"},
+    notices = [{"reg_no": "MH-1", "kind": "abeyance", "promoter_ref": "P9"},  # our project: matched by its number
                {"reg_no": "MH-2", "kind": "nclt", "detail": {"status": "Lapsed", "status_as_of": "2025-01-31"}},
-               {"reg_no": "MH-3", "kind": "abeyance"},  # a possibly-related builder's project: not this group's
-               {"reg_no": "MH-999", "kind": "abeyance"}]  # a project this database does not have
+               {"reg_no": "MH-3", "kind": "abeyance", "promoter_ref": "P3"},  # a possibly-related builder: not this group's
+               {"reg_no": "MH-800", "kind": "abeyance", "promoter_ref": "P2",  # this group's builder, project never in our search results
+                "detail": {"project_name": "Shree Hidden", "district": "Pune"}},
+               {"reg_no": "MH-999", "kind": "abeyance", "promoter_ref": "P9"}]
     run_ingest(FakeAdapter({"n1": {"project_flags": notices}}), session, LocalRawStore(tmp_path))
     body = client.get(f"/projects/{_project_id(session, 'MH-1')}").json()
-    assert [(n["rera_reg_no"], n["project_name"], n["kind"]) for n in body["status_notices"]] == [
-        ("MH-1", "Shree Heights", "abeyance"), ("MH-2", "Shree Gardens", "nclt")]
+    assert [(n["rera_reg_no"], n["project_name"], n["kind"], n["in_our_project_list"]) for n in body["status_notices"]] == [
+        ("MH-1", "Shree Heights", "abeyance", True), ("MH-2", "Shree Gardens", "nclt", True), ("MH-800", "Shree Hidden", "abeyance", False)]
     assert body["status_notices"][1]["detail"]["status"] == "Lapsed"
     assert all(str(n["source_document_id"]) in body["sources"] for n in body["status_notices"])
     assert body["score"]["overall"] == 50  # notices are shown beside the score, never folded into it

@@ -71,7 +71,8 @@ export type StatusNotice = {
   rera_reg_no: string
   project_name: string
   kind: 'abeyance' | 'nclt'
-  detail: { status?: string; status_as_of?: string | null } | null
+  detail: { status?: string; status_as_of?: string | null; district?: string } | null
+  in_our_project_list: boolean
   source_document_id: number
 }
 

@@ -136,14 +136,26 @@ def _table_rows(html: str) -> list[list[str]]:
     return [[_text(c) for c in re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S)] for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S)]
 
 
-def parse_abeyance_list(html: str) -> list[str]:
-    """Certificate numbers on the "Due to Lapse of Completion Date" list: projects MahaRERA keeps in abeyance."""
-    return [row[1] for row in _table_rows(html) if len(row) >= 2 and re.fullmatch(r"P\d{11}", row[1])]
+@dataclass
+class AbeyanceRow:
+    reg_no: str
+    promoter_name: str
+    project_name: str
+    district: str
+
+
+def parse_abeyance_list(html: str) -> list[AbeyanceRow]:
+    """The "Due to Lapse of Completion Date" list: projects MahaRERA keeps in abeyance."""
+    return [AbeyanceRow(row[1], row[2], row[3], row[4]) for row in _table_rows(html)
+            if len(row) >= 5 and re.fullmatch(r"P\d{11}", row[1])]
 
 
 @dataclass
 class NcltRow:
     reg_no: str
+    promoter_name: str
+    project_name: str
+    district: str
     status: str  # registration status as published, e.g. "Lapsed" or "Active"
     status_as_of: date | None  # the date in the column heading "Project Status as on dd-mm-yyyy"
     proposed_completion: date | None
@@ -159,7 +171,7 @@ def parse_nclt_list(html: str) -> list[NcltRow]:
     """The NCLT projects list: one page, with each project's certificate number and registration status."""
     heading = re.search(r"Project Status as on (\d{2}-\d{2}-\d{4})", html)
     as_of = _dmy(heading.group(1)) if heading else None
-    return [NcltRow(row[3], row[8], as_of, _dmy(row[4]), row[9].strip().upper() == "Y")
+    return [NcltRow(row[3], row[1], row[2], row[6], row[8], as_of, _dmy(row[4]), row[9].strip().upper() == "Y")
             for row in _table_rows(html) if len(row) >= 10 and re.fullmatch(r"P\d{11}", row[3])]
 
 

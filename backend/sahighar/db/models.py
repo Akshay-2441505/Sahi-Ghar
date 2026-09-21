@@ -100,6 +100,7 @@ class ProjectFlag(Base):
     state: Mapped[str] = mapped_column(String(2))
     rera_reg_no: Mapped[str]
     kind: Mapped[str]
+    promoter_ref: Mapped[str | None] = mapped_column(index=True)  # from the promoter name on the list, to find a builder's notices
     detail: Mapped[dict | None] = mapped_column(Json)
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 

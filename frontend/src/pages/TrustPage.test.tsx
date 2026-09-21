@@ -160,14 +160,18 @@ describe('TrustPageView', () => {
 
   it('shows regulator notices in the regulator’s own terms, with a source, and never in the score', () => {
     const notices = { ...data, status_notices: [
-      { rera_reg_no: 'MH-1', project_name: 'Shree Heights', kind: 'abeyance' as const, detail: null, source_document_id: 1 },
+      { rera_reg_no: 'MH-1', project_name: 'Shree Heights', kind: 'abeyance' as const, detail: null, in_our_project_list: true, source_document_id: 1 },
       { rera_reg_no: 'MH-2', project_name: 'Shree Gardens', kind: 'nclt' as const,
-        detail: { status: 'Lapsed', status_as_of: '2025-01-31' }, source_document_id: 2 }] }
+        detail: { status: 'Lapsed', status_as_of: '2025-01-31' }, in_our_project_list: true, source_document_id: 2 },
+      { rera_reg_no: 'MH-800', project_name: 'Shree Hidden', kind: 'abeyance' as const, detail: { district: 'Pune' }, in_our_project_list: false, source_document_id: 1 }] }
     render(<TrustPageView data={notices} />)
     const block = screen.getByRole('region', { name: 'MahaRERA notices' })
-    expect(within(block).getByText(/Kept in abeyance for lapse of the completion date/)).toBeInTheDocument()
-    expect(within(block).getByText(/bank accounts are frozen and the promoter may not execute agreements for sale/)).toBeInTheDocument()
+    expect(within(block).getAllByText(/Kept in abeyance for lapse of the completion date/)).toHaveLength(2)
+    expect(within(block).getAllByText(/bank accounts are frozen and the promoter may not execute agreements for sale/)).toHaveLength(2)
     expect(within(block).getByText(/Listed as an NCLT project; registration status "Lapsed" as on 31 Jan 2025/)).toBeInTheDocument()
+    const hidden = within(block).getByText('Shree Hidden').closest('tr')!
+    expect(within(hidden).getByText(/Not among the projects returned by MahaRERA’s project search; matched to this builder by name only/)).toBeInTheDocument()
+    expect(within(block).getByText('Shree Heights').closest('tr')!.textContent).not.toMatch(/matched to this builder by name/)
     for (const row of within(block).getAllByRole('row').slice(1)) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
   })
 

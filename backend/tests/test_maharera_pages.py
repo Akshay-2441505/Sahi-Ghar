@@ -84,7 +84,9 @@ def test_newer_format_certificate_lists_each_extension_with_its_label():
 
 def test_abeyance_list_gives_the_certificate_numbers():
     from sahighar.adapters.maharera_pages import parse_abeyance_list
-    assert parse_abeyance_list(fixture("status_abeyance.html")) == ["P52100005326", "P51900008342", "P52100009025", "P51800012235"]
+    rows = parse_abeyance_list(fixture("status_abeyance.html"))
+    assert [r.reg_no for r in rows] == ["P52100005326", "P51900008342", "P52100009025", "P51800012235"]
+    assert (rows[0].promoter_name, rows[0].project_name, rows[0].district) == ("SATISH BORA AND ASSOCIATES", "CRYSTAL HEIGHTS", "Pune")
     assert parse_abeyance_list("<div>nothing here</div>") == []
 
 
@@ -93,6 +95,7 @@ def test_nclt_list_gives_status_as_of_its_date_and_the_proposed_completion():
     rows = parse_nclt_list(fixture("status_nclt.html"))
     assert (rows[0].reg_no, rows[0].status, rows[0].status_as_of, rows[0].proposed_completion, rows[0].form4_uploaded) == (
         "P51800008635", "Lapsed", date(2025, 1, 31), date(2021, 12, 30), False)
+    assert (rows[0].promoter_name, rows[0].district) == ("A A Estates Pvt Ltd", "Mumbai Suburban") and rows[0].project_name.startswith("Redevelopment of OB")
     assert len(rows) == 4
 
 

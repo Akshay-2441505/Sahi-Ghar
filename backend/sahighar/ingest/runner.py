@@ -70,7 +70,7 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
         )
     for f in parsed.project_flags:
         _upsert(session, ProjectFlag, {"state": state, "rera_reg_no": f.reg_no, "kind": f.kind},
-                {"detail": f.detail, "source_document_id": sd_id})
+                {"promoter_ref": f.promoter_ref, "detail": f.detail, "source_document_id": sd_id})
     for c in parsed.complaints:
         project = None
         if c.project_reg_no:
