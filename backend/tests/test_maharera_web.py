@@ -95,9 +95,27 @@ def test_discover_seeds_by_pincode_then_completes_each_builder_then_certificates
     assert order.count("complaint_list") == 1 and order.count("complaints") == 1
     assert order.count("application") == 10  # one application per builder
     assert order.index("promoter_list") > 0 and order.index("registration_certificate") > order.index("promoter_list")
-    assert order.index("complaint_list") > order.index("extension_certificate")
+    assert order.index("complaint_list") < order.index("registration_certificate")  # the index comes first (free when already stored)
     assert "project_location=411001" in docs[2].url and all(d.origin == "maharera-web" for d in docs)
     assert len(fetcher.requested) == 37  # 2 status lists + 1 + 10 builders + 10 + 2 certificates + 10 applications + 1 complaint page + 1 detail
+
+
+def test_builders_are_completed_one_at_a_time_largest_portfolio_first():
+    from sahighar.adapters.maharera_pages import parse_project_list
+    cards = parse_project_list(LIST_PAGE.decode("utf-8", "replace")).cards
+    big, small = cards[0].promoter_name, cards[1].promoter_name
+    page = LIST_PAGE.replace(f">{small}<".encode(), f">{big}<".encode())  # now the first builder has two projects
+    assert page != LIST_PAGE
+
+    def route(url):
+        return page if urlparse(url).path in ("/projects-search-result", "/promoters-search-result") else site(url)
+
+    docs = list(adapter(FakeFetcher(route=route)).discover())
+    body = [d for d in docs if d.kind in ("registration_certificate", "extension_certificate", "application", "complaints")]
+    first_app = next(i for i, d in enumerate(body) if d.kind == "application")
+    assert kinds(body[:first_app]).count("registration_certificate") == 2  # the two-project builder is finished first
+    assert kinds(body[first_app + 1:first_app + 2]) == ["complaints"]  # ...including its complaint page, before the next builder
+    assert sum(d.kind == "application" for d in docs) == 9  # nobody is left out: one application per builder
 
 
 def test_full_import_builds_projects_dates_and_complaints(session, tmp_path):
@@ -263,7 +281,7 @@ def test_the_complaint_index_counts_as_collected_only_after_a_complete_scan():
     list(capped.discover())
     assert capped.complaint_index_complete is False
 
-    interrupted = adapter(FakeFetcher(limit=35 - 2))  # budget runs out before the last pages
+    interrupted = adapter(FakeFetcher(limit=13))  # 2 notice lists + 1 list + 10 builders: the budget runs out at the index
     with pytest.raises(BudgetExhausted):
         list(interrupted.discover())
     assert interrupted.complaint_index_complete is False

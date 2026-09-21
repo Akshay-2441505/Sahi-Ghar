@@ -7,9 +7,12 @@ PoliteFetcher, which stops the crawl on any refusal or CAPTCHA. A crawl runs in 
   1. project lists for the chosen pincodes (10 projects per page);
   2. each builder found in phase 1: their whole portfolio (a builder's record only means something if all their
      projects are in), via the promoter search;
-  3. registration and extension certificates for every project (they hold the original and extended end dates);
-  4. complaints: the complete complaint report index (the site's name filter needs a form POST, so the whole index
-     is read once, about 540 pages, and reused), then the complaint page of each builder in scope.
+  3. the complaint report index (the site's name filter needs a form POST, so the whole index is read once, about
+     540 pages, and reused: free once stored);
+  4. builder by builder, largest portfolio first, everything about that builder: the registration and extension
+     certificates of each of its projects (they hold the original and extended end dates), its registration
+     application, and its complaint page. A run that stops early therefore leaves whole builders finished, not
+     every builder half done.
 Each fetched page is one RawDoc, so every number links to the stored page it came from.
 """
 import json
@@ -192,24 +195,22 @@ class MahaReraWebAdapter:
         for ref, name in list(promoters.items()):
             yield from self._list_pages(lambda n: promoter_list_url(name, n), "promoter_list", self.max_promoter_pages,
                                         cards, promoters, ref)
-        for card in sorted(cards.values(), key=lambda c: c.reg_no):
-            registration = self._certificate(card.cert_id, "DocProjectCert", "registration_certificate")
-            if registration:
-                yield registration
-            if not (registration and self._is_complete(registration)):  # a newer certificate already holds the extension
-                extension = self._certificate(card.ext_cert_id, "DocProjectExtCert", "extension_certificate")
-                if extension:
-                    yield extension
-        by_builder: dict[str, list[ProjectCard]] = {}  # one application per builder, oldest project first
-        for card in cards.values():
-            if card.cert_id:
-                by_builder.setdefault(promoter_ref(card.promoter_name), []).append(card)
-        for ref, builder_cards in sorted(by_builder.items()):
-            builder_cards.sort(key=lambda c: int(c.cert_id))
-            if doc := self._application(builder_cards, ref, promoters.get(ref) or builder_cards[0].promoter_name):
-                yield doc
         yield from self._complaint_index()
-        for ref in promoters:
+        by_builder: dict[str, list[ProjectCard]] = {}
+        for card in cards.values():
+            by_builder.setdefault(promoter_ref(card.promoter_name), []).append(card)
+        for ref, builder_cards in sorted(by_builder.items(), key=lambda item: (-len(item[1]), item[0])):
+            for card in sorted(builder_cards, key=lambda c: c.reg_no):
+                registration = self._certificate(card.cert_id, "DocProjectCert", "registration_certificate")
+                if registration:
+                    yield registration
+                if not (registration and self._is_complete(registration)):  # a newer certificate already holds the extension
+                    extension = self._certificate(card.ext_cert_id, "DocProjectExtCert", "extension_certificate")
+                    if extension:
+                        yield extension
+            with_id = sorted((c for c in builder_cards if c.cert_id), key=lambda c: int(c.cert_id))  # oldest project first
+            if with_id and (doc := self._application(with_id, ref, promoters.get(ref) or with_id[0].promoter_name)):
+                yield doc
             for promoter_id in self._complaint_ids.get(ref, []):
                 url = complaint_detail_url(promoter_id)
                 if not self.is_fresh(url) and (doc := self._optional_doc(url, "complaints")):

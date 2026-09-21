@@ -37,9 +37,13 @@ Exit code: 0 finished or stopped at its budget, 1 some page failed to parse (nam
 0. **Two notice lists** MahaRERA publishes, one request each: projects **kept in abeyance** ("Due to Lapse of Completion Date": bank accounts frozen, promoter barred from selling until compliant; about 4,200 projects) and **NCLT projects** (about 330, with registration status). Fetched every run because they change.
 1. **Project lists** for your pincodes (10 projects per page). Gives registration number, name, promoter name, district.
 2. **Each builder's whole portfolio**, through the promoter search, because a builder's record only means something with all their projects.
-3. **Certificates** for every project: the registration certificate, and the extension certificate only when the project has one and the first document does not already carry the extension history. They supply the original and the extended end dates.
-4. **Registration applications**, one per builder (its **oldest** project first: newer applications show PANs masked, so up to three are tried until one has a usable PAN). From each: the organization or individual, the organization's PAN, the members' PANs (directors, partners, signatories; LLP partner lists are in a second table), and the business address. The document is about 1.6 MB and also contains bank accounts, phone numbers, emails and Aadhaar numbers, so **the raw PDF is never stored**: it is reduced at once to a whitelisted extract of about 0.5 KB (see Privacy).
-5. **Complaints:** the complete complaint index (once, reused), then the complaint page of every builder in scope.
+3. **The complaint index** (about 540 pages, once; free when already stored).
+4. **Builder by builder, largest portfolio first**, everything about each builder before the next:
+   - the **certificates** of each of its projects: the registration certificate, and the extension certificate only when the project has one and the first document does not already carry the extension history. They supply the original and the extended end dates;
+   - its **registration application** (its **oldest** project first: newer applications show PANs masked, so up to three are tried until one has a usable PAN). From it: the organization or individual, the organization's PAN, the members' PANs (directors, partners, signatories; LLP partner lists are in a second table), the business address, and the declared past projects. The document is about 1.6 MB and also contains bank accounts, phone numbers, emails and Aadhaar numbers, so **the raw PDF is never stored**: it is reduced at once to a whitelisted extract of about 0.5 KB (see Privacy);
+   - its **complaint page**.
+
+   A run that stops early (budget, laptop closed) therefore leaves whole builders finished, not every builder half done.
 
 Rough cost at 3 s per request: a pincode of about 100 projects with their builders' portfolios is a few hundred requests (tens of minutes). The complaint index is about 540 requests (about 27 minutes) once. All of Maharashtra is about 4,900 list pages plus about 49,000 certificate requests: about two days of fetching.
 
