@@ -1,0 +1,83 @@
+from datetime import date
+from pathlib import Path
+
+import pytest
+
+from sahighar.adapters.maharera_pages import (
+    parse_certificate, parse_complaint_detail, parse_complaint_list, parse_project_list, promoter_ref,
+)
+
+FIXTURES = Path(__file__).parent / "fixtures" / "maharera"
+
+
+def fixture(name: str) -> str:
+    return (FIXTURES / name).read_text(encoding="utf-8", errors="replace")
+
+
+def test_promoter_ref_ignores_case_spacing_and_punctuation_only():
+    assert promoter_ref("GREEN SPACE INFRA VENTURES") == promoter_ref("  Green  Space Infra Ventures ")
+    assert promoter_ref("Shree Realty LLP.") == promoter_ref("shree realty llp")
+    assert promoter_ref("Shree Realty Pvt Ltd") != promoter_ref("Shree Realty Private Limited")  # never merged by guessing
+
+
+def test_project_list_page_yields_cards_and_paging_info():
+    page = parse_project_list(fixture("list_page1.html"))
+    assert (page.total, page.pages) == (49450, 4945)
+    assert len(page.cards) == 10
+    first = page.cards[0]
+    assert (first.reg_no, first.name, first.promoter_name, first.district, first.pincode) == (
+        "P50500000005", "GREEN CITY 3", "GREEN SPACE INFRA VENTURES", "Nagpur", "441108")
+    assert first.last_modified == date(2017, 5, 20) and first.cert_id == "1" and first.ext_cert_id is None
+
+
+def test_cards_with_an_extension_certificate_carry_its_id():
+    by_no = {c.reg_no: c for c in parse_project_list(fixture("list_page1.html")).cards}
+    assert by_no["P51700002065"].ext_cert_id == "5" and by_no["P51700002065"].cert_id == "5"
+    assert by_no["P51800002451"].ext_cert_id == "15"
+    assert by_no["P50500000348"].ext_cert_id is None
+
+
+def test_complaint_list_gives_promoter_ids_and_counts():
+    page = parse_complaint_list(fixture("complaint_list.html"))
+    assert page.total == 5382 and len(page.rows) == 10
+    row = page.rows[2]
+    assert (row.name, row.count, row.promoter_id) == ("ARJUN ANANT WAGHMARE", 4, "106973")
+
+
+def test_complaint_detail_rows_keep_month_and_year_only():
+    rows = parse_complaint_detail(fixture("complaint_detail.html"))
+    assert len(rows) == 4
+    first, last = rows[0], rows[-1]
+    assert (first.promoter_name, first.project_no, first.district, first.complaint_no) == (
+        "ARJUN ANANT WAGHMARE", "P51800004827", "Mumbai Suburban", "CC006000000057487")
+    assert (first.year, first.month, first.status, first.non_execution_applied) == (2018, "December", "Order Approved", False)
+    assert (last.complaint_no, last.year, last.month) == ("CC12400302", 2024, "October")
+
+
+def test_registration_certificate_gives_the_original_end_date():
+    cert = parse_certificate(fixture("cert_reg_5.html"))
+    assert cert.reg_no == "P51700002065"
+    assert (cert.kind, cert.valid_from, cert.valid_until) == ("registration", date(2017, 7, 31), date(2018, 12, 31))
+
+
+def test_extension_certificate_gives_the_new_end_date():
+    cert = parse_certificate(fixture("cert_ext_5.html"))
+    assert cert.reg_no == "P51700002065"
+    assert (cert.kind, cert.valid_from, cert.valid_until) == ("extension", None, date(2019, 12, 31))
+
+
+def test_a_response_without_a_certificate_is_not_an_error():
+    assert parse_certificate("<div>No Record Found</div>") is None
+
+
+def test_a_pdf_that_does_not_look_like_a_certificate_is_an_error():
+    import base64
+    from pypdf import PdfWriter
+    import io
+    writer = PdfWriter()
+    writer.add_blank_page(width=100, height=100)
+    buffer = io.BytesIO()
+    writer.write(buffer)
+    html = f'<object data=data:application/pdf;base64,{base64.b64encode(buffer.getvalue()).decode()}>'
+    with pytest.raises(ValueError, match="registration number"):
+        parse_certificate(html)
