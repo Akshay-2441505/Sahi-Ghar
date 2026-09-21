@@ -160,7 +160,8 @@ class MahaReraWebAdapter:
         if doc.kind in ("project_list", "promoter_list"):
             cards = parse_project_list(text).cards
             if doc.kind == "promoter_list":  # the search also returns similarly named builders: keep only the asked-for one
-                target = promoter_ref(parse_qs(urlparse(doc.url).query)["promoters_name"][0])
+                query = parse_qs(urlparse(doc.url).query)  # pages stored before the fix used the old promoter_name parameter
+                target = promoter_ref((query.get("promoters_name") or query["promoter_name"])[0])
                 cards = [c for c in cards if promoter_ref(c.promoter_name) == target]
             return ParsedRecords(
                 promoters=list({promoter_ref(c.promoter_name): PromoterRec(promoter_ref(c.promoter_name), c.promoter_name)

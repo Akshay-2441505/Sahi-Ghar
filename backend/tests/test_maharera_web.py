@@ -206,3 +206,11 @@ def test_the_complaint_index_is_capped_by_max_complaint_pages():
     fetcher = FakeFetcher(route=route)
     list(adapter(fetcher, max_complaint_pages=3).discover())
     assert sum("promoter-complaint-report" in u for u in fetcher.requested) == 3
+
+
+def test_a_promoter_list_stored_under_the_old_parameter_name_still_parses():
+    from sahighar.adapters.base import RawDoc
+    from sahighar.util import utcnow
+    old = "https://maharera.maharashtra.gov.in/promoters-search-result?promoter_name=Vascon%20Engineers%20Ltd&page=1&op="
+    parsed = adapter(FakeFetcher()).parse(RawDoc("maharera-web", "promoter_list", old, utcnow(), "text/html", LIST_PAGE))
+    assert parsed.projects == []  # that page was unfiltered, so none of its cards belong to the asked-for builder
