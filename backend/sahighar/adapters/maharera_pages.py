@@ -76,11 +76,13 @@ def parse_project_list(html: str) -> ProjectListPage:
         if not (reg and name and promoter):
             continue  # not a project card
         modified = _field(block, "Last Modified")
+        view = re.search(r"/project/view/(\d+)", block)  # builder-search cards have no Certificate link; this id is the same
         cards.append(ProjectCard(
             reg_no=reg.group(1), name=_text(name.group(1)), promoter_name=_text(promoter.group(1)),
             district=_field(block, "District"), pincode=_field(block, "Pincode"),
             last_modified=datetime.strptime(modified, "%Y-%m-%d").date() if re.fullmatch(r"\d{4}-\d{2}-\d{2}", modified) else None,
-            cert_id=_cert_id(block, "DocProjectCert"), ext_cert_id=_cert_id(block, "DocProjectExtCert"),
+            cert_id=_cert_id(block, "DocProjectCert") or (view.group(1) if view else None),
+            ext_cert_id=_cert_id(block, "DocProjectExtCert"),
         ))
     return ProjectListPage(_total(html), int(pages.group(1)) if pages else None, cards)
 

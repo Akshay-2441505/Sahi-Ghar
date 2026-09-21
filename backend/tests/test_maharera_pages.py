@@ -93,3 +93,18 @@ def test_a_pdf_that_does_not_look_like_a_certificate_is_an_error():
     html = f'<object data=data:application/pdf;base64,{base64.b64encode(buffer.getvalue()).decode()}>'
     with pytest.raises(ValueError, match="registration number"):
         parse_certificate(html)
+
+
+def test_builder_search_cards_have_no_certificate_link_so_the_id_comes_from_the_view_link():
+    # on the promoter search page the "Certificate" column is missing; the internal project id is in "View Details"
+    cards = parse_project_list(fixture("promoter_list_page1.html")).cards
+    assert len(cards) == 10 and all(c.cert_id for c in cards)
+    assert [c.cert_id for c in cards][:4] == ["1", "3", "4", "5"]
+
+
+def test_where_both_exist_the_certificate_id_equals_the_view_link_id():
+    html = fixture("list_page1.html")
+    import re
+    views = re.findall(r"/project/view/(\d+)\"", html)
+    cards = parse_project_list(html).cards
+    assert [c.cert_id for c in cards] == views[: len(cards)]
