@@ -54,20 +54,32 @@ def test_complaint_detail_rows_keep_month_and_year_only():
     assert (last.complaint_no, last.year, last.month) == ("CC12400302", 2024, "October")
 
 
-def test_registration_certificate_gives_the_original_end_date():
+def test_old_format_registration_certificate_gives_the_original_end_date():
     cert = parse_certificate(fixture("cert_reg_5.html"))
-    assert cert.reg_no == "P51700002065"
-    assert (cert.kind, cert.valid_from, cert.valid_until) == ("registration", date(2017, 7, 31), date(2018, 12, 31))
+    assert (cert.reg_no, cert.original_end, cert.current_end, cert.complete) == (
+        "P51700002065", date(2018, 12, 31), date(2018, 12, 31), False)
 
 
-def test_extension_certificate_gives_the_new_end_date():
+def test_old_format_extension_certificate_gives_only_the_new_end_date():
     cert = parse_certificate(fixture("cert_ext_5.html"))
-    assert cert.reg_no == "P51700002065"
-    assert (cert.kind, cert.valid_from, cert.valid_until) == ("extension", None, date(2019, 12, 31))
+    assert (cert.reg_no, cert.original_end, cert.current_end, cert.complete) == (
+        "P51700002065", None, date(2019, 12, 31), False)
+
+
+def test_newer_format_certificate_has_the_original_and_current_dates_in_one_document():
+    # the site serves this richer certificate (with the extension history) from either certificate endpoint
+    cert = parse_certificate(fixture("cert_new_format.html"))
+    assert (cert.reg_no, cert.original_end, cert.current_end, cert.complete) == (
+        "P52100001400", date(2019, 12, 31), date(2027, 12, 31), True)
 
 
 def test_a_response_without_a_certificate_is_not_an_error():
     assert parse_certificate("<div>No Record Found</div>") is None
+
+
+def test_a_json_error_where_the_pdf_should_be_is_not_an_error_either():
+    # the site sometimes answers {"status":"1","message":"can not fetch the object from repository"} instead of a PDF
+    assert parse_certificate(fixture("cert_error_json.html")) is None
 
 
 def test_a_pdf_that_does_not_look_like_a_certificate_is_an_error():

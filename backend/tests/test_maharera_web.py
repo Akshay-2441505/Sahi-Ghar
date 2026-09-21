@@ -16,13 +16,13 @@ FIXTURES = Path(__file__).parent / "fixtures" / "maharera"
 LIST_PAGE = (FIXTURES / "list_page1.html").read_bytes()  # real page: 10 projects, 10 different promoters
 CERTS = {("5", "DocProjectCert"): (FIXTURES / "cert_reg_5.html").read_bytes(),
          ("5", "DocProjectExtCert"): (FIXTURES / "cert_ext_5.html").read_bytes()}
+NEW_FORMAT = (FIXTURES / "cert_new_format.html").read_bytes()
+ERROR_JSON = (FIXTURES / "cert_error_json.html").read_bytes()
 NO_RECORD = b"<div>No Record Found</div>"
 COMPLAINANT = "GREEN SPACE INFRA VENTURES"  # the promoter of the first card
 
 
-def complaint_list_html(name: str) -> bytes:
-    if promoter_ref(name) != promoter_ref(COMPLAINANT):
-        return b"<html>Showing Final <span class='colorBlue'>0</span> Result</html>"
+def complaint_list_html() -> bytes:
     return (f'<html>Showing Final <span class="colorBlue">1</span> Result<table><tr><th>Sr</th></tr>'
             f'<tr><td class="center"> 1</td><td>{COMPLAINANT}</td><td>2</td><td class="center">'
             f'<a href="https://x.test/promoter-complaint-view-data?promoter_id=777">v</a></td></tr></table></html>').encode()
@@ -43,7 +43,7 @@ def site(url: str) -> bytes:
     if u.path == "/project-document":
         return CERTS.get((q["id"][0], q["type"][0]), NO_RECORD)
     if u.path == "/promoter-complaint-report":
-        return complaint_list_html(q["promoter_complaint_name"][0])
+        return complaint_list_html()
     if u.path == "/promoter-complaint-view-data":
         return complaint_detail_html()
     raise AssertionError(f"unexpected url {url}")
@@ -81,11 +81,11 @@ def test_discover_seeds_by_pincode_then_completes_each_builder_then_certificates
     order = kinds(docs)
     assert order[0] == "project_list" and order.count("promoter_list") == 10
     assert order.count("registration_certificate") == 10 and order.count("extension_certificate") == 2
-    assert order.count("complaint_list") == 10 and order.count("complaints") == 1
+    assert order.count("complaint_list") == 1 and order.count("complaints") == 1
     assert order.index("promoter_list") > 0 and order.index("registration_certificate") > order.index("promoter_list")
     assert order.index("complaint_list") > order.index("extension_certificate")
     assert "project_location=411001" in docs[0].url and all(d.origin == "maharera-web" for d in docs)
-    assert len(fetcher.requested) == 34
+    assert len(fetcher.requested) == 25  # 1 + 10 builders + 10 + 2 certificates + 1 complaint page + 1 detail
 
 
 def test_full_import_builds_projects_dates_and_complaints(session, tmp_path):
@@ -111,7 +111,7 @@ def test_a_second_run_skips_certificates_and_complaint_pages_it_already_has():
     have = {u for u in first.requested if "project-document" in u or "view-data" in u}
     second = FakeFetcher()
     list(adapter(second, is_fresh=lambda url: url in have).discover())
-    assert len(second.requested) == 34 - len(have) == 21
+    assert len(second.requested) == 25 - len(have) == 12
     assert not any("project-document" in u for u in second.requested)
 
 
@@ -145,3 +145,64 @@ def test_a_promoter_list_only_yields_that_promoters_projects():
     parsed = adapter(FakeFetcher()).parse(doc)
     assert len(parsed.projects) == 1 and len(parsed.promoters) == 1
     assert parsed.projects[0].promoter_ref == parsed.promoters[0].ref
+
+
+def test_builder_portfolios_use_the_real_filter_parameter_of_the_promoter_search():
+    fetcher = FakeFetcher()
+    list(adapter(fetcher).discover())
+    portfolio_urls = [u for u in fetcher.requested if "promoters-search-result" in u]
+    assert len(portfolio_urls) == 10 and all("promoters_name=" in u and "promoter_name=" not in u for u in portfolio_urls)
+
+
+def test_a_complete_certificate_saves_the_extension_request():
+    def route(url):
+        q = parse_qs(urlparse(url).query)
+        if urlparse(url).path == "/project-document" and q["id"] == ["15"] and q["type"] == ["DocProjectCert"]:
+            return NEW_FORMAT  # already carries the extension history
+        return site(url)
+
+    fetcher = FakeFetcher(route=route)
+    list(adapter(fetcher).discover())
+    assert not any("id=15&type=DocProjectExtCert" in u for u in fetcher.requested)
+    assert any("id=5&type=DocProjectExtCert" in u for u in fetcher.requested)  # an old-format certificate still needs its extension
+
+
+def test_a_certificate_endpoint_answering_with_a_json_error_is_not_a_failure(session, tmp_path):
+    def route(url):
+        q = parse_qs(urlparse(url).query)
+        if urlparse(url).path == "/project-document" and q["id"] == ["3"]:
+            return ERROR_JSON
+        return site(url)
+
+    summary = run_ingest(adapter(FakeFetcher(route=route)), session, LocalRawStore(tmp_path))
+    assert summary.failed == 0
+
+
+def test_a_new_format_certificate_sets_both_dates(session, tmp_path):
+    from sahighar.adapters.base import RawDoc
+    from sahighar.util import utcnow
+    run_ingest(adapter(FakeFetcher()), session, LocalRawStore(tmp_path))
+    card = session.scalar(select(Project).where(Project.rera_reg_no == "P51800002451"))  # any known project
+    doc = RawDoc("maharera-web", "registration_certificate", "u", utcnow(), "text/html", NEW_FORMAT)
+    parsed = adapter(FakeFetcher()).parse(doc)
+    assert (parsed.projects[0].reg_no, parsed.projects[0].registration_end, parsed.projects[0].extended_end) == (
+        "P52100001400", date(2019, 12, 31), date(2027, 12, 31))
+    assert card is not None
+
+
+def test_stored_complaint_pages_are_reused_instead_of_fetched_again():
+    fetcher = FakeFetcher()
+    docs = list(adapter(fetcher, stored=lambda url: complaint_list_html() if "promoter-complaint-report" in url else None).discover())
+    assert not any("promoter-complaint-report" in u for u in fetcher.requested)
+    assert "complaint_list" not in kinds(docs) and kinds(docs).count("complaints") == 1
+
+
+def test_the_complaint_index_is_capped_by_max_complaint_pages():
+    def route(url):
+        if urlparse(url).path == "/promoter-complaint-report":  # says there are 5384 promoters, i.e. 539 pages
+            return (FIXTURES / "complaint_list_live.html").read_bytes()
+        return site(url)
+
+    fetcher = FakeFetcher(route=route)
+    list(adapter(fetcher, max_complaint_pages=3).discover())
+    assert sum("promoter-complaint-report" in u for u in fetcher.requested) == 3

@@ -20,7 +20,7 @@ from sahighar.adapters.maharera_web import MahaReraWebAdapter
 from sahighar.adapters.polite import BlockedError, BudgetExhausted, PoliteFetcher
 from sahighar.db.models import SourceDocument
 from sahighar.db.session import session_scope
-from sahighar.ingest.runner import run_ingest
+from sahighar.ingest.runner import reparse_all, run_ingest
 from sahighar.rawstore import LocalRawStore
 from sahighar.scoring.service import refresh
 from sahighar.util import utcnow
@@ -43,11 +43,17 @@ def main(argv: list[str] | None = None) -> int:
     crawl.add_argument("--delay", type=float, default=3.0, help="seconds between requests (default 3, do not go lower)")
     crawl.add_argument("--max-list-pages", type=int, help="cap list pages per pincode (trial runs)")
     crawl.add_argument("--max-promoter-pages", type=int, default=20, help="cap pages per builder's portfolio (default 20)")
+    crawl.add_argument("--max-complaint-pages", type=int, help="cap pages of the complaint index (about 540 exist; trial runs)")
     crawl.add_argument("--refresh-after-days", type=int, default=90, help="skip certificates and complaint pages fetched within this many days")
     crawl.add_argument("--raw-store", default="raw_store", help="where fetched pages are kept (default: ./raw_store)")
+    reparse = sub.add_parser("reparse", help="re-run the parsers over stored pages (no network), e.g. after a parser fix")
+    reparse.add_argument("--origin", choices=["maharera-web", "file-import"], required=True)
+    reparse.add_argument("--raw-store", default="raw_store")
     args = parser.parse_args(argv)
     if args.command == "crawl":
         return _crawl(args)
+    if args.command == "reparse":
+        return _reparse(args)
 
     folder = Path(args.folder)
     if not folder.is_dir():
@@ -78,11 +84,16 @@ def _crawl(args) -> int:
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
             SourceDocument.fetched_at >= cutoff,
             SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints"]))))
-        adapter = MahaReraWebAdapter(fetcher, args.pincode or None, fresh.__contains__,
-                                     args.max_list_pages, args.max_promoter_pages)
+        store = LocalRawStore(Path(args.raw_store))
+        index_pages = dict(session.execute(select(SourceDocument.url, SourceDocument.store_key).where(
+            SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
+            SourceDocument.kind == "complaint_list", SourceDocument.fetched_at >= cutoff).order_by(SourceDocument.id)).all())
+        adapter = MahaReraWebAdapter(fetcher, args.pincode or None, fresh.__contains__, args.max_list_pages,
+                                     args.max_promoter_pages, args.max_complaint_pages,
+                                     stored=lambda url: store.get(index_pages[url]) if url in index_pages else None)
         stopped = None
         try:
-            run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+            run_ingest(adapter, session, store, max_failure_rate=1.0)
         except BudgetExhausted:
             stopped = "budget"
         except BlockedError as error:
@@ -100,6 +111,18 @@ def _crawl(args) -> int:
             print(f"  FAILED {doc.url}: {doc.parse_error}")
         print(f"{refresh(session)} promoter groups scored")
     return 3 if stopped and stopped != "budget" else (1 if failed else 0)
+
+
+def _reparse(args) -> int:
+    adapter = MahaReraWebAdapter(None) if args.origin == "maharera-web" else FileImportAdapter(Path("."))
+    with session_scope() as session:
+        summary = reparse_all(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+        print(f"{summary.total} documents re-parsed, {summary.failed} failed")
+        for doc in session.scalars(select(SourceDocument).where(
+                SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")):
+            print(f"  FAILED {doc.url}: {doc.parse_error}")
+        print(f"{refresh(session)} promoter groups scored")
+    return 1 if summary.failed else 0
 
 
 if __name__ == "__main__":

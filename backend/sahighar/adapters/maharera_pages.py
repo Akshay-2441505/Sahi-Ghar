@@ -133,31 +133,43 @@ def parse_complaint_detail(html: str) -> list[ComplaintRow]:
 @dataclass
 class Certificate:
     reg_no: str
-    kind: str  # registration | extension
-    valid_from: date | None
-    valid_until: date
+    original_end: date | None  # end of the ORIGINAL registration validity, when the document says so
+    current_end: date | None  # end of the registration as of this document (the extended date, if extended)
+    complete: bool  # True for the newer format, which carries the whole extension history in one document
 
 
 def _date(text: str) -> date:
     return datetime.strptime(text, "%d/%m/%Y").date()
 
 
+_D = r"(\d{2}/\d{2}/\d{4})"
+
+
 def parse_certificate(html: str) -> Certificate | None:
-    """The certificate endpoint returns HTML with the PDF embedded. None if the site says there is none."""
+    """The certificate endpoint returns HTML with the PDF embedded, in one of three shapes (read by content, not by
+    which endpoint served it): an old registration certificate (original end date), an old extension certificate
+    (new end date only), or a newer certificate that states the original date and the current end date together.
+    None if the site has no certificate (\"No Record Found\", or a small JSON error where the PDF should be)."""
     m = re.search(r"data:application/pdf;base64,([A-Za-z0-9+/=]+)", html)
     if not m:
         return None
-    reader = PdfReader(io.BytesIO(base64.b64decode(m.group(1))))
-    text = "\n".join(page.extract_text() or "" for page in reader.pages).replace("\xa0", " ")  # PDF text uses non-breaking spaces
+    blob = base64.b64decode(m.group(1))
+    if not blob.startswith(b"%PDF"):
+        return None
+    pages = PdfReader(io.BytesIO(blob)).pages
+    text = "\n".join(page.extract_text() or "" for page in pages).replace("\xa0", " ")  # the PDF text uses non-breaking spaces
     reg = re.search(r"\bP\d{11}\b", text)
     if not reg:
         raise ValueError("certificate has no project registration number")
-    if "EXTENSION OF REGISTRATION" in text.upper():
-        until = re.search(r"valid up to\s+(\d{2}/\d{2}/\d{4})", text)
-        if not until:
-            raise ValueError(f"extension certificate for {reg.group(0)} has no 'valid up to' date")
-        return Certificate(reg.group(0), "extension", None, _date(until.group(1)))
-    span = re.search(r"commencing from\s+(\d{2}/\d{2}/\d{4})\s+and ending with\s+(\d{2}/\d{2}/\d{4})", text)
-    if not span:
-        raise ValueError(f"registration certificate for {reg.group(0)} has no validity period")
-    return Certificate(reg.group(0), "registration", _date(span.group(1)), _date(span.group(2)))
+    original = re.search(rf"Original Project Completion date:\s*{_D}", text)
+    ending = re.search(rf"ending with\s+{_D}", text)
+    until = re.search(rf"valid up to\s+{_D}", text)
+    if original:
+        if not ending:
+            raise ValueError(f"certificate for {reg.group(0)} states an original date but no validity end")
+        return Certificate(reg.group(0), _date(original.group(1)), _date(ending.group(1)), True)
+    if "EXTENSION OF REGISTRATION" in text.upper() and until:
+        return Certificate(reg.group(0), None, _date(until.group(1)), False)
+    if ending:
+        return Certificate(reg.group(0), _date(ending.group(1)), _date(ending.group(1)), False)
+    raise ValueError(f"certificate for {reg.group(0)} has no validity period")

@@ -99,9 +99,9 @@ def test_a_bounded_crawl_stops_cleanly_and_says_how_to_continue(monkeypatch, tmp
 def test_a_full_small_crawl_then_a_second_run_skips_what_it_already_has(monkeypatch, tmp_path, capsys, fake_site):
     engine = setup_db(monkeypatch, tmp_path)
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
-    assert "34 requests" in capsys.readouterr().out
+    assert "25 requests" in capsys.readouterr().out
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
-    assert "21 requests" in capsys.readouterr().out
+    assert "11 requests" in capsys.readouterr().out  # certificates, complaint pages and the complaint index are all reused
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(Project)) == 10
 
@@ -115,3 +115,26 @@ def test_a_block_ends_the_crawl_with_a_clear_message_and_exit_code_3(monkeypatch
     assert code == 3 and "BLOCKED" in out and "do not retry" in out.lower() and "HTTP 429" in out
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(Project)) == 10  # what was fetched before is kept
+
+
+def test_reparse_rebuilds_records_from_stored_pages_without_any_network(monkeypatch, tmp_path, capsys, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+    assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
+    with Session(engine) as session:  # simulate a parser bug fixed since: throw the parsed rows away
+        session.query(ScoreSnapshot).delete()
+        from sahighar.db.models import Complaint, GroupMembership, PromoterGroup
+        for model in (GroupMembership, PromoterGroup, Complaint, Project):
+            session.query(model).delete()
+        session.commit()
+    capsys.readouterr()
+    code = main(["reparse", "--origin", "maharera-web", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 0 and "0 failed" in out and len(fake_site) == 1  # no second fetcher was created: nothing was fetched
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(Project)) == 10
+
+
+def test_crawl_passes_the_complaint_page_cap_and_reuses_stored_index_pages(monkeypatch, tmp_path, capsys, fake_site):
+    setup_db(monkeypatch, tmp_path)
+    main([*CRAWL, "--max-requests", "100", "--max-complaint-pages", "1", "--raw-store", str(tmp_path / "raw")])
+    assert "25 requests" in capsys.readouterr().out

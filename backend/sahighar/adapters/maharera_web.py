@@ -6,9 +6,11 @@ PoliteFetcher, which stops the crawl on any refusal or CAPTCHA. A crawl runs in 
   2. each builder found in phase 1: their whole portfolio (a builder's record only means something if all their
      projects are in), via the promoter search;
   3. registration and extension certificates for every project (they hold the original and extended end dates);
-  4. each builder's complaints (a name-filtered complaint list, then the promoter's complaint page).
+  4. complaints: the complete complaint report index (the site's name filter needs a form POST, so the whole index
+     is read once, about 540 pages, and reused), then the complaint page of each builder in scope.
 Each fetched page is one RawDoc, so every number links to the stored page it came from.
 """
+from math import ceil
 from typing import Callable, Iterable
 from urllib.parse import parse_qs, quote, urlparse
 
@@ -30,20 +32,25 @@ def list_url(pincode: str, page: int) -> str:
 
 
 def promoter_list_url(name: str, page: int) -> str:
-    return f"{BASE}/promoters-search-result?promoter_name={quote(name, safe='')}&promoter_location=&promoter_division=&page={page}&op="
+    # the promoter search box is named promoters_name (plural); the promoter_name in the site's own paging links is ignored
+    return f"{BASE}/promoters-search-result?promoters_name={quote(name, safe='')}&promoter_location=&page={page}&op="
 
 
 def certificate_url(cert_id: str, flag: str) -> str:
     return f"{BASE}/project-document?id={cert_id}&type={flag}"
 
 
-def complaint_list_url(name: str) -> str:
+def complaint_list_page_url(page: int) -> str:
     return (f"{BASE}/promoter-complaint-report?promoter_complaint_division=0&promoter_complaint_district=0"
-            f"&promoter_complaint_name={quote(name, safe='')}&page=1&op=")
+            f"&promoter_complaint_name=&page={page}&op=")
 
 
 def complaint_detail_url(promoter_id: str) -> str:
     return f"{BASE}/promoter-complaint-view-data?promoter_id={promoter_id}"
+
+
+def _text(doc: RawDoc) -> str:
+    return doc.data.decode("utf-8", errors="replace")
 
 
 class MahaReraWebAdapter:
@@ -51,13 +58,17 @@ class MahaReraWebAdapter:
     origin = "maharera-web"
 
     def __init__(self, fetcher, pincodes: list[str] | None = None, is_fresh: Callable[[str], bool] = lambda url: False,
-                 max_list_pages: int | None = None, max_promoter_pages: int = 20):
+                 max_list_pages: int | None = None, max_promoter_pages: int = 20, max_complaint_pages: int | None = None,
+                 stored: Callable[[str], bytes | None] = lambda url: None):
         """pincodes: seed the crawl with these (None = all of Maharashtra, about 4,900 list pages).
         is_fresh(url): True if that certificate or complaint page is already stored and recent (it is then not fetched).
-        max_list_pages / max_promoter_pages: cap pages fetched per list, for trial runs."""
-        self.fetcher, self.pincodes, self.is_fresh = fetcher, pincodes, is_fresh
+        stored(url): the stored bytes of a recent complaint report page, or None (used for planning, not re-fetched).
+        max_list_pages / max_promoter_pages / max_complaint_pages: caps, for trial runs."""
+        self.fetcher, self.pincodes, self.is_fresh, self.stored = fetcher, pincodes, is_fresh, stored
         self.max_list_pages, self.max_promoter_pages = max_list_pages, max_promoter_pages
+        self.max_complaint_pages = max_complaint_pages
         self.skipped: list[str] = []  # pages that could not be fetched (not found, server error); reported by the CLI
+        self._complaint_ids: dict[str, list[str]] = {}
 
     def _doc(self, url: str, kind: str) -> RawDoc:
         fetched = self.fetcher.get(url)
@@ -72,22 +83,54 @@ class MahaReraWebAdapter:
             return None
 
     def _list_pages(self, url_for, kind: str, cap: int | None, cards: dict, promoters: dict, only: str | None):
-        page = 1
-        pages = 1
+        page, pages = 1, 1
         while page <= pages:
             doc = self._doc(url_for(page), kind)
             yield doc
-            parsed = parse_project_list(doc.data.decode("utf-8", errors="replace"))
+            parsed = parse_project_list(_text(doc))
             for card in parsed.cards:
                 ref = promoter_ref(card.promoter_name)
                 if only is None or ref == only:
                     cards.setdefault(card.reg_no, card)
                     promoters.setdefault(ref, card.promoter_name)
             if page == 1:
-                pages = parsed.pages or 1
-                if cap:
-                    pages = min(pages, cap)
+                pages = min(parsed.pages or 1, cap) if cap else (parsed.pages or 1)
             page += 1
+
+    def _certificate(self, cert_id: str | None, flag: str, kind: str) -> RawDoc | None:
+        url = certificate_url(cert_id, flag) if cert_id else None
+        if url is None or self.is_fresh(url):
+            return None
+        return self._optional_doc(url, kind)
+
+    @staticmethod
+    def _is_complete(doc: RawDoc) -> bool:
+        try:
+            cert = parse_certificate(_text(doc))
+        except Exception:
+            return False  # a broken certificate is reported when it is parsed, not here
+        return bool(cert and cert.complete)
+
+    def _complaint_index(self):
+        """Yield the complaint report pages (from the site, or reused from storage) and remember each promoter's ids."""
+        ids: dict[str, list[str]] = {}
+        page, pages = 1, 1
+        while page <= pages:
+            url = complaint_list_page_url(page)
+            data = self.stored(url)
+            if data is None:
+                doc = self._doc(url, "complaint_list")
+                yield doc
+                data = doc.data
+            parsed = parse_complaint_list(data.decode("utf-8", errors="replace"))
+            for row in parsed.rows:
+                ids.setdefault(promoter_ref(row.name), []).append(row.promoter_id)
+            if page == 1:
+                pages = ceil(parsed.total / 10) if parsed.total else 1
+                if self.max_complaint_pages:
+                    pages = min(pages, self.max_complaint_pages)
+            page += 1
+        self._complaint_ids = ids
 
     def discover(self) -> Iterable[RawDoc]:
         cards: dict[str, ProjectCard] = {}
@@ -98,30 +141,26 @@ class MahaReraWebAdapter:
             yield from self._list_pages(lambda n: promoter_list_url(name, n), "promoter_list", self.max_promoter_pages,
                                         cards, promoters, ref)
         for card in sorted(cards.values(), key=lambda c: c.reg_no):
-            for cert_id, flag, kind in ((card.cert_id, "DocProjectCert", "registration_certificate"),
-                                        (card.ext_cert_id, "DocProjectExtCert", "extension_certificate")):
-                url = certificate_url(cert_id, flag) if cert_id else None
-                if url and not self.is_fresh(url) and (doc := self._optional_doc(url, kind)):
+            registration = self._certificate(card.cert_id, "DocProjectCert", "registration_certificate")
+            if registration:
+                yield registration
+            if not (registration and self._is_complete(registration)):  # a newer certificate already holds the extension
+                extension = self._certificate(card.ext_cert_id, "DocProjectExtCert", "extension_certificate")
+                if extension:
+                    yield extension
+        yield from self._complaint_index()
+        for ref in promoters:
+            for promoter_id in self._complaint_ids.get(ref, []):
+                url = complaint_detail_url(promoter_id)
+                if not self.is_fresh(url) and (doc := self._optional_doc(url, "complaints")):
                     yield doc
-        for ref, name in promoters.items():
-            yield from self._complaints(ref, name)
-
-    def _complaints(self, ref: str, name: str):
-        listing = self._optional_doc(complaint_list_url(name), "complaint_list")
-        if listing is None:
-            return
-        yield listing
-        for row in parse_complaint_list(listing.data.decode("utf-8", errors="replace")).rows:
-            url = complaint_detail_url(row.promoter_id)
-            if promoter_ref(row.name) == ref and not self.is_fresh(url) and (doc := self._optional_doc(url, "complaints")):
-                yield doc
 
     def parse(self, doc: RawDoc) -> ParsedRecords:
-        text = doc.data.decode("utf-8", errors="replace")
+        text = _text(doc)
         if doc.kind in ("project_list", "promoter_list"):
             cards = parse_project_list(text).cards
-            if doc.kind == "promoter_list":  # the promoter search also returns similarly named builders: keep only the asked-for one
-                target = promoter_ref(parse_qs(urlparse(doc.url).query)["promoter_name"][0])
+            if doc.kind == "promoter_list":  # the search also returns similarly named builders: keep only the asked-for one
+                target = promoter_ref(parse_qs(urlparse(doc.url).query)["promoters_name"][0])
                 cards = [c for c in cards if promoter_ref(c.promoter_name) == target]
             return ParsedRecords(
                 promoters=list({promoter_ref(c.promoter_name): PromoterRec(promoter_ref(c.promoter_name), c.promoter_name)
@@ -129,12 +168,10 @@ class MahaReraWebAdapter:
                 projects=[ProjectRec(c.reg_no, promoter_ref(c.promoter_name), c.name, city=c.district or None) for c in cards])
         if doc.kind in ("registration_certificate", "extension_certificate"):
             cert = parse_certificate(text)
-            if cert is None:  # the site answered "No Record Found"
+            if cert is None:  # "No Record Found", or a JSON error where the PDF should be
                 return ParsedRecords()
-            if cert.kind != doc.kind.removesuffix("_certificate"):
-                raise ValueError(f"expected a {doc.kind} but the document is an {cert.kind} certificate")
-            fields = {"registration_end": cert.valid_until} if cert.kind == "registration" else {"extended_end": cert.valid_until}
-            return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, **fields)])
+            extended = cert.current_end if cert.current_end and (cert.original_end is None or cert.current_end > cert.original_end) else None
+            return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end, extended_end=extended)])
         if doc.kind == "complaint_list":
             return ParsedRecords()  # kept as evidence of which promoter page to fetch
         if doc.kind == "complaints":
