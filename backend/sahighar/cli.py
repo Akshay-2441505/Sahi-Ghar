@@ -16,6 +16,7 @@ from pathlib import Path
 from sqlalchemy import func, select
 
 from sahighar.adapters.file_import import FileImportAdapter
+from sahighar.adapters.application import CONTENT_TYPE as APPLICATION_CONTENT_TYPE
 from sahighar.adapters.maharera_web import MahaReraWebAdapter
 from sahighar.adapters.polite import BlockedError, BudgetExhausted, PoliteFetcher
 from sahighar.db.models import SourceDocument
@@ -102,7 +103,11 @@ def _crawl(args) -> int:
         fresh = set(session.scalars(select(SourceDocument.url).where(
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
             SourceDocument.fetched_at >= cutoff,
-            SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints", "application"]))))
+            SourceDocument.kind.in_(["registration_certificate", "extension_certificate", "complaints"]))))
+        fresh |= set(session.scalars(select(SourceDocument.url).where(  # an application extracted by an older extractor is stale
+            SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
+            SourceDocument.fetched_at >= cutoff, SourceDocument.kind == "application",
+            SourceDocument.content_type == APPLICATION_CONTENT_TYPE)))
         store = LocalRawStore(Path(args.raw_store))
         index_pages = dict(session.execute(select(SourceDocument.url, SourceDocument.store_key).where(
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",

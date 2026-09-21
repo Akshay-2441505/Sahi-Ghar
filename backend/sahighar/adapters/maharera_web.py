@@ -15,6 +15,7 @@ from math import ceil
 from typing import Callable, Iterable
 from urllib.parse import parse_qs, quote, urlparse
 
+from sahighar.adapters.application import CONTENT_TYPE as APPLICATION_CONTENT_TYPE
 from sahighar.adapters.application import extract_application_from_html, parse_application
 from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
 from sahighar.adapters.maharera_pages import (
@@ -135,7 +136,7 @@ class MahaReraWebAdapter:
             return None
         extract, url, card = best
         extract |= {"promoter_ref": ref, "promoter_name": name, "reg_no": card.reg_no}
-        return RawDoc(self.origin, "application", url, utcnow(), "application/json", json.dumps(extract, sort_keys=True).encode())
+        return RawDoc(self.origin, "application", url, utcnow(), APPLICATION_CONTENT_TYPE, json.dumps(extract, sort_keys=True).encode())
 
     @staticmethod
     def _is_complete(doc: RawDoc) -> bool:

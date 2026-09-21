@@ -19,6 +19,11 @@ from pypdf import PdfReader
 from sahighar.adapters.base import ParsedRecords, PromoterRec
 from sahighar.privacy import tokenize
 
+# Bump when extract_application changes what it reads. Stored extracts carry the version they were made with; the raw
+# PDF is not kept, so an older extract cannot be re-parsed, only fetched again.
+EXTRACT_VERSION = 2
+CONTENT_TYPE = f"application/json; extract={EXTRACT_VERSION}"
+
 _PAN = r"[A-Z]{5}\d{4}[A-Z]"
 _ISO = r"\d{4}-\d{2}-\d{2}"
 _DMY = r"\d{2}/\d{2}/\d{4}"

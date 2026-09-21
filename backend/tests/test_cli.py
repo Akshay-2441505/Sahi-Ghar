@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
 from sahighar.cli import main
-from sahighar.db.models import Base, Project, ScoreSnapshot
+from sahighar.db.models import Base, Project, ScoreSnapshot, SourceDocument
 from sahighar.db.session import _sessionmaker
 from tests.test_file_import import COMPLAINTS, PROJECTS, PROMOTERS
 
@@ -196,3 +196,14 @@ def test_crawl_and_import_refuse_to_run_without_the_privacy_key(monkeypatch, tmp
     write_tables(data)
     assert main(["import", str(data)]) == 2
     assert "SAHIGHAR_PII_KEY" in capsys.readouterr().out
+
+
+def test_applications_extracted_by_an_older_extractor_are_fetched_again(monkeypatch, tmp_path, capsys, fake_site):
+    engine = setup_db(monkeypatch, tmp_path)
+    assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
+    capsys.readouterr()
+    with Session(engine) as session:  # pretend those extracts came from an older version of the extractor
+        session.query(SourceDocument).filter(SourceDocument.kind == "application").update({"content_type": "application/json; extract=0"})
+        session.commit()
+    main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")])
+    assert "21 requests" in capsys.readouterr().out  # the 11 of a normal repeat run + the 10 applications, and nothing else again
