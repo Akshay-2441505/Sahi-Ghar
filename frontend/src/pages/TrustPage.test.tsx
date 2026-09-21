@@ -14,6 +14,7 @@ const data: ProjectPayload = {
     complaints: { available: true, reason: null, score: 0, total: 2, pending: 1, order_issued: 1, order_not_executed: 1, unresolved: 2, project_count: 2 },
     declared: { available: true, reason: null, score: 33, total: 3, on_or_before: 1, later: 2, median_months_later: 23.65 },
     progress: { available: false, reason: 'not_yet_available', score: null },
+    notices: { count: 0 },
   },
   group_promoters: [{ promoter_id: 1, name: 'Shree Realty LLP', source_document_id: 1 }],
   group_basis: null,
@@ -173,6 +174,14 @@ describe('TrustPageView', () => {
     expect(within(hidden).getByText(/Not among the projects returned by MahaRERA’s project search; matched to this builder by name only/)).toBeInTheDocument()
     expect(within(block).getByText('Shree Heights').closest('tr')!.textContent).not.toMatch(/matched to this builder by name/)
     for (const row of within(block).getAllByRole('row').slice(1)) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
+  })
+
+  it('withholds the overall number while MahaRERA lists a notice, and says why', () => {
+    const noticed = { ...data, score: { ...data.score!, overall: null, notices: { count: 2 } } }
+    render(<TrustPageView data={noticed} />)
+    const breakdown = screen.getByRole('region', { name: 'Score breakdown' })
+    expect(within(breakdown).getByText(/Overall: not shown, because MahaRERA lists 2 notices about this builder's projects \(below\)/)).toBeInTheDocument()
+    expect(within(breakdown).getByText('Registration schedule')).toBeInTheDocument()  // the sections stay
   })
 
   it('says none were listed only when the lists were collected', () => {

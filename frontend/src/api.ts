@@ -34,6 +34,7 @@ export type Score = {
     median_months_later: number | null
   }
   progress: { available: boolean; reason: string | null; score: number | null }
+  notices: { count: number }
 }
 
 export type DeclaredItem = {

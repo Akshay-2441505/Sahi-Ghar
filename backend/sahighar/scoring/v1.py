@@ -75,9 +75,11 @@ def classify(p: ProjectFacts, today: date) -> tuple[str, float | None]:
 
 
 def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today: date, complaints_known: bool = True,
-          declared: list[DeclaredFacts] | None = None) -> dict:
+          declared: list[DeclaredFacts] | None = None, notices: int = 0) -> dict:
     """complaints_known: False when complaints were never collected for this builder. Then the complaint section is
-    unavailable ("not_collected"), because an empty list would otherwise read as a clean record."""
+    unavailable ("not_collected"), because an empty list would otherwise read as a clean record.
+    notices: how many notices MahaRERA publishes about this builder's projects (kept in abeyance, NCLT). They are shown
+    beside the sections, never averaged in, and the overall is withheld while any exist."""
     outcomes = [classify(p, today) for p in projects]
     counts = Counter(outcome for outcome, _ in outcomes)
     evaluated = counts["extended"] + counts["covid_only"] + counts["not_extended"]
@@ -130,5 +132,6 @@ def score(projects: list[ProjectFacts], complaints: list[ComplaintFacts], today:
         "complaints": complaint_summary,
         "declared": declared_summary,
         "progress": {"available": False, "reason": "not_yet_available", "score": None},
-        "overall": round(mean(available)) if len(available) >= MIN_SECTIONS_FOR_OVERALL else None,
+        "notices": {"count": notices},
+        "overall": round(mean(available)) if len(available) >= MIN_SECTIONS_FOR_OVERALL and not notices else None,
     }

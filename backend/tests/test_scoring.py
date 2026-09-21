@@ -77,6 +77,15 @@ def test_overall_needs_at_least_two_sections_with_data():
     assert score(projects, [], TODAY, complaints_known=False, declared=declared)["overall"] == 75
 
 
+def test_regulator_notices_withhold_the_overall_but_not_the_sections():
+    projects = [P(date(2022, 1, 1), None), P(date(2022, 1, 1), date(2023, 1, 1))]
+    s = score(projects, [], TODAY, complaints_known=True, notices=2)
+    assert s["notices"] == {"count": 2}
+    assert s["schedule"]["score"] == 50 and s["complaints"]["score"] == 100  # every section is still shown
+    assert s["overall"] is None  # an average cannot speak for a project MahaRERA has frozen
+    assert score(projects, [], TODAY, complaints_known=True)["overall"] == 75
+
+
 def test_nothing_known_at_all_is_not_enough_data():
     assert score([P(date(2027, 1, 1), None)], [], TODAY, complaints_known=False)["overall"] is None
 

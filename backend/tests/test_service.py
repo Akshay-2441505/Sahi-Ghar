@@ -65,6 +65,20 @@ def test_declared_past_projects_are_deduplicated_across_a_groups_applications(se
     assert (declared["total"], declared["on_or_before"], declared["later"]) == (3, 1, 2)  # 4 rows, 3 distinct projects
 
 
+def test_a_notice_naming_the_builder_withholds_the_groups_overall_score(session, tmp_path):
+    store = LocalRawStore(tmp_path)
+    run_ingest(FakeAdapter({"u1": DOC_1, "u2": DOC_2}), session, store)
+    refresh(session, today=date(2026, 9, 1))
+    assert _group_breakdown(session, "P1")["overall"] == 50 and _group_breakdown(session, "P1")["notices"] == {"count": 0}
+    notice = {"project_flags": [{"reg_no": "MH-800", "kind": "abeyance", "promoter_ref": "P2"},  # named by builder only
+                                {"reg_no": "MH-1", "kind": "nclt"}]}  # named by project number only
+    run_ingest(FakeAdapter({"n1": notice}), session, store)
+    refresh(session, today=date(2026, 9, 1))
+    p1 = _group_breakdown(session, "P1")
+    assert p1["notices"] == {"count": 2} and p1["overall"] is None and p1["schedule"]["score"] == 50
+    assert _group_breakdown(session, "P4")["notices"] == {"count": 0}
+
+
 def _group_breakdown(session, promoter_ref):
     p = session.scalar(select(Promoter).where(Promoter.rera_promoter_ref == promoter_ref))
     group_id = session.scalar(select(GroupMembership.group_id).where(

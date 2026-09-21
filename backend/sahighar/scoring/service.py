@@ -2,10 +2,10 @@ import re
 from collections import defaultdict
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
-from sahighar.db.models import Complaint, Coverage, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot
+from sahighar.db.models import Complaint, Coverage, GroupMembership, PastProject, Project, ProjectFlag, Promoter, ScoreSnapshot
 from sahighar.resolve.grouping import rebuild_groups
 from sahighar.scoring.v1 import ComplaintFacts, DeclaredFacts, ProjectFacts, covid_days, score
 from sahighar.util import utcnow
@@ -24,6 +24,14 @@ def distinct_declared(rows: list[PastProject]) -> list[PastProject]:
     return list(seen.values())
 
 
+def group_notices(session: Session, state: str, refs: list[str], reg_nos: list[str]) -> list[ProjectFlag]:
+    """Regulator notices about a group: those naming one of its projects, or (the lists carry no promoter id) one of
+    its promoters by name. Also used by the trust page, so the score and the page can never disagree."""
+    return list(session.scalars(select(ProjectFlag).where(
+        ProjectFlag.state == state, or_(ProjectFlag.rera_reg_no.in_(reg_nos), ProjectFlag.promoter_ref.in_(refs)))
+        .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind)))
+
+
 def compute_scores(session: Session, today: date) -> int:
     """One ScoreSnapshot per group, from the group's filing_confirmed promoters only."""
     projects: dict[int, list[Project]] = defaultdict(list)
@@ -36,6 +44,7 @@ def compute_scores(session: Session, today: date) -> int:
     for d in session.scalars(select(PastProject)):
         declared[d.promoter_id].append(d)
     promoter_doc = dict(session.execute(select(Promoter.id, Promoter.source_document_id)).all())
+    promoter_key = {pid: (state, ref) for pid, state, ref in session.execute(select(Promoter.id, Promoter.state, Promoter.rera_promoter_ref))}
     members: dict[int, list[int]] = defaultdict(list)
     for m in session.scalars(select(GroupMembership).where(GroupMembership.link_type == "filing_confirmed")):
         members[m.group_id].append(m.promoter_id)
@@ -46,13 +55,15 @@ def compute_scores(session: Session, today: date) -> int:
         ps = [p for pid in promoter_ids for p in projects[pid]]
         cs = [c for pid in promoter_ids for c in complaints[pid]]
         ds = distinct_declared([d for pid in promoter_ids for d in declared[pid]])
+        notices = group_notices(session, promoter_key[promoter_ids[0]][0], [promoter_key[pid][1] for pid in promoter_ids],
+                                [p.rera_reg_no for p in ps])
         breakdown = score(
             [project_facts(p) for p in ps],
             [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
             complaints_known=complaints_collected or bool(cs),  # complaint rows exist only if that builder's page was fetched
-            declared=[DeclaredFacts(d.original_proposed_date, d.actual_completion_date) for d in ds],
+            declared=[DeclaredFacts(d.original_proposed_date, d.actual_completion_date) for d in ds], notices=len(notices),
         )
-        sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs, *ds)}
+        sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs, *ds, *notices)}
         session.add(ScoreSnapshot(group_id=group_id, computed_at=now, breakdown=breakdown,
                                   input_source_document_ids=sorted(sources)))
     session.commit()

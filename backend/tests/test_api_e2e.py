@@ -72,12 +72,14 @@ def test_regulator_notices_are_listed_for_the_groups_projects_only_with_their_so
                 "detail": {"project_name": "Shree Hidden", "district": "Pune"}},
                {"reg_no": "MH-999", "kind": "abeyance", "promoter_ref": "P9"}]
     run_ingest(FakeAdapter({"n1": {"project_flags": notices}}), session, LocalRawStore(tmp_path))
+    refresh(session, today=date(2026, 9, 1))
     body = client.get(f"/projects/{_project_id(session, 'MH-1')}").json()
     assert [(n["rera_reg_no"], n["project_name"], n["kind"], n["in_our_project_list"]) for n in body["status_notices"]] == [
         ("MH-1", "Shree Heights", "abeyance", True), ("MH-2", "Shree Gardens", "nclt", True), ("MH-800", "Shree Hidden", "abeyance", False)]
     assert body["status_notices"][1]["detail"]["status"] == "Lapsed"
     assert all(str(n["source_document_id"]) in body["sources"] for n in body["status_notices"])
-    assert body["score"]["overall"] == 50  # notices are shown beside the score, never folded into it
+    assert body["score"]["schedule"]["score"] == 50 and body["score"]["overall"] is None  # sections unchanged; no overall beside a notice
+    assert body["score"]["notices"] == {"count": 3}
     assert body["status_lists_as_of"] is None  # these test documents are not the regulator's lists, so "none listed" is never claimed
 
 

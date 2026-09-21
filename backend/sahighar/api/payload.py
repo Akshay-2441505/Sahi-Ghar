@@ -1,10 +1,10 @@
 from datetime import date
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, ProjectFlag, Promoter, ScoreSnapshot, SourceDocument
-from sahighar.scoring.service import distinct_declared, project_facts
+from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot, SourceDocument
+from sahighar.scoring.service import distinct_declared, group_notices, project_facts
 from sahighar.scoring.v1 import DAYS_PER_MONTH, classify
 
 
@@ -60,9 +60,7 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
     status_notices = [
         {"rera_reg_no": f.rera_reg_no, "project_name": names.get(f.rera_reg_no) or (f.detail or {}).get("project_name") or f.rera_reg_no,
          "kind": f.kind, "detail": f.detail, "in_our_project_list": f.rera_reg_no in names, "source_document_id": f.source_document_id}
-        for f in session.scalars(select(ProjectFlag).where(
-            ProjectFlag.state == promoter.state, or_(ProjectFlag.rera_reg_no.in_(names), ProjectFlag.promoter_ref.in_(refs)))
-            .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind))
+        for f in group_notices(session, promoter.state, refs, list(names))
     ]
     listed = dict(session.execute(select(SourceDocument.kind, func.max(SourceDocument.fetched_at)).where(
         SourceDocument.kind.in_(["status_abeyance", "status_nclt"]), SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all())
