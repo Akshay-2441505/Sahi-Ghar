@@ -54,6 +54,8 @@ Same polite rules (one request at a time, at least 3 s apart, honest User-Agent)
 
 ## Decision
 
+> **Final path, by the owner's decision on 2026-09-21: Path B (official data only). The program will not crawl any RERA site.** The Path A analysis below is kept because it shows which fields the open pages contain, which is what the data request should ask for and what the import adapter should expect. See "Owner's decisions" at the end.
+
 Applied the spec's rule (§3): Path A = open pages fetched by the program; Path B = official data / data request / assisted import; Mixed = each per data type.
 
 - **Project data (Maharashtra): Path A, conditional on the runner check** (Task 3, Step 3). Registration number, project name, promoter name, district, pincode, `Last Modified`, and the **original and extended registration end dates** (from the registration and extension certificates) are on open pages (rows 1-5). **Gap:** actual completion status/date is not on open pages; for that one field the options are Path B (a data request or RTI to MahaRERA) or leaving it out. It is not needed if the delivery metric is redefined (decision 1 below).
@@ -69,9 +71,16 @@ Applied the spec's rule (§3): Path A = open pages fetched by the program; Path 
   - Refresh should be incremental (use `Last Modified` and extension-certificate presence); certificates are about 200 KB each, so a full re-crawl is about 41 hours at the polite rate.
   - The raw store must stream large bodies to disk (Karnataka pages reach 17 MB).
 
-### Decisions needed from the owner before Plan B
+### Owner's decisions (2026-09-21)
 
-1. **Delivery-history metric (spec §7).** Redefine around registration end dates: "registered end date, extended by N months (or not extended), and whether the current end date has passed", instead of on time / late against an actual completion date. Recommended for Maharashtra; a Path B data request for actual completion can be added later.
-2. **Complaint wording and score (spec §7).** Replace open/resolved with the site's stages (order issued; hearing pending; order not executed where "applied for non-execution" is Y), and rebuild the complaint sub-score on those.
-3. **Grouping (spec §6).** With PAN and partners unavailable, allow a `possible` link on *same registered-office address plus similar promoter name* (still excluded from the score), and expect groups to be single promoters until MCA data arrives.
-4. **Comfort with automated crawling of the open pages.** The terms are silent and the copyright policy asks for accurate reuse with attribution; the spike is not legal advice. The CAPTCHA-gated detail app stays off-limits.
+1. **Delivery-history metric: registration end dates. Approved.** Show "registered to <date>, extended by N months (or not extended)" and whether the current end date has passed, instead of on time / late against an actual completion date. Caveats to keep in the wording: an extension is not necessarily the promoter's fault (regulators have granted blanket extensions), and a project past its end date with no extension may simply have been completed, so "past end date" is never called "late".
+2. **Automated crawling: no. Official data only (Path B). Approved.** Consequences: the Plan B "adapter" is a **file-import adapter**, not a crawler; the weekly-scrape workflow and the GitHub runner reachability check (question 6) are no longer needed; the raw store and the source-link/timestamp rules still apply (each imported file is a `source_document`).
+3. **Complaint wording and grouping: defaults chosen by Claude, not yet reviewed by the owner.** Complaint stages replace open/resolved (order issued; hearing pending; order not executed when "applied for non-execution" is Y), and "unresolved" = pending or not executed. Grouping adds a `possible` link on *same registered-office address plus similar promoter name* alongside the PAN and partner rules, which simply stay dormant until such data arrives. Both are reversible when the owner reviews them.
+4. **History rewrite: approved and done.** A third-party map API key had been saved in a sample and was in an earlier local commit; the local branch history was rewritten (tree verified identical) and the old objects purged. Nothing had been pushed.
+
+### What "official data only" leaves to do
+
+- **The Unified RERA Portal is not a data source today.** `rera.mohua.gov.in` (launched 4 Sep 2025 by the Housing Ministry) was checked with one request: its home page is an information site (the Act, notifications, an implementation-status tracker with counts, and a state-facing login). **No project search and no dataset download were found**, despite blog posts describing a searchable national database. Not ruled out: features behind the login or on other pages. `data.gov.in` showed no RERA dataset in a web search.
+- **The realistic official route is a written data request or RTI to each state RERA** (MahaRERA has an RTI section linked from its site). The request should name the fields this spike found: registration number, project name, promoter name and registered office, registration start and end dates, extension certificates and new end dates, complaint number, project number, filing year/month, status, non-execution flags; and, if they are willing, the fields the open pages lack: promoter PAN, partners/directors, actual completion date and status. Draft it once the owner decides who files it.
+- **Open question for the owner:** *human-assisted import*. A person saving pages from the official site in their own browser (for example Karnataka's single-page promoter complaint table and extension table, which hold thousands of rows) and feeding the saved files to the import adapter is a form of Path B in the spec. It is not automated crawling, but it was not covered by the owner's answer, so it is **not** assumed.
+- **Until data arrives, everything is built and tested on fixtures**, including the real page formats captured in `spike/samples/`.
