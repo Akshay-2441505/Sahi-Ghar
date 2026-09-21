@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getProject, type ProjectPayload } from '../api'
 import { ScoreBreakdown } from '../components/ScoreBreakdown'
 import { SourceLink } from '../components/SourceLink'
-import { formatDate, formatMonthYear, outcomeText } from '../format'
+import { formatDate, formatMonthYear, noticeText, outcomeText } from '../format'
 
 export function TrustPageView({ data }: { data: ProjectPayload }) {
   const { project, sources } = data
@@ -85,6 +85,32 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
             </tbody>
           </table>
           </div>
+        )}
+      </section>
+
+      <section aria-label="MahaRERA notices">
+        <h2 className="text-lg font-semibold text-stone-900">MahaRERA notices</h2>
+        {data.status_notices.length > 0 ? (
+          <div className="mt-2 overflow-x-auto">
+          <table className="w-full min-w-[40rem] text-left text-sm">
+            <thead className="text-stone-600"><tr><th>Project</th><th>Notice, as published by MahaRERA</th><th>Source</th></tr></thead>
+            <tbody>
+              {data.status_notices.map((n) => (
+                <tr key={`${n.rera_reg_no}|${n.kind}`} className="border-t border-stone-200 align-top">
+                  <td>{n.project_name} <span className="font-mono text-xs text-stone-500">{n.rera_reg_no}</span></td>
+                  <td>{noticeText(n)}</td>
+                  <td><SourceLink id={n.source_document_id} sources={sources} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+        ) : (
+          <p className="text-sm text-stone-600">
+            {data.status_lists_as_of
+              ? `None of these projects appears on the two MahaRERA notice lists checked (projects kept in abeyance, and NCLT projects), as of ${formatDate(data.status_lists_as_of)}.`
+              : 'MahaRERA’s notice lists (projects kept in abeyance, NCLT projects) have not been collected for this data set, so nothing can be said here. This is not the same as having none.'}
+          </p>
         )}
       </section>
 

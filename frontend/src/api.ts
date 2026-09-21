@@ -67,6 +67,14 @@ export type ComplaintItem = {
   source_document_id: number
 }
 
+export type StatusNotice = {
+  rera_reg_no: string
+  project_name: string
+  kind: 'abeyance' | 'nclt'
+  detail: { status?: string; status_as_of?: string | null } | null
+  source_document_id: number
+}
+
 export type RelatedItem = {
   promoter_id: number
   name: string
@@ -93,6 +101,8 @@ export type ProjectPayload = {
   group_basis: string | null
   schedule: ScheduleItem[]
   complaints: ComplaintItem[]
+  status_lists_as_of: string | null
+  status_notices: StatusNotice[]
   declared_history: DeclaredItem[]
   possibly_related: RelatedItem[]
   sources: Record<string, Source>

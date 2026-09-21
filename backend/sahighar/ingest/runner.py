@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from sahighar.adapters.base import Adapter, ParsedRecords, RawDoc
-from sahighar.db.models import Complaint, PastProject, Project, Promoter, SourceDocument
+from sahighar.db.models import Complaint, PastProject, Project, ProjectFlag, Promoter, SourceDocument
 from sahighar.rawstore import RawStore
 
 
@@ -68,6 +68,9 @@ def _apply(session: Session, state: str, sd_id: int, parsed: ParsedRecords) -> N
              "original_proposed_date": pp.original_proposed},
             {"project_type": pp.project_type, "actual_completion_date": pp.actual, "source_document_id": sd_id},
         )
+    for f in parsed.project_flags:
+        _upsert(session, ProjectFlag, {"state": state, "rera_reg_no": f.reg_no, "kind": f.kind},
+                {"detail": f.detail, "source_document_id": sd_id})
     for c in parsed.complaints:
         project = None
         if c.project_reg_no:

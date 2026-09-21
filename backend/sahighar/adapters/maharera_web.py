@@ -2,6 +2,8 @@
 
 Never touches the CAPTCHA-gated project detail app on the second host. All network access goes through a
 PoliteFetcher, which stops the crawl on any refusal or CAPTCHA. A crawl runs in phases:
+  0. two one-page notice lists the regulator publishes: projects kept in abeyance (lapse of completion date) and
+     NCLT projects, each keyed by registration number;
   1. project lists for the chosen pincodes (10 projects per page);
   2. each builder found in phase 1: their whole portfolio (a builder's record only means something if all their
      projects are in), via the promoter search;
@@ -17,9 +19,12 @@ from urllib.parse import parse_qs, quote, urlparse
 
 from sahighar.adapters.application import CONTENT_TYPE as APPLICATION_CONTENT_TYPE
 from sahighar.adapters.application import extract_application_from_html, parse_application
-from sahighar.adapters.base import ComplaintRec, ParsedRecords, ProjectRec, PromoterRec, RawDoc, complaint_stage
+from sahighar.adapters.base import (
+    ComplaintRec, ParsedRecords, ProjectFlagRec, ProjectRec, PromoterRec, RawDoc, complaint_stage,
+)
 from sahighar.adapters.maharera_pages import (
-    ProjectCard, parse_certificate, parse_complaint_detail, parse_complaint_list, parse_project_list, promoter_ref,
+    ProjectCard, parse_abeyance_list, parse_certificate, parse_complaint_detail, parse_complaint_list, parse_nclt_list,
+    parse_project_list, promoter_ref,
 )
 from sahighar.adapters.polite import FetchError
 from sahighar.adapters.tabular import parse_month
@@ -37,6 +42,10 @@ def list_url(pincode: str, page: int) -> str:
 def promoter_list_url(name: str, page: int) -> str:
     # the promoter search box is named promoters_name (plural); the promoter_name in the site's own paging links is ignored
     return f"{BASE}/promoters-search-result?promoters_name={quote(name, safe='')}&promoter_location=&page={page}&op="
+
+
+ABEYANCE_URL = f"{BASE}/due-lapse-completion-date"
+NCLT_URL = f"{BASE}/nclt-projects"
 
 
 def certificate_url(cert_id: str, flag: str) -> str:
@@ -65,7 +74,7 @@ class MahaReraWebAdapter:
                  stored: Callable[[str], bytes | None] = lambda url: None):
         """pincodes: seed the crawl with these (None = all of Maharashtra, about 4,900 list pages).
         is_fresh(url): True if that certificate or complaint page is already stored and recent (it is then not fetched).
-        stored(url): the stored bytes of a recent complaint report page, or None (used for planning, not re-fetched).
+        stored(url): the stored bytes of a recent list or complaint report page, or None (used for planning, not re-fetched).
         max_list_pages / max_promoter_pages / max_complaint_pages: caps, for trial runs."""
         self.fetcher, self.pincodes, self.is_fresh, self.stored = fetcher, pincodes, is_fresh, stored
         self.max_list_pages, self.max_promoter_pages = max_list_pages, max_promoter_pages
@@ -89,9 +98,13 @@ class MahaReraWebAdapter:
     def _list_pages(self, url_for, kind: str, cap: int | None, cards: dict, promoters: dict, only: str | None):
         page, pages = 1, 1
         while page <= pages:
-            doc = self._doc(url_for(page), kind)
-            yield doc
-            parsed = parse_project_list(_text(doc))
+            url = url_for(page)
+            data = self.stored(url)
+            if data is None:
+                doc = self._doc(url, kind)
+                yield doc
+                data = doc.data
+            parsed = parse_project_list(data.decode("utf-8", errors="replace"))
             for card in parsed.cards:
                 ref = promoter_ref(card.promoter_name)
                 if only is None or ref == only:
@@ -171,6 +184,9 @@ class MahaReraWebAdapter:
     def discover(self) -> Iterable[RawDoc]:
         cards: dict[str, ProjectCard] = {}
         promoters: dict[str, str] = {}
+        for url, kind in ((ABEYANCE_URL, "status_abeyance"), (NCLT_URL, "status_nclt")):
+            if doc := self._optional_doc(url, kind):
+                yield doc
         for pincode in self.pincodes or [""]:
             yield from self._list_pages(lambda n: list_url(pincode, n), "project_list", self.max_list_pages, cards, promoters, None)
         for ref, name in list(promoters.items()):
@@ -219,6 +235,14 @@ class MahaReraWebAdapter:
             history = [{"label": label, "revised_end": revised.isoformat()} for label, revised in cert.extensions] or None
             return ParsedRecords(projects=[ProjectRec(cert.reg_no, None, None, registration_end=cert.original_end,
                                                       extended_end=extended, extension_history=history)])
+        if doc.kind == "status_abeyance":
+            return ParsedRecords(project_flags=[ProjectFlagRec(no, "abeyance") for no in parse_abeyance_list(text)])
+        if doc.kind == "status_nclt":
+            return ParsedRecords(project_flags=[
+                ProjectFlagRec(r.reg_no, "nclt", {
+                    "status": r.status, "status_as_of": r.status_as_of.isoformat() if r.status_as_of else None,
+                    "proposed_completion": r.proposed_completion.isoformat() if r.proposed_completion else None,
+                    "form4_uploaded": r.form4_uploaded}) for r in parse_nclt_list(text)])
         if doc.kind == "application":
             return parse_application(json.loads(text))
         if doc.kind == "complaint_list":

@@ -82,6 +82,20 @@ def test_newer_format_certificate_lists_each_extension_with_its_label():
     assert parse_certificate(fixture("cert_reg_5.html")).extensions == []  # older formats carry no history
 
 
+def test_abeyance_list_gives_the_certificate_numbers():
+    from sahighar.adapters.maharera_pages import parse_abeyance_list
+    assert parse_abeyance_list(fixture("status_abeyance.html")) == ["P52100005326", "P51900008342", "P52100009025", "P51800012235"]
+    assert parse_abeyance_list("<div>nothing here</div>") == []
+
+
+def test_nclt_list_gives_status_as_of_its_date_and_the_proposed_completion():
+    from sahighar.adapters.maharera_pages import parse_nclt_list
+    rows = parse_nclt_list(fixture("status_nclt.html"))
+    assert (rows[0].reg_no, rows[0].status, rows[0].status_as_of, rows[0].proposed_completion, rows[0].form4_uploaded) == (
+        "P51800008635", "Lapsed", date(2025, 1, 31), date(2021, 12, 30), False)
+    assert len(rows) == 4
+
+
 def test_a_response_without_a_certificate_is_not_an_error():
     assert parse_certificate("<div>No Record Found</div>") is None
 

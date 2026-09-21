@@ -64,6 +64,36 @@ def test_declared_history_is_listed_once_with_its_source(client, session, tmp_pa
     assert body["score"]["declared"]["total"] == 2
 
 
+def test_regulator_notices_are_listed_for_the_groups_projects_only_with_their_source(client, session, tmp_path):
+    notices = [{"reg_no": "MH-1", "kind": "abeyance"},
+               {"reg_no": "MH-2", "kind": "nclt", "detail": {"status": "Lapsed", "status_as_of": "2025-01-31"}},
+               {"reg_no": "MH-3", "kind": "abeyance"},  # a possibly-related builder's project: not this group's
+               {"reg_no": "MH-999", "kind": "abeyance"}]  # a project this database does not have
+    run_ingest(FakeAdapter({"n1": {"project_flags": notices}}), session, LocalRawStore(tmp_path))
+    body = client.get(f"/projects/{_project_id(session, 'MH-1')}").json()
+    assert [(n["rera_reg_no"], n["project_name"], n["kind"]) for n in body["status_notices"]] == [
+        ("MH-1", "Shree Heights", "abeyance"), ("MH-2", "Shree Gardens", "nclt")]
+    assert body["status_notices"][1]["detail"]["status"] == "Lapsed"
+    assert all(str(n["source_document_id"]) in body["sources"] for n in body["status_notices"])
+    assert body["score"]["overall"] == 50  # notices are shown beside the score, never folded into it
+    assert body["status_lists_as_of"] is None  # these test documents are not the regulator's lists, so "none listed" is never claimed
+
+
+def test_notice_lists_as_of_is_the_older_of_the_two_lists_and_only_when_both_were_collected(client, session):
+    from datetime import datetime
+    from sahighar.db.models import SourceDocument
+
+    def doc(kind, day):
+        session.add(SourceDocument(origin="maharera-web", kind=kind, url=f"https://x.test/{kind}", fetched_at=datetime(2026, 9, day),
+                                   sha256="0" * 64, content_type="text/html", store_key=kind, parse_status="ok"))
+        session.commit()
+    pid = _project_id(session, "MH-1")
+    doc("status_abeyance", 20)
+    assert client.get(f"/projects/{pid}").json()["status_lists_as_of"] is None  # only one of the two lists
+    doc("status_nclt", 18)
+    assert client.get(f"/projects/{pid}").json()["status_lists_as_of"].startswith("2026-09-18")
+
+
 def test_search_matches_project_promoter_and_reg_no(client):
     def names(q):
         return {p["name"] for p in client.get("/search", params={"q": q}).json()["projects"]}

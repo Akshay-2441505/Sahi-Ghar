@@ -1,9 +1,9 @@
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, Promoter, ScoreSnapshot, SourceDocument
+from sahighar.db.models import Complaint, GroupMembership, PastProject, Project, ProjectFlag, Promoter, ScoreSnapshot, SourceDocument
 from sahighar.scoring.service import distinct_declared, project_facts
 from sahighar.scoring.v1 import DAYS_PER_MONTH, classify
 
@@ -52,6 +52,15 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         for d in sorted(distinct_declared(list(session.scalars(select(PastProject).where(PastProject.promoter_id.in_(confirmed_ids))))),
                         key=lambda d: (d.original_proposed_date, d.name))
     ]
+    names = {p["rera_reg_no"]: p["name"] for p in schedule}
+    status_notices = [
+        {"rera_reg_no": f.rera_reg_no, "project_name": names[f.rera_reg_no], "kind": f.kind, "detail": f.detail,
+         "source_document_id": f.source_document_id}
+        for f in session.scalars(select(ProjectFlag).where(ProjectFlag.state == promoter.state, ProjectFlag.rera_reg_no.in_(names))
+                                 .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind))
+    ]
+    listed = dict(session.execute(select(SourceDocument.kind, func.max(SourceDocument.fetched_at)).where(
+        SourceDocument.kind.in_(["status_abeyance", "status_nclt"]), SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all())
     possibly_related = [
         {"promoter_id": m.promoter_id, "name": promoters[m.promoter_id].name, "evidence": m.evidence,
          "source_document_id": promoters[m.promoter_id].source_document_id}
@@ -62,7 +71,7 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         for pid in confirmed_ids
     ]
 
-    source_ids = {r["source_document_id"] for r in (*schedule, *complaints, *declared_history, *possibly_related, *group_promoters)}
+    source_ids = {r["source_document_id"] for r in (*schedule, *complaints, *declared_history, *status_notices, *possibly_related, *group_promoters)}
     docs = session.scalars(select(SourceDocument).where(SourceDocument.id.in_(source_ids))).all()
     return {
         "data_as_of": max((d.fetched_at for d in docs), default=None),
@@ -73,6 +82,8 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         "group_basis": "same PAN" if len(confirmed_ids) > 1 else None,
         "schedule": schedule,
         "complaints": complaints,
+        "status_lists_as_of": min(listed.values()) if len(listed) == 2 else None,  # None: the lists were not collected
+        "status_notices": status_notices,  # notices the regulator itself publishes about these projects
         "declared_history": declared_history,  # the promoter's own account from its registration applications
         "possibly_related": possibly_related,
         "sources": {str(d.id): {"url": d.url, "origin": d.origin, "fetched_at": d.fetched_at} for d in docs},

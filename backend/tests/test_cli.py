@@ -99,9 +99,9 @@ def test_a_bounded_crawl_stops_cleanly_and_says_how_to_continue(monkeypatch, tmp
 def test_a_full_small_crawl_then_a_second_run_skips_what_it_already_has(monkeypatch, tmp_path, capsys, fake_site):
     engine = setup_db(monkeypatch, tmp_path)
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
-    assert "35 requests" in capsys.readouterr().out
+    assert "37 requests" in capsys.readouterr().out
     assert main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")]) == 0
-    assert "11 requests" in capsys.readouterr().out  # certificates, complaint pages and the complaint index are all reused
+    assert "2 requests" in capsys.readouterr().out  # only the two notice lists (they change often): list pages, certificates, complaint pages and the index are all reused
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(Project)) == 10
 
@@ -137,7 +137,7 @@ def test_reparse_rebuilds_records_from_stored_pages_without_any_network(monkeypa
 def test_crawl_passes_the_complaint_page_cap_and_reuses_stored_index_pages(monkeypatch, tmp_path, capsys, fake_site):
     setup_db(monkeypatch, tmp_path)
     main([*CRAWL, "--max-requests", "100", "--max-complaint-pages", "1", "--raw-store", str(tmp_path / "raw")])
-    assert "35 requests" in capsys.readouterr().out
+    assert "37 requests" in capsys.readouterr().out
 
 
 # ---- complaint coverage ------------------------------------------------------------------------------------
@@ -206,4 +206,4 @@ def test_applications_extracted_by_an_older_extractor_are_fetched_again(monkeypa
         session.query(SourceDocument).filter(SourceDocument.kind == "application").update({"content_type": "application/json; extract=0"})
         session.commit()
     main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")])
-    assert "21 requests" in capsys.readouterr().out  # the 11 of a normal repeat run + the 10 applications, and nothing else again
+    assert "12 requests" in capsys.readouterr().out  # the 10 applications fetched again + the two notice lists, and nothing else

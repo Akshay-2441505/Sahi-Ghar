@@ -60,11 +60,20 @@ class PastProjectRec:
 
 
 @dataclass
+class ProjectFlagRec:
+    """A notice the regulator itself publishes about a project (e.g. kept in abeyance, an NCLT project)."""
+    reg_no: str
+    kind: str  # abeyance | nclt
+    detail: dict | None = None
+
+
+@dataclass
 class ParsedRecords:
     promoters: list[PromoterRec] = field(default_factory=list)
     projects: list[ProjectRec] = field(default_factory=list)
     complaints: list[ComplaintRec] = field(default_factory=list)
     past_projects: list[PastProjectRec] = field(default_factory=list)
+    project_flags: list[ProjectFlagRec] = field(default_factory=list)
 
 
 _STAGES = {"order approved": "order_issued", "hearing scheduled": "pending", "roznama approved": "pending"}

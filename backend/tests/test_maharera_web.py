@@ -22,6 +22,8 @@ CERTS = {("5", "DocProjectCert"): (FIXTURES / "cert_reg_5.html").read_bytes(),
 NEW_FORMAT = (FIXTURES / "cert_new_format.html").read_bytes()
 ERROR_JSON = (FIXTURES / "cert_error_json.html").read_bytes()
 NO_RECORD = b"<div>No Record Found</div>"
+ABEYANCE = (FIXTURES / "status_abeyance.html").read_bytes()
+NCLT = (FIXTURES / "status_nclt.html").read_bytes()
 COMPLAINANT = "GREEN SPACE INFRA VENTURES"  # the promoter of the first card
 
 
@@ -43,6 +45,10 @@ def site(url: str) -> bytes:
     u, q = urlparse(url), parse_qs(urlparse(url).query)
     if u.path in ("/projects-search-result", "/promoters-search-result"):
         return LIST_PAGE
+    if u.path == "/due-lapse-completion-date":
+        return ABEYANCE
+    if u.path == "/nclt-projects":
+        return NCLT
     if u.path == "/project-document" and q["type"] == ["DocProjectHSMViewCert"]:
         return application_html(COMPANY)
     if u.path == "/project-document":
@@ -84,14 +90,14 @@ def test_discover_seeds_by_pincode_then_completes_each_builder_then_certificates
     fetcher = FakeFetcher()
     docs = list(adapter(fetcher).discover())
     order = kinds(docs)
-    assert order[0] == "project_list" and order.count("promoter_list") == 10
+    assert order[:3] == ["status_abeyance", "status_nclt", "project_list"] and order.count("promoter_list") == 10
     assert order.count("registration_certificate") == 10 and order.count("extension_certificate") == 2
     assert order.count("complaint_list") == 1 and order.count("complaints") == 1
     assert order.count("application") == 10  # one application per builder
     assert order.index("promoter_list") > 0 and order.index("registration_certificate") > order.index("promoter_list")
     assert order.index("complaint_list") > order.index("extension_certificate")
-    assert "project_location=411001" in docs[0].url and all(d.origin == "maharera-web" for d in docs)
-    assert len(fetcher.requested) == 35  # 1 + 10 builders + 10 + 2 certificates + 10 applications + 1 complaint page + 1 detail
+    assert "project_location=411001" in docs[2].url and all(d.origin == "maharera-web" for d in docs)
+    assert len(fetcher.requested) == 37  # 2 status lists + 1 + 10 builders + 10 + 2 certificates + 10 applications + 1 complaint page + 1 detail
 
 
 def test_full_import_builds_projects_dates_and_complaints(session, tmp_path):
@@ -117,7 +123,7 @@ def test_a_second_run_skips_certificates_and_complaint_pages_it_already_has():
     have = {u for u in first.requested if "project-document" in u or "view-data" in u}
     second = FakeFetcher()
     list(adapter(second, is_fresh=lambda url: url in have).discover())
-    assert len(second.requested) == 35 - len(have) == 12
+    assert len(second.requested) == 37 - len(have) == 14
     assert not any("project-document" in u for u in second.requested)
 
 
@@ -195,6 +201,25 @@ def test_a_new_format_certificate_sets_both_dates(session, tmp_path):
         "P52100001400", date(2019, 12, 31), date(2027, 12, 31))
     assert card is not None
     assert [(e["label"], e["revised_end"]) for e in parsed.projects[0].extension_history][1] == ("Covid Extension -2", "2021-03-30")
+
+
+def test_status_lists_become_regulator_notices_on_projects_by_registration_number(session, tmp_path):
+    from sahighar.db.models import ProjectFlag
+    run_ingest(adapter(FakeFetcher()), session, LocalRawStore(tmp_path))
+    flags = {(f.rera_reg_no, f.kind): f.detail for f in session.scalars(select(ProjectFlag))}
+    assert ("P52100005326", "abeyance") in flags and ("P51800012235", "abeyance") in flags
+    assert flags[("P51800008635", "nclt")] == {"status": "Lapsed", "status_as_of": "2025-01-31",
+                                               "proposed_completion": "2021-12-30", "form4_uploaded": False}
+    assert len([k for k in flags if k[1] == "nclt"]) == 4
+
+
+def test_stored_list_pages_are_reused_so_a_resumed_run_does_not_fetch_them_again():
+    fetcher = FakeFetcher()
+    stored = lambda url: LIST_PAGE if "search-result" in url else None
+    docs = list(adapter(fetcher, stored=stored).discover())
+    assert not any("search-result" in u for u in fetcher.requested)
+    assert "project_list" not in kinds(docs) and "promoter_list" not in kinds(docs)
+    assert kinds(docs).count("registration_certificate") == 10  # the certificates are still fetched from the stored cards
 
 
 def test_stored_complaint_pages_are_reused_instead_of_fetched_again():

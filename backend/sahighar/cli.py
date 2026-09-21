@@ -111,7 +111,7 @@ def _crawl(args) -> int:
         store = LocalRawStore(Path(args.raw_store))
         index_pages = dict(session.execute(select(SourceDocument.url, SourceDocument.store_key).where(
             SourceDocument.origin == MahaReraWebAdapter.origin, SourceDocument.parse_status == "ok",
-            SourceDocument.kind == "complaint_list", SourceDocument.fetched_at >= cutoff).order_by(SourceDocument.id)).all())
+            SourceDocument.kind.in_(["complaint_list", "project_list", "promoter_list"]), SourceDocument.fetched_at >= cutoff).order_by(SourceDocument.id)).all())
         adapter = MahaReraWebAdapter(fetcher, args.pincode or None, fresh.__contains__, args.max_list_pages,
                                      args.max_promoter_pages, args.max_complaint_pages,
                                      stored=lambda url: store.get(index_pages[url]) if url in index_pages else None)

@@ -1,4 +1,4 @@
-import type { ScheduleItem } from './api'
+import type { ScheduleItem, StatusNotice } from './api'
 
 // The API sends naive UTC datetimes (no "Z"); without this the browser reads them as local time.
 const asUtc = (value: string) => (/T[\d:.]+$/.test(value) ? `${value}Z` : value)
@@ -30,4 +30,14 @@ export function outcomeText(item: Pick<ScheduleItem, 'outcome' | 'months_extende
     default:
       return 'No end date in the filing'
   }
+}
+
+/** The regulator's own notice, in neutral words. */
+export function noticeText(n: Pick<StatusNotice, 'kind' | 'detail'>): string {
+  if (n.kind === 'abeyance') {
+    return 'Kept in abeyance for lapse of the completion date. MahaRERA says the project’s bank accounts are frozen and the promoter may not execute agreements for sale or sale deeds until it fulfils further compliances.'
+  }
+  const status = n.detail?.status
+  const asOf = n.detail?.status_as_of
+  return 'Listed as an NCLT project' + (status ? `; registration status "${status}"` : '') + (asOf ? ` as on ${formatDate(asOf)}` : '') + '.'
 }

@@ -29,6 +29,8 @@ const data: ProjectPayload = {
     { complaint_ref: 'C2', status: 'Order Approved', stage: 'order_issued', non_execution_applied: true,
       filed_year: 2023, filed_month: 11, order_url: 'https://example.test/C2.pdf', source_document_id: 3 },
   ],
+  status_lists_as_of: '2026-09-21T00:00:00',
+  status_notices: [],
   declared_history: [
     { name: 'Shree Old', project_type: 'Residential', original_proposed_date: '2015-01-01', actual_completion_date: '2016-07-01', source_document_id: 5 },
     { name: 'Shree Older', project_type: null, original_proposed_date: '2012-01-01', actual_completion_date: '2012-01-01', source_document_id: 5 },
@@ -154,6 +156,31 @@ describe('TrustPageView', () => {
     expect(within(schedule).getByText('Registration extended by 84 months, plus 12 months of COVID-19 relief')).toBeInTheDocument()
     expect(within(schedule).getByText('Extended only under COVID-19 relief (6 months)')).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Score breakdown' })).getByText(/1 only under COVID-19 relief \(not counted against the builder\)/)).toBeInTheDocument()
+  })
+
+  it('shows regulator notices in the regulator’s own terms, with a source, and never in the score', () => {
+    const notices = { ...data, status_notices: [
+      { rera_reg_no: 'MH-1', project_name: 'Shree Heights', kind: 'abeyance' as const, detail: null, source_document_id: 1 },
+      { rera_reg_no: 'MH-2', project_name: 'Shree Gardens', kind: 'nclt' as const,
+        detail: { status: 'Lapsed', status_as_of: '2025-01-31' }, source_document_id: 2 }] }
+    render(<TrustPageView data={notices} />)
+    const block = screen.getByRole('region', { name: 'MahaRERA notices' })
+    expect(within(block).getByText(/Kept in abeyance for lapse of the completion date/)).toBeInTheDocument()
+    expect(within(block).getByText(/bank accounts are frozen and the promoter may not execute agreements for sale/)).toBeInTheDocument()
+    expect(within(block).getByText(/Listed as an NCLT project; registration status "Lapsed" as on 31 Jan 2025/)).toBeInTheDocument()
+    for (const row of within(block).getAllByRole('row').slice(1)) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
+  })
+
+  it('says none were listed only when the lists were collected', () => {
+    render(<TrustPageView data={data} />)
+    expect(within(screen.getByRole('region', { name: 'MahaRERA notices' })).getByText(/None of these projects appears on/)).toBeInTheDocument()
+  })
+
+  it('says nothing was checked rather than none listed when the lists were never collected', () => {
+    render(<TrustPageView data={{ ...data, status_lists_as_of: null }} />)
+    const block = screen.getByRole('region', { name: 'MahaRERA notices' })
+    expect(within(block).getByText(/have not been collected/)).toBeInTheDocument()
+    expect(within(block).queryByText(/None of these projects/)).not.toBeInTheDocument()
   })
 
   it('says so when no past projects were declared', () => {

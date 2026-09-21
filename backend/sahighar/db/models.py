@@ -90,6 +90,20 @@ class PastProject(Base):
     source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
 
 
+class ProjectFlag(Base):
+    """A notice the regulator publishes about a project, keyed by its registration number (the project itself
+    may not be in this database). kind: abeyance | nclt."""
+    __tablename__ = "project_flag"
+    __table_args__ = (UniqueConstraint("state", "rera_reg_no", "kind"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    state: Mapped[str] = mapped_column(String(2))
+    rera_reg_no: Mapped[str]
+    kind: Mapped[str]
+    detail: Mapped[dict | None] = mapped_column(Json)
+    source_document_id: Mapped[int] = mapped_column(ForeignKey("source_document.id"))
+
+
 class Complaint(Base):
     __tablename__ = "complaint"
     __table_args__ = (UniqueConstraint("promoter_id", "complaint_ref"),)
