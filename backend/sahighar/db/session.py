@@ -1,4 +1,5 @@
 import os
+from contextlib import contextmanager
 from functools import lru_cache
 
 from sqlalchemy import create_engine
@@ -11,5 +12,11 @@ def _sessionmaker() -> sessionmaker:
 
 
 def get_session():
+    with _sessionmaker()() as session:
+        yield session
+
+
+@contextmanager
+def session_scope():
     with _sessionmaker()() as session:
         yield session
