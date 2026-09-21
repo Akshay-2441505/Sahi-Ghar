@@ -38,6 +38,7 @@ def test_trust_page_payload(client, session):
     assert [p["name"] for p in body["possibly_related"]] == ["Shree Realty Phase 2 LLP"]
     assert body["possibly_related"][0]["evidence"]["same_address"] is True
     assert len(body["schedule"]) == 2  # possibly-related project is NOT counted
+    assert body["group_basis"] == "same PAN"  # P1 and P2 are one group because the filings show the same PAN
     assert body["data_as_of"] and body["score_computed_at"]
 
 

@@ -71,6 +71,7 @@ export type ProjectPayload = {
   score_computed_at: string | null
   score: Score | null
   group_promoters: { promoter_id: number; name: string; source_document_id: number }[]
+  group_basis: string | null
   schedule: ScheduleItem[]
   complaints: ComplaintItem[]
   possibly_related: RelatedItem[]

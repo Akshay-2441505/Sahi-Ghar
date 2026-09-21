@@ -15,6 +15,7 @@ const data: ProjectPayload = {
     progress: { available: false, reason: 'not_yet_available', score: null },
   },
   group_promoters: [{ promoter_id: 1, name: 'Shree Realty LLP', source_document_id: 1 }],
+  group_basis: null,
   schedule: [
     { project_id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', registration_end_date: '2022-01-01', extended_end_date: null,
       outcome: 'not_extended', months_extended: null, source_document_id: 1 },
@@ -106,11 +107,20 @@ describe('TrustPageView', () => {
     expect(within(screen.getByRole('region', { name: 'Score breakdown' })).getByText(/Not collected for this data set/)).toBeInTheDocument()
   })
 
+  it('says why builders are grouped as one, without showing the identifier', () => {
+    const grouped = { ...data, group_basis: 'same PAN',
+      group_promoters: [{ promoter_id: 1, name: 'Shree Realty LLP', source_document_id: 1 }, { promoter_id: 2, name: 'Shree Homes LLP', source_document_id: 1 }] }
+    render(<TrustPageView data={grouped} />)
+    const schedule = screen.getByRole('region', { name: 'Registration schedule' })
+    expect(within(schedule).getByText(/grouped as one because the filings show the same PAN/)).toBeInTheDocument()
+    expect(screen.queryByText(/pan:/)).not.toBeInTheDocument()
+  })
+
   it('says how many partners or directors are shared, never who', () => {
     const shared = { ...data, possibly_related: [{ ...data.possibly_related[0], evidence: { shared_count: 2, same_address: false, name_similarity: 91 } }] }
     render(<TrustPageView data={shared} />)
     const block = screen.getByRole('region', { name: 'Possibly related entities' })
-    expect(within(block).getByText(/shares 2 partners or directors/)).toBeInTheDocument()
+    expect(within(block).getByText(/shares 2 registered members/)).toBeInTheDocument()
   })
 
   it('says so when there is not enough data instead of showing a number', () => {

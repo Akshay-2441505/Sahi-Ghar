@@ -26,7 +26,8 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
       <section aria-label="Registration schedule">
         <h2 className="text-lg font-semibold text-stone-900">Registration schedule</h2>
         <p className="text-sm text-stone-600">
-          Projects registered by {data.group_promoters.map((p) => p.name).join(', ')}. Dates are the end of each
+          Projects registered by {data.group_promoters.map((p) => p.name).join(', ')}
+          {data.group_basis ? ` (grouped as one because the filings show the ${data.group_basis})` : ''}. Dates are the end of each
           registration, taken from the registration and extension certificates. An extension is not necessarily the
           promoter's fault, and a project past its end date may already be complete: these are dates, not a verdict.
         </p>
@@ -99,7 +100,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
               <li key={r.promoter_id}>
                 {r.name}:{' '}
                 {[
-                  r.evidence.shared_count ? `shares ${r.evidence.shared_count} partner${r.evidence.shared_count > 1 ? 's' : ''} or director${r.evidence.shared_count > 1 ? 's' : ''}` : null,
+                  r.evidence.shared_count ? `shares ${r.evidence.shared_count} registered member${r.evidence.shared_count > 1 ? 's' : ''} (partners, directors or signatories)` : null,
                   r.evidence.same_address ? 'same registered address' : null,
                   `name similarity ${r.evidence.name_similarity}%`,
                 ].filter(Boolean).join('; ')}{' '}

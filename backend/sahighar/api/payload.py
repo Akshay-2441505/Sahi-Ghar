@@ -59,6 +59,8 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
         "score_computed_at": snapshot.computed_at if snapshot else None,
         "score": snapshot.breakdown if snapshot else None,
         "group_promoters": group_promoters,
+        # why several promoters are one group; the evidence records only the kind of match, never the identifier
+        "group_basis": "same PAN" if len(confirmed_ids) > 1 else None,
         "schedule": schedule,
         "complaints": complaints,
         "possibly_related": possibly_related,
