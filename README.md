@@ -2,7 +2,7 @@
 
 Free tool that shows a homebuilder's RERA track record before you book. Docs: `PRD.md`, `DESIGN.md`, `TECH_STACK.md`, `DATA_SOURCES.md`; design spec in `docs/superpowers/specs/`; implementation plan in `docs/superpowers/plans/`; MahaRERA access findings and decisions in `docs/spikes/`.
 
-Data path: official data only. Nothing in this repository fetches from a RERA website.
+Data path: MahaRERA's open public pages, read politely by a bounded crawler that stops for good on any refusal or CAPTCHA (never the CAPTCHA-gated detail app), plus data files obtained from the authority by request. See `docs/plan-b/crawler.md`.
 
 ## Run locally
 
@@ -15,7 +15,14 @@ Data path: official data only. Nothing in this repository fetches from a RERA we
     # in another terminal
     cd frontend && npm install && npm run dev
 
-## Import real data
+## Load real data
+
+Crawl MahaRERA's public pages (bounded, resumable; see `docs/plan-b/crawler.md`):
+
+    cd backend
+    uv run python -m sahighar.cli crawl --contact you@example.com --pincode 411001 --max-list-pages 2 --max-promoter-pages 1 --max-requests 250
+
+## Import data files
 
 When an authority's data files arrive (the RTI request draft is in `docs/plan-b/`), load them with:
 

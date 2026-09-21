@@ -1,7 +1,7 @@
 # Data request to MahaRERA (RTI draft)
 
 Status: **DRAFT for the owner to review, edit and send. Nothing has been sent.** Prepared 2026-09-21.
-Why this exists: the owner decided on official data only (no crawling). This is the official route. It is drafted from what the access spike found (`docs/spikes/2026-09-maharera-access.md`); every item below matches a field MahaRERA's own website already shows, so the Authority should hold it.
+Why this exists: it was drafted when the owner had decided on official data only. The owner later also approved polite crawling of the open pages (`crawler.md`), so this request is now an **optional second source**: it can still supply what the open pages do not show (PAN, partners, completion status). It is drafted from what the access spike found (`docs/spikes/2026-09-maharera-access.md`); every item below matches a field MahaRERA's own website already shows, so the Authority should hold it.
 
 ## 1. What to decide before sending
 

@@ -3,7 +3,7 @@
 Date: 2026-09-21
 Source docs: `PRD.md`, `DESIGN.md`, `TECH_STACK.md`, `DATA_SOURCES.md`
 Approved plan: `~/.claude/plans/the-folder-contains-all-goofy-stardust.md`
-Amended 2026-09-21 after the spike (`docs/spikes/2026-09-maharera-access.md`): data path is **official data only (no crawling)**, the delivery metric is based on **registration end dates**, complaints use the site's stages, and grouping gains an address+name rule. Sections 3-8 reflect this.
+Amended 2026-09-21 after the spike (`docs/spikes/2026-09-maharera-access.md`): data path is **open public pages, read politely by a bounded crawler (owner's later decision), with data requests as a second source** (first decided as official data only), the delivery metric is based on **registration end dates**, complaints use the site's stages, and grouping gains an address+name rule. Sections 3-8 reflect this.
 
 ## 1. Goal and scope
 
@@ -17,7 +17,7 @@ Out of scope for this spec (later slices, see §10): Karnataka and Telangana ada
 Fixed decisions:
 
 1. All three states are the goal. The adapter interface is designed for three states now; only MahaRERA is implemented in slice 1.
-2. The spike precedes any parser code. The adapter interface is source-agnostic. **Owner decision after the spike: official data only, no automated crawling of any RERA site.** The first real adapter is therefore a file-import adapter, fed by a data request or RTI to the state authority (a person saving pages by hand is a possible variant, not assumed).
+2. The spike precedes any parser code. The adapter interface is source-agnostic. **Owner decision after the spike: first official data only, then (later the same day) crawling MahaRERA's open pages politely and in bounded runs is approved, trial first.** Two real adapters exist: a web adapter that reads the open pages (never the CAPTCHA-gated detail app; stops for good on any refusal or CAPTCHA) and a file-import adapter for data obtained by data request or RTI.
 3. **No CAPTCHA solving or bypass, ever.** If a page is CAPTCHA-gated, use another route (§3).
 4. Slice 1 builder grouping is rule-based and uses RERA data only. MCA data is added later as another evidence source.
 5. Stack follows `TECH_STACK.md`: Python + FastAPI + PostgreSQL, React + Vite + Tailwind.
@@ -63,7 +63,7 @@ Fixed decisions:
 - **Path B — official data or assisted import:** any needed page is CAPTCHA-gated or prohibited. Use official downloads, the Unified RERA Portal, an RTI or data request to MahaRERA, or a human-assisted import tool that ingests files the user obtains manually.
 - **Mixed:** use Path A for open pages and Path B for gated ones. The adapter interface supports this (§4).
 
-The choice is written into the spike report. **Outcome (2026-09-21): Path B, by the owner's decision.** The open Maharashtra pages (project list, complaints, registration and extension certificates) were found to be CAPTCHA-free, but the owner chose not to crawl them; the detail app that holds PAN, partners and completion status is CAPTCHA-gated and off-limits regardless. The findings remain the reference for which fields exist.
+The choice is written into the spike report. **Outcome (2026-09-21): first Path B, then reversed by the owner to Path A for the open pages, trial first.** The open Maharashtra pages (project list, complaints, registration and extension certificates) were found to be CAPTCHA-free; the detail app that holds PAN, partners and completion status is CAPTCHA-gated and off-limits regardless. The findings remain the reference for which fields exist.
 
 ## 4. Slice 1 architecture
 

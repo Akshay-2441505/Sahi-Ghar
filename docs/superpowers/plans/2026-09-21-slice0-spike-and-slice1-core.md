@@ -16,7 +16,7 @@ Every task's requirements implicitly include these (copied from the spec).
 
 - Stack: Python + FastAPI + PostgreSQL backend; React + Vite + Tailwind frontend.
 - **No CAPTCHA solving or bypass, ever.** If a page is CAPTCHA-gated, the spike records it and stops on that page.
-- **Official data only: no code in this repository fetches from any RERA website** (owner decision 2026-09-21). Data enters through the file-import adapter (Plan B) or test fixtures.
+- **Data path (owner decision, updated 2026-09-21):** open public pages may be read only by the polite crawler (`sahighar/adapters/polite.py`), never the CAPTCHA-gated detail app, stopping for good on any refusal or CAPTCHA; data files from an authority come in through the file-import adapter. Everything in this plan runs on test fixtures.
 - Every parsed row carries `source_document_id`; every figure on the trust page links to its source document; every page states "data as of" a date.
 - Adapters never touch the database; `parse()` is a pure function of the raw document (no network, no database).
 - Fields a source does not publish stay nullable, and rules that depend on them degrade gracefully.
@@ -72,7 +72,7 @@ The file-import adapter for the data the owner obtains (parsers and fixtures mod
 
 Tasks 1-5 (probe tool, MahaRERA findings, runner check, Karnataka/Telangana/rera-india, decision) are done and committed on the local branch `slice0-spike-and-core`. **Do not redo them.** Read `docs/spikes/2026-09-maharera-access.md` first; the outcome that shapes everything below:
 
-- **Path B, by the owner's decision: official data only. No code in this repository fetches from any RERA website.** The first real adapter is a file-import adapter for data the owner obtains by data request or RTI (Plan B).
+- **Data path: first decided as official data only; later the same day the owner approved crawling MahaRERA's open pages politely, trial first.** Both a web adapter and a file-import adapter exist (Plan B); see `docs/plan-b/`.
 - Maharashtra's open pages showed which fields exist (registration and extension end dates from certificates, complaints with status and non-execution flags, promoter name and registered office). The CAPTCHA-gated detail app (PAN, partners, completion status) is off-limits.
 - **Delivery metric:** registration end dates (registered until; extended by N months or not extended), never "on time / late". **Complaints:** the site's stages (order issued, pending) plus non-execution requests. **Grouping:** PAN and partner rules stay (dormant without that data), plus a same-address and similar-name rule.
 - Task 3 (GitHub runner reachability) is **obsolete**: there is no scheduled scrape.
