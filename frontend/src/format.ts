@@ -38,6 +38,20 @@ export function outcomeText(item: Pick<ScheduleItem, 'outcome' | 'months_extende
   }
 }
 
+export function outcomeTone(item: Pick<ScheduleItem, 'outcome'>): 'good' | 'neutral' {
+  return item.outcome === 'within_registration' ? 'good' : 'neutral'
+}
+
+export function outcomeLabel(item: Pick<ScheduleItem, 'outcome'>): string {
+  switch (item.outcome) {
+    case 'extended': return 'Extended'
+    case 'covid_only': return 'COVID relief only'
+    case 'not_extended': return 'No extension on record'
+    case 'within_registration': return 'On schedule'
+    default: return 'Unknown'
+  }
+}
+
 /** The regulator's own notice, in neutral words. */
 export function noticeText(n: Pick<StatusNotice, 'kind' | 'detail'>): string {
   if (n.kind === 'abeyance') {

@@ -4,7 +4,29 @@ import { WarningCircle } from '@phosphor-icons/react'
 import { getProject, type ProjectPayload } from '../api'
 import { ScoreBreakdown } from '../components/ScoreBreakdown'
 import { SourceLink } from '../components/SourceLink'
-import { formatDate, formatMonthYear, noticeText, outcomeText, stateName } from '../format'
+import { formatDate, formatMonthYear, noticeText, outcomeLabel, outcomeText, outcomeTone, stateName } from '../format'
+
+function Chip({ tone, children }: { tone: 'good' | 'alert' | 'neutral'; children: React.ReactNode }) {
+  const toneClass =
+    tone === 'good' ? 'bg-(--color-good-soft) text-(--color-good)'
+    : tone === 'alert' ? 'bg-(--color-alert-soft) text-(--color-alert)'
+    : 'bg-(--color-border) text-(--color-ink-muted)'
+  return <span className={`inline-block whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium ${toneClass}`}>{children}</span>
+}
+
+/** Sticky under the app header, so a long table doesn't leave the visitor scrolling blind to find another section. */
+function SectionNav({ items }: { items: { id: string; label: string }[] }) {
+  return (
+    <nav
+      aria-label="Jump to section"
+      className="sticky top-[110px] z-[5] -mx-1 flex gap-5 overflow-x-auto border-b border-(--color-border) bg-(--color-paper) px-1 py-2 text-sm text-(--color-ink-muted) sm:top-[94px]"
+    >
+      {items.map((it) => (
+        <a key={it.id} href={`#${it.id}`} className="shrink-0 hover:text-(--color-accent)">{it.label}</a>
+      ))}
+    </nav>
+  )
+}
 
 function Table({ head, children }: { head: string[]; children: React.ReactNode }) {
   return (
@@ -39,9 +61,26 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         </p>
       </header>
 
-      {data.score ? <ScoreBreakdown score={data.score} state={project.state} /> : <p>No score has been computed for this promoter yet.</p>}
+      <SectionNav
+        items={[
+          data.score ? { id: 'score', label: 'Score' } : null,
+          { id: 'schedule', label: 'Schedule' },
+          { id: 'complaints', label: 'Complaints' },
+          { id: 'notices', label: project.state === 'MH' ? 'MahaRERA notices' : 'Regulator notices' },
+          { id: 'declared', label: 'Declared delivery' },
+          data.possibly_related.length > 0 ? { id: 'related', label: 'Related' } : null,
+        ].filter((it): it is { id: string; label: string } => it !== null)}
+      />
 
-      <section aria-label="Registration schedule">
+      {data.score ? (
+        <div id="score" className="scroll-mt-[150px] sm:scroll-mt-[136px]">
+          <ScoreBreakdown score={data.score} state={project.state} />
+        </div>
+      ) : (
+        <p>No score has been computed for this promoter yet.</p>
+      )}
+
+      <section id="schedule" aria-label="Registration schedule" className="scroll-mt-[150px] sm:scroll-mt-[136px]">
         <h2 className="text-lg font-semibold">Registration schedule</h2>
         <p className="mt-1 max-w-3xl text-sm text-(--color-ink-muted)">
           Projects registered by {data.group_promoters.map((p) => p.name).join(', ')}
@@ -55,14 +94,17 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
               <td>{h.name} <span className="ledger-figure text-xs text-(--color-ink-faint)">{h.rera_reg_no}</span></td>
               <td className="ledger-figure whitespace-nowrap">{formatDate(h.registration_end_date)}</td>
               <td className="ledger-figure whitespace-nowrap">{formatDate(h.extended_end_date)}</td>
-              <td>{outcomeText(h)}</td>
+              <td>
+                <Chip tone={outcomeTone(h)}>{outcomeLabel(h)}</Chip>
+                <p className="mt-1 text-xs text-(--color-ink-muted)">{outcomeText(h)}</p>
+              </td>
               <td><SourceLink id={h.source_document_id} sources={sources} /></td>
             </tr>
           ))}
         </Table>
       </section>
 
-      <section aria-label="Complaints">
+      <section id="complaints" aria-label="Complaints" className="scroll-mt-[150px] sm:scroll-mt-[136px]">
         <h2 className="text-lg font-semibold">Complaints</h2>
         {data.complaints.length === 0 ? (
           <p className="mt-1 text-sm text-(--color-ink-muted)">
@@ -77,7 +119,15 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
                 <td className="ledger-figure">{c.complaint_ref}</td>
                 <td>{c.status}</td>
                 <td className="ledger-figure whitespace-nowrap">{formatMonthYear(c.filed_year, c.filed_month)}</td>
-                <td>{project.state !== 'MH' ? 'Not tracked for this state' : c.non_execution_applied ? 'Yes, order not complied with' : 'No'}</td>
+                <td>
+                  {project.state !== 'MH' ? (
+                    <Chip tone="neutral">Not tracked for this state</Chip>
+                  ) : c.non_execution_applied ? (
+                    <Chip tone="alert">Yes, order not complied with</Chip>
+                  ) : (
+                    <Chip tone="neutral">No</Chip>
+                  )}
+                </td>
                 <td>
                   {c.order_url ? (
                     <a className="text-(--color-accent) hover:underline" href={c.order_url} target="_blank" rel="noopener noreferrer">
@@ -93,8 +143,12 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
       </section>
 
       <section
+        id="notices"
         aria-label={project.state === 'MH' ? 'MahaRERA notices' : 'Regulator notices'}
-        className={hasNotices ? 'rounded-lg border border-(--color-alert) bg-(--color-alert-soft) p-4' : undefined}
+        className={
+          (hasNotices ? 'rounded-lg border border-(--color-alert) bg-(--color-alert-soft) p-4 ' : '') +
+          'scroll-mt-[150px] sm:scroll-mt-[136px]'
+        }
       >
         <h2 className="flex items-center gap-2 text-lg font-semibold">
           {hasNotices && <WarningCircle size={20} weight="fill" className="text-(--color-alert)" />}
@@ -128,7 +182,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         )}
       </section>
 
-      <section aria-label="Declared delivery record">
+      <section id="declared" aria-label="Declared delivery record" className="scroll-mt-[150px] sm:scroll-mt-[136px]">
         <h2 className="text-lg font-semibold">Declared delivery record</h2>
         <p className="mt-1 max-w-3xl text-sm text-(--color-ink-muted)">
           Completed projects the promoter listed in its registration applications, with the completion date it first proposed and
@@ -152,7 +206,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
       </section>
 
       {data.possibly_related.length > 0 && (
-        <section aria-label="Possibly related entities" className="rounded-lg border border-dashed border-(--color-border-strong) p-4">
+        <section id="related" aria-label="Possibly related entities" className="scroll-mt-[150px] rounded-lg border border-dashed border-(--color-border-strong) p-4 sm:scroll-mt-[136px]">
           <h2 className="text-lg font-semibold">Possibly related entities</h2>
           <p className="mt-1 max-w-3xl text-sm text-(--color-ink-muted)">
             Records of possibly related entities (not counted in this score). They are matched on details such as a shared

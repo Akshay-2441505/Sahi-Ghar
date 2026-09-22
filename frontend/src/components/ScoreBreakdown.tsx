@@ -1,11 +1,18 @@
 import type { Score } from '../api'
 
 function Section({ title, score, children }: { title: string; score: number | null; children: React.ReactNode }) {
+  const hasScore = score !== null
   return (
-    <div className="rise-in rounded-lg border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5">
+    <div
+      className={
+        hasScore
+          ? 'rise-in rounded-lg border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5'
+          : 'rise-in rounded-lg border border-dashed border-(--color-border) p-4'
+      }
+    >
       <h3 className="text-sm font-medium text-(--color-ink-muted)">{title}</h3>
       <p className="ledger-figure mt-1 text-3xl font-medium">
-        {score === null ? <span className="text-(--color-ink-faint)">—</span> : <>{score}<span className="text-lg text-(--color-ink-faint)">/100</span></>}
+        {hasScore ? <>{score}<span className="text-lg text-(--color-ink-faint)">/100</span></> : <span className="text-(--color-ink-faint)">—</span>}
       </p>
       <p className="mt-2 text-sm text-(--color-ink-muted)">{children}</p>
     </div>
