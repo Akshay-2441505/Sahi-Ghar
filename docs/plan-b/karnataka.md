@@ -31,6 +31,14 @@ block or CAPTCHA). After a parser fix: `reparse --origin karnataka-web` (no netw
   behind it were found in the spike but not read; every Karnataka builder's complaint score reads "not
   collected" until that is built. Complaint coverage is tracked per state (`Coverage` key `complaints:KA`), so
   this can never be masked by MahaRERA's own complaint coverage.
+
+  Checked 2026-09-22: `/promoterComplaintReport` is one page, one request, no pagination, with a raw complaint
+  **count** for every one of 2,018 promoters (13,295 complaints total) and a link per row to that promoter's own
+  complaint list. The count alone cannot feed the score honestly — the score needs each complaint's stage
+  (pending vs order issued) and whether non-execution was applied, which only the per-promoter detail page has,
+  and reading those is about 2,000 more requests (roughly 1.7 hours at the required 3 s spacing). Not pursued
+  today; worth doing when there is a block of time free for it. The index page itself was not stored (research
+  only, not ingested), so nothing needs re-fetching to pick this up — start from a fresh index page next time.
 - Projects still in progress and not yet past their completion date are on neither page, so the full register is
   not covered, only completed/expired/extended projects.
 
