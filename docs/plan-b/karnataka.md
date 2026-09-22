@@ -1,7 +1,8 @@
-# Karnataka: two bulk pages, no crawl needed
+# Karnataka: two bulk pages, plus a per-promoter complaint crawl
 
 Unlike MahaRERA, Karnataka RERA (`rera.karnataka.gov.in`) publishes builder-level delivery data as two whole-dataset
 HTML tables. No PDFs, no per-project or per-builder requests, no CAPTCHA on either page (checked 2026-09-21).
+Complaints are a separate, larger crawl (see below) — one request per promoter, no bulk table.
 
 ## Run it
 
@@ -10,6 +11,15 @@ HTML tables. No PDFs, no per-project or per-builder requests, no CAPTCHA on eith
 
 Two requests total, 3 s apart, same politeness rules as MahaRERA (own honest User-Agent, stops for good on any
 block or CAPTCHA). After a parser fix: `reparse --origin karnataka-web` (no network).
+
+To also read every promoter's own complaint list (about 2,000 more requests, ~1.7 hours at the required 3 s
+spacing):
+
+    DATABASE_URL=... uv run python -m sahighar.cli crawl-karnataka --contact you@example.com --complaints --max-requests 2100
+
+Only a *complete* scan (no `--max-complaint-promoters` cap, no stop partway) sets `Coverage` key `complaints:KA`
+to `True` — a partial run leaves it `False` so "no complaints found" is never shown for a builder who was simply
+never checked.
 
 ## What the two pages give
 
@@ -27,18 +37,15 @@ block or CAPTCHA). After a parser fix: `reparse --origin karnataka-web` (no netw
   Every Karnataka promoter is therefore its own group ("single_entity"); two companies of the same builder are
   never linked, and a common name is never flagged as "possibly related" either (that needs the partner/address
   data MahaRERA's applications have; Karnataka has no open equivalent found so far).
-- **No complaints.** `/promoterComplaintReport` (about 2,018 promoters, counts only) and the per-promoter detail
-  behind it were found in the spike but not read; every Karnataka builder's complaint score reads "not
-  collected" until that is built. Complaint coverage is tracked per state (`Coverage` key `complaints:KA`), so
-  this can never be masked by MahaRERA's own complaint coverage.
+- **Complaints: done.** `/promoterComplaintReport` (one page, one request, no pagination) lists a raw complaint
+  count per promoter with a link to that promoter's own complaint list. The count alone could not feed the score
+  honestly — the score needs each complaint's stage (pending vs order issued) and whether non-execution was
+  applied, which only the per-promoter detail page has — so the full crawl reads every promoter's own complaint
+  list (about 2,000 requests, ~1.7 hours at the required 3 s spacing).
 
-  Checked 2026-09-22: `/promoterComplaintReport` is one page, one request, no pagination, with a raw complaint
-  **count** for every one of 2,018 promoters (13,295 complaints total) and a link per row to that promoter's own
-  complaint list. The count alone cannot feed the score honestly — the score needs each complaint's stage
-  (pending vs order issued) and whether non-execution was applied, which only the per-promoter detail page has,
-  and reading those is about 2,000 more requests (roughly 1.7 hours at the required 3 s spacing). Not pursued
-  today; worth doing when there is a block of time free for it. The index page itself was not stored (research
-  only, not ingested), so nothing needs re-fetching to pick this up — start from a fresh index page next time.
+  Run completed 2026-09-22 10:44 (`ka_complaints_crawl.log`): 2,029 requests, 13,418 Karnataka complaints stored,
+  `Coverage` key `complaints:KA` set `True`, and all 6,409 promoter groups rescored in the same run. Karnataka
+  builder pages now show real complaint counts instead of "not collected."
 - Projects still in progress and not yet past their completion date are on neither page, so the full register is
   not covered, only completed/expired/extended projects.
 

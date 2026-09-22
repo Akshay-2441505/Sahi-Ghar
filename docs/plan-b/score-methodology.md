@@ -49,11 +49,11 @@ state's complete scan can never make another's missing data look clean. As of th
 
 - Maharashtra: complaint index fully scanned; 778 promoter groups scored, covering central Pune only (10 of
   Maharashtra's roughly 4,900 list pages so far — a small fraction of the state; see `crawler.md`).
-- Karnataka: complaint index fetched; per-builder detail pages are still being fetched (a long-running crawl,
-  progress tracked in `karnataka.md`) — **not yet complete**, so Karnataka's "complaints" component is not yet
-  marked collected and stays "not_collected" until that finishes.
-- 5,588 promoter groups scored in total (779 MH + 4,848 KA promoters); 621 currently show an overall figure
-  (need ≥2 components and no notice); 36 have their overall withheld specifically because of a regulator notice.
+- Karnataka: complaint index fetched and every promoter's own complaint list read (2,029 requests, completed
+  2026-09-22 10:44, `ka_complaints_crawl.log`) — 13,418 complaints stored, `complaints:KA` now `True`. Karnataka's
+  "complaints" component is marked collected and no longer reads "not_collected".
+- 6,409 promoter groups scored in total (778 MH + 5,631 KA); 940 currently show an overall figure (need ≥2
+  components and no notice); 36 have their overall withheld specifically because of a regulator notice.
 
 ## Known limitations, by design
 
@@ -72,7 +72,7 @@ state's complete scan can never make another's missing data look clean. As of th
 
 ## Sign-off checklist (not done until these are)
 
-1. Karnataka's complaint crawl finishes (currently running).
+1. ~~Karnataka's complaint crawl finishes.~~ Done 2026-09-22 (13,418 complaints, `complaints:KA` = `True`).
 2. A handful of Karnataka projects spot-checked by hand against the live site, the same way Maharashtra's were.
 3. The pre-existing Maharashtra "equal original/extended date" pattern (16 of 2,002 projects, documented in
    `karnataka.md`) is understood well enough to say it's benign with confidence, not just by inference.
