@@ -2,8 +2,8 @@ from sahighar.db.models import Promoter
 from sahighar.resolve.grouping import resolve_groups
 
 
-def P(id, name, pan=None, address=None, partners=None):
-    return Promoter(id=id, state="MH", rera_promoter_ref=f"P{id}", name=name, pan=pan,
+def P(id, name, pan=None, address=None, partners=None, state="MH"):
+    return Promoter(id=id, state=state, rera_promoter_ref=f"P{id}", name=name, pan=pan,
                     registered_address=address, partners_or_directors=partners, source_document_id=1)
 
 
@@ -15,6 +15,13 @@ def test_same_pan_is_filing_confirmed_and_transitive():
     groups = resolve_groups([P(1, "A", pan="ABCDE1234F"), P(2, "B", pan="abcde1234f "), P(3, "C", pan="ZZZZZ9999Z")])
     assert types(groups[0]) == {(1, "filing_confirmed"), (2, "filing_confirmed")}
     assert types(groups[1]) == {(3, "filing_confirmed")}
+
+
+def test_same_pan_merges_across_states_on_purpose_pan_is_a_national_id_not_a_state_one():
+    """A builder registered in both Maharashtra and Karnataka under the same PAN is one legal entity: merging
+    them into a single trust record spanning both states is the intended behaviour, not a leak to guard against."""
+    groups = resolve_groups([P(1, "A Pvt Ltd", pan="ABCDE1234F", state="MH"), P(2, "A Pvt Ltd", pan="ABCDE1234F", state="KA")])
+    assert types(groups[0]) == {(1, "filing_confirmed"), (2, "filing_confirmed")}
 
 
 def test_partner_overlap_plus_same_address_is_possible_only():

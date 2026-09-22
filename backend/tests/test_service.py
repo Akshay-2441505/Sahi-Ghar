@@ -72,6 +72,28 @@ def test_complaint_coverage_is_scoped_per_state_never_leaks_across_states(sessio
     assert _complaints_reason(session, "P1")["available"] is True  # MH's own coverage still applies to MH
 
 
+def test_a_pan_merged_group_spanning_two_states_needs_both_states_complaints_collected(session, tmp_path):
+    """Same PAN across states is one legal entity and is meant to merge (see test_grouping.py) -- but the merged
+    group's complaints can only be called known once EVERY state it spans has been collected, not just one."""
+    from sahighar.db.models import Coverage
+
+    class KaFakeAdapter(FakeAdapter):
+        state = "KA"
+
+    same_pan = {"promoters": [{"ref": "MH1", "name": "National Co MH", "pan": "SAMEPAN0001"}],
+                "projects": [{"reg_no": "MHX-1", "promoter_ref": "MH1", "name": "MH Project", "registration_end": "2022-01-01"}]}
+    same_pan_ka = {"promoters": [{"ref": "KA1", "name": "National Co KA", "pan": "SAMEPAN0001"}],
+                   "projects": [{"reg_no": "KAX-1", "promoter_ref": "KA1", "name": "KA Project", "registration_end": "2022-01-01"}]}
+    run_ingest(FakeAdapter({"u1": same_pan}), session, LocalRawStore(tmp_path))
+    run_ingest(KaFakeAdapter({"u2": same_pan_ka}), session, LocalRawStore(tmp_path))
+    session.add(Coverage(key="complaints:MH", complete=True, updated_at=utcnow()))  # only MH's side was collected
+    session.commit()
+    refresh(session, today=date(2026, 9, 1))
+    reason = _complaints_reason(session, "MH1")
+    assert _complaints_reason(session, "KA1") == reason  # same group, same snapshot
+    assert reason["reason"] == "not_collected"  # KA's side of this merged entity is still unknown
+
+
 def test_declared_past_projects_are_deduplicated_across_a_groups_applications(session, tmp_path):
     past = lambda ref, name, o, a: {"promoter_ref": ref, "name": name, "original_proposed": o, "actual": a}
     doc = {"past_projects": [

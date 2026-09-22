@@ -176,11 +176,12 @@ describe('TrustPageView', () => {
     for (const row of within(block).getAllByRole('row').slice(1)) expect(within(row).getByText(/^Source, fetched/)).toBeInTheDocument()
   })
 
-  it('withholds the overall number while MahaRERA lists a notice, and says why', () => {
+  it('withholds the overall number while a notice is on record, and says why without naming a specific state’s regulator', () => {
     const noticed = { ...data, score: { ...data.score!, overall: null, notices: { count: 2 } } }
     render(<TrustPageView data={noticed} />)
     const breakdown = screen.getByRole('region', { name: 'Score breakdown' })
-    expect(within(breakdown).getByText(/Overall: not shown, because MahaRERA lists 2 notices about this builder's projects \(below\)/)).toBeInTheDocument()
+    expect(within(breakdown).getByText(/Overall: not shown, because the regulator lists 2 notices about this builder's projects \(below\)/)).toBeInTheDocument()
+    expect(within(breakdown).queryByText(/MahaRERA/)).not.toBeInTheDocument()  // the score card is shared by every state
     expect(within(breakdown).getByText('Registration schedule')).toBeInTheDocument()  // the sections stay
   })
 

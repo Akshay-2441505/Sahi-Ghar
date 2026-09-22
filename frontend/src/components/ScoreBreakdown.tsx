@@ -48,7 +48,7 @@ export function ScoreBreakdown({ score }: { score: Score }) {
       <p className="mt-3 text-sm text-stone-700">
         {score.overall === null
           ? score.notices.count > 0
-            ? `Overall: not shown, because MahaRERA lists ${score.notices.count} notice${score.notices.count > 1 ? 's' : ''} about this builder's projects (below). An average cannot speak for those.`
+            ? `Overall: not shown, because the regulator lists ${score.notices.count} notice${score.notices.count > 1 ? 's' : ''} about this builder's projects (below). An average cannot speak for those.`
             : 'Overall: not shown until at least two sections above have data.'
           : `Overall: ${score.overall}/100, the average of the sections above that have data.`}
       </p>

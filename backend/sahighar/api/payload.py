@@ -57,15 +57,17 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
     # promoters by name. Projects kept in abeyance can be absent from the site's project search, so the second route
     # is how they are found at all; `in_our_project_list` says which is which.
     refs = [promoters[pid].rera_promoter_ref for pid in confirmed_ids]
+    # Usually one state; a shared PAN can span two (see test_grouping.py) -- check every state the group spans.
+    group_states = {promoters[pid].state for pid in confirmed_ids}
     status_notices = [
         {"rera_reg_no": f.rera_reg_no, "project_name": names.get(f.rera_reg_no) or (f.detail or {}).get("project_name") or f.rera_reg_no,
          "kind": f.kind, "detail": f.detail, "in_our_project_list": f.rera_reg_no in names, "source_document_id": f.source_document_id}
-        for f in group_notices(session, promoter.state, refs, list(names))
+        for f in group_notices(session, list(group_states), refs, list(names))
     ]
     # These two notice lists are MahaRERA's own; they say nothing about a project in any other state.
     listed = dict(session.execute(select(SourceDocument.kind, func.max(SourceDocument.fetched_at)).where(
         SourceDocument.origin == "maharera-web", SourceDocument.kind.in_(["status_abeyance", "status_nclt"]),
-        SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all()) if promoter.state == "MH" else {}
+        SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all()) if "MH" in group_states else {}
     possibly_related = [
         {"promoter_id": m.promoter_id, "name": promoters[m.promoter_id].name, "evidence": m.evidence,
          "source_document_id": promoters[m.promoter_id].source_document_id}

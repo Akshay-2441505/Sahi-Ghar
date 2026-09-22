@@ -24,11 +24,14 @@ def distinct_declared(rows: list[PastProject]) -> list[PastProject]:
     return list(seen.values())
 
 
-def group_notices(session: Session, state: str, refs: list[str], reg_nos: list[str]) -> list[ProjectFlag]:
+def group_notices(session: Session, states: list[str], refs: list[str], reg_nos: list[str]) -> list[ProjectFlag]:
     """Regulator notices about a group: those naming one of its projects, or (the lists carry no promoter id) one of
-    its promoters by name. Also used by the trust page, so the score and the page can never disagree."""
+    its promoters by name. Also used by the trust page, so the score and the page can never disagree.
+
+    A group can span more than one state (a national builder, same PAN in both -- see test_grouping.py), so this
+    checks every state it spans, never just one."""
     return list(session.scalars(select(ProjectFlag).where(
-        ProjectFlag.state == state, or_(ProjectFlag.rera_reg_no.in_(reg_nos), ProjectFlag.promoter_ref.in_(refs)))
+        ProjectFlag.state.in_(states), or_(ProjectFlag.rera_reg_no.in_(reg_nos), ProjectFlag.promoter_ref.in_(refs)))
         .order_by(ProjectFlag.rera_reg_no, ProjectFlag.kind)))
 
 
@@ -58,12 +61,14 @@ def compute_scores(session: Session, today: date) -> int:
         ps = [p for pid in promoter_ids for p in projects[pid]]
         cs = [c for pid in promoter_ids for c in complaints[pid]]
         ds = distinct_declared([d for pid in promoter_ids for d in declared[pid]])
-        group_state = promoter_key[promoter_ids[0]][0]
-        notices = group_notices(session, group_state, [promoter_key[pid][1] for pid in promoter_ids], [p.rera_reg_no for p in ps])
+        group_states = {promoter_key[pid][0] for pid in promoter_ids}  # usually one state; a shared PAN can span two
+        notices = group_notices(session, list(group_states), [promoter_key[pid][1] for pid in promoter_ids], [p.rera_reg_no for p in ps])
+        # every state the group spans must be collected -- one state's full scan must never vouch for another's
+        complaints_known = all(coverage_by_state.get(s, False) for s in group_states)
         breakdown = score(
             [project_facts(p) for p in ps],
             [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
-            complaints_known=coverage_by_state.get(group_state, False) or bool(cs),  # or complaint rows exist for this builder
+            complaints_known=complaints_known or bool(cs),  # or complaint rows exist for this builder
             declared=[DeclaredFacts(d.original_proposed_date, d.actual_completion_date) for d in ds], notices=len(notices),
         )
         sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs, *ds, *notices)}
