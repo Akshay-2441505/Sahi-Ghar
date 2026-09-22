@@ -23,7 +23,17 @@ function CoverageBand() {
         </div>
         <div className="flex-1">
           {states === null ? (
-            <p className="text-sm text-(--color-band-muted)">Loading coverage.</p>
+            <div className="divide-y divide-(--color-band-border) animate-pulse">
+              {[0, 1].map((i) => (
+                <div key={i} className="flex items-baseline justify-between gap-4 py-4">
+                  <div className="space-y-2">
+                    <div className="h-4 w-24 rounded bg-(--color-band-border)" />
+                    <div className="h-3 w-20 rounded bg-(--color-band-border)" />
+                  </div>
+                  <div className="h-7 w-14 rounded bg-(--color-band-border)" />
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="divide-y divide-(--color-band-border)">
               {states.map((s) => (
@@ -66,10 +76,10 @@ export default function Search() {
     <div className="-mt-8 space-y-16 sm:-mt-10">
       <section className="relative -mx-4 overflow-hidden sm:-mx-[calc((100vw-100%)/2)]">
         <img
-          src="https://images.unsplash.com/photo-1620372177236-03c33d977675?w=1600&q=75&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1553064483-f10fe837615f?w=1600&q=75&auto=format&fit=crop"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: '50% 60%' }}
+          style={{ objectPosition: '50% 55%' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/75" />
         <div className="relative mx-auto max-w-5xl px-4 pt-24 pb-14 sm:px-[calc((100vw-100%)/2+16px)]">
