@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { MagnifyingGlass, CheckCircle, WarningCircle, X } from '@phosphor-icons/react'
-import { getCoverage, searchProjects, type CoverageState, type SearchResult } from '../api'
+import { getCoverage, searchProjects, type CoverageState, type SearchResult, type TopBuilder } from '../api'
 
 const STATE_THUMBNAILS: Record<string, string> = {
   MH: 'https://images.unsplash.com/photo-1553064483-f10fe837615f?w=200&q=70&auto=format&fit=crop',
   KA: 'https://images.unsplash.com/photo-1697130383976-38f28c444292?w=200&q=70&auto=format&fit=crop',
 }
 
-type Selected = { state: string; name: string; area: string }
+type Selected = { state: string; name: string; area: string; topBuilders: TopBuilder[] }
 
-function RegionChoice({ onPick, selectedState }: { onPick: (state: string, name: string, area: string) => void; selectedState: string | null }) {
+function RegionChoice({ onPick, selectedState }: { onPick: (s: CoverageState) => void; selectedState: string | null }) {
   const [states, setStates] = useState<CoverageState[] | null>(null)
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function RegionChoice({ onPick, selectedState }: { onPick: (state: string, name:
                 <button
                   key={s.state}
                   type="button"
-                  onClick={() => onPick(s.state, s.name, s.area)}
+                  onClick={() => onPick(s)}
                   aria-pressed={active}
                   className={
                     'rise-in group rounded-lg border-2 p-6 text-left transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5 ' +
@@ -98,11 +98,11 @@ export default function Search() {
     inputRef.current?.focus()
   }, [selected])
 
-  function pickState(state: string, name: string, area: string) {
+  function pickState(s: CoverageState) {
     setQ('')
     setResults(null)
     setError(null)
-    setSelected({ state, name, area })
+    setSelected({ state: s.state, name: s.name, area: s.area, topBuilders: s.top_builders })
   }
 
   function changeState() {
@@ -112,15 +112,24 @@ export default function Search() {
     regionRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
   }
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault()
+  async function runSearch(query: string) {
     setError(null)
     try {
-      setResults(await searchProjects(q.trim()))
+      setResults(await searchProjects(query))
     } catch (e) {
       setResults(null)
       setError((e as Error).message)
     }
+  }
+
+  function trySample(name: string) {
+    setQ(name)
+    runSearch(name)
+  }
+
+  function onSubmit(event: FormEvent) {
+    event.preventDefault()
+    runSearch(q.trim())
   }
 
   const visibleResults = selected && results ? results.filter((r) => r.state === selected.state) : null
@@ -189,6 +198,22 @@ export default function Search() {
               Search
             </button>
           </form>
+
+          {selected.topBuilders.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="text-sm text-(--color-ink-faint)">Nothing to search yet? Try:</span>
+              {selected.topBuilders.map((b) => (
+                <button
+                  key={b.promoter_id}
+                  type="button"
+                  onClick={() => trySample(b.name)}
+                  className="rounded-full border border-(--color-border) bg-(--color-surface) px-3 py-1 text-sm text-(--color-ink-muted) hover:border-(--color-accent) hover:text-(--color-accent)"
+                >
+                  {b.name}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="mt-6">
             {visibleResults && visibleResults.length === 0 && (

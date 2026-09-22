@@ -10,8 +10,8 @@ function mockFetch(url: string) {
       ok: true,
       json: async () => ({
         states: [
-          { state: 'MH', name: 'Maharashtra', area: 'Central Pune', projects: 2002 },
-          { state: 'KA', name: 'Karnataka', area: 'Statewide', projects: 6501 },
+          { state: 'MH', name: 'Maharashtra', area: 'Central Pune', projects: 2002, top_builders: [{ promoter_id: 1, name: 'Shree Realty', projects: 42 }] },
+          { state: 'KA', name: 'Karnataka', area: 'Statewide', projects: 6501, top_builders: [{ promoter_id: 2, name: 'Casa Grande', projects: 68 }] },
         ],
       }),
     }
@@ -62,6 +62,14 @@ describe('Search', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Search' }))
     await waitFor(() => expect(screen.getByText('Casagrand Meridian')).toBeInTheDocument())
     expect(screen.queryByText('Shree Heights')).not.toBeInTheDocument()
+  })
+
+  it('offers a real top builder to try, for someone with nothing specific to search', async () => {
+    render(<Search />, { wrapper: MemoryRouter })
+    await userEvent.click(await screen.findByRole('button', { name: /Search Karnataka projects/ }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Casa Grande' }))
+    await waitFor(() => expect(screen.getByText('Casagrand Meridian')).toBeInTheDocument())
+    expect(screen.getByLabelText(/Builder, project name/)).toHaveValue('Casa Grande')
   })
 
   it('lets the visitor change state, which clears the search and its box', async () => {

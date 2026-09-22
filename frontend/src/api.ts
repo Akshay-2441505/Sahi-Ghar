@@ -1,6 +1,8 @@
 export type Source = { url: string; origin: string; fetched_at: string }
 
-export type CoverageState = { state: string; name: string; area: string; projects: number }
+export type TopBuilder = { promoter_id: number; name: string; projects: number }
+
+export type CoverageState = { state: string; name: string; area: string; projects: number; top_builders: TopBuilder[] }
 
 export type Score = {
   overall: number | null

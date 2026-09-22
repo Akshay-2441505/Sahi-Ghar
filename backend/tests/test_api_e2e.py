@@ -132,6 +132,9 @@ def test_coverage_reports_real_counts_only_for_states_with_data(client, session,
     assert by_state["MH"]["projects"] == 4 and by_state["MH"]["area"] == "Central Pune"  # DOC_1 + DOC_2
     assert by_state["KA"]["projects"] == 1 and by_state["KA"]["area"] == "Statewide"
     assert "TG" not in by_state  # no data yet: never listed as if it were live
+    ka_top = by_state["KA"]["top_builders"]
+    assert len(ka_top) == 1 and ka_top[0]["name"] == "Karnataka Co" and ka_top[0]["projects"] == 1
+    assert len(by_state["MH"]["top_builders"]) == 4  # every MH promoter in the fixture has exactly one project
 
 
 def test_search_matches_project_promoter_and_reg_no(client):

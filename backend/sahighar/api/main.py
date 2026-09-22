@@ -16,10 +16,24 @@ STATE_AREAS = {"MH": "Central Pune", "KA": "Statewide"}
 
 @app.get("/coverage")
 def coverage(session: Session = Depends(get_session)):
-    """Real, live counts per state -- never claims a state is covered before it actually has data."""
+    """Real, live counts per state -- never claims a state is covered before it actually has data.
+
+    top_builders: the promoters with the most registered projects in that state, so someone with nothing
+    specific to search still has something real to try -- ranked by project count, not curated or paid for.
+    """
     counts = dict(session.execute(select(Project.state, func.count()).group_by(Project.state)).all())
     return {"states": [
-        {"state": state, "name": STATE_NAMES.get(state, state), "area": STATE_AREAS[state], "projects": n}
+        {"state": state, "name": STATE_NAMES.get(state, state), "area": STATE_AREAS[state], "projects": n,
+         "top_builders": [
+            {"promoter_id": pid, "name": name, "projects": count} for pid, name, count in session.execute(
+                select(Promoter.id, Promoter.name, func.count(Project.id))
+                .join(Project, Project.promoter_id == Promoter.id)
+                .where(Project.state == state)
+                .group_by(Promoter.id, Promoter.name)
+                .order_by(func.count(Project.id).desc())
+                .limit(5)
+            ).all()
+         ]}
         for state, n in sorted(counts.items()) if state in STATE_AREAS
     ]}
 
