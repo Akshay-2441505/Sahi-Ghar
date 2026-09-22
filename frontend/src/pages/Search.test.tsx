@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -33,37 +33,47 @@ describe('Search', () => {
   })
   afterEach(() => vi.unstubAllGlobals())
 
-  it('shows which state each result is registered in, so builders from different states are never confused', async () => {
-    render(<Search />, { wrapper: MemoryRouter })
-    await userEvent.type(screen.getByLabelText(/Builder, project name/), 'casa')
-    await userEvent.click(screen.getByRole('button', { name: 'Search' }))
-    await waitFor(() => expect(screen.getByText('Shree Heights')).toBeInTheDocument())
-    const results = screen.getByText('Shree Heights').closest('ul')!
-    expect(within(results).getByText('Maharashtra')).toBeInTheDocument()
-    expect(within(results).getByText('Karnataka')).toBeInTheDocument()
-  })
-
   it('states plainly what the site is and where it actually has data, with real counts', async () => {
     render(<Search />, { wrapper: MemoryRouter })
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/RERA/)
     const coverage = await screen.findByRole('region', { name: /coverage/i })
-    expect(within(coverage).getByText('Maharashtra')).toBeInTheDocument()
-    expect(within(coverage).getByText('Central Pune')).toBeInTheDocument()
-    expect(within(coverage).getByText('2,002')).toBeInTheDocument()
-    expect(within(coverage).getByText('Karnataka')).toBeInTheDocument()
-    expect(within(coverage).getByText('6,501')).toBeInTheDocument()
-    expect(within(coverage).getByText(/More states will be added/)).toBeInTheDocument()
-    expect(within(coverage).queryByText(/Telangana/)).not.toBeInTheDocument()
+    expect(coverage).toHaveTextContent('Maharashtra')
+    expect(coverage).toHaveTextContent('Central Pune')
+    expect(coverage).toHaveTextContent('2,002')
+    expect(coverage).toHaveTextContent('Karnataka')
+    expect(coverage).toHaveTextContent('6,501')
+    expect(coverage).toHaveTextContent(/More states will be added/)
+    expect(coverage).not.toHaveTextContent(/Telangana/)
   })
 
-  it('filters results to the picked state and can be cleared', async () => {
+  it('has no search box until a state is chosen', async () => {
+    render(<Search />, { wrapper: MemoryRouter })
+    await screen.findByRole('region', { name: /coverage/i })
+    expect(screen.queryByLabelText(/Builder, project name/)).not.toBeInTheDocument()
+  })
+
+  it('scopes the search to the chosen state, and only that state, once picked', async () => {
     render(<Search />, { wrapper: MemoryRouter })
     await userEvent.click(await screen.findByRole('button', { name: /Search Karnataka projects/ }))
-    await userEvent.type(screen.getByLabelText(/Builder, project name/), 'casa')
+    const input = await screen.findByLabelText(/Builder, project name/)
+    expect(screen.getByText(/Searching/)).toHaveTextContent('Karnataka')
+
+    await userEvent.type(input, 'casa')
     await userEvent.click(screen.getByRole('button', { name: 'Search' }))
     await waitFor(() => expect(screen.getByText('Casagrand Meridian')).toBeInTheDocument())
     expect(screen.queryByText('Shree Heights')).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: /Showing Karnataka only/ }))
-    expect(await screen.findByText('Shree Heights')).toBeInTheDocument()
+  })
+
+  it('lets the visitor change state, which clears the search and its box', async () => {
+    render(<Search />, { wrapper: MemoryRouter })
+    await userEvent.click(await screen.findByRole('button', { name: /Search Karnataka projects/ }))
+    await screen.findByLabelText(/Builder, project name/)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Change state' }))
+    expect(screen.queryByLabelText(/Builder, project name/)).not.toBeInTheDocument()
+
+    await userEvent.click(await screen.findByRole('button', { name: /Search Maharashtra projects/ }))
+    const input = await screen.findByLabelText(/Builder, project name/)
+    expect(input).toHaveValue('')
   })
 })
