@@ -21,7 +21,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         </p>
       </header>
 
-      {data.score ? <ScoreBreakdown score={data.score} /> : <p>No score has been computed for this promoter yet.</p>}
+      {data.score ? <ScoreBreakdown score={data.score} state={project.state} /> : <p>No score has been computed for this promoter yet.</p>}
 
       <section aria-label="Registration schedule">
         <h2 className="text-lg font-semibold text-stone-900">Registration schedule</h2>
@@ -71,7 +71,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
                   <td className="font-mono">{c.complaint_ref}</td>
                   <td>{c.status}</td>
                   <td>{formatMonthYear(c.filed_year, c.filed_month)}</td>
-                  <td>{c.non_execution_applied ? 'Yes, order not complied with' : 'No'}</td>
+                  <td>{project.state !== 'MH' ? 'Not tracked for this state' : c.non_execution_applied ? 'Yes, order not complied with' : 'No'}</td>
                   <td>
                     {c.order_url ? (
                       <a className="text-blue-800 underline" href={c.order_url} target="_blank" rel="noopener noreferrer">

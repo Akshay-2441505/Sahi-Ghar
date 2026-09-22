@@ -11,7 +11,7 @@ function Section({ title, score, children }: { title: string; score: number | nu
 }
 
 /** The overall number is only ever rendered below, and as a summary of, the three sections. */
-export function ScoreBreakdown({ score }: { score: Score }) {
+export function ScoreBreakdown({ score, state }: { score: Score; state: string }) {
   const { schedule, complaints, declared, progress } = score
   const evaluated = schedule.extended + schedule.covid_only + schedule.not_extended
   return (
@@ -28,7 +28,9 @@ export function ScoreBreakdown({ score }: { score: Score }) {
         <Section title="Complaints" score={complaints.score}>
           {complaints.available
             ? `${complaints.total} on record: ${complaints.pending} hearing pending, ${complaints.order_issued} order issued; ` +
-              `${complaints.order_not_executed} with a request to enforce an order that was not complied with. ` +
+              (state === 'MH'
+                ? `${complaints.order_not_executed} with a request to enforce an order that was not complied with. `
+                : 'enforcement-of-order requests are not tracked for this state. ') +
               `${complaints.unresolved} unresolved across ${complaints.project_count} registered projects.`
             : complaints.reason === 'not_collected'
               ? 'Not collected for this data set yet. A missing complaint list here does not mean the builder has none.'

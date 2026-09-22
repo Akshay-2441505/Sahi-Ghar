@@ -205,6 +205,17 @@ describe('TrustPageView', () => {
     expect(within(block).getByText(/not yet read for this state/)).toBeInTheDocument()
   })
 
+  it('never claims a state tracks enforcement-of-order requests when it does not', () => {
+    const karnataka = { ...data, project: { ...data.project, state: 'KA' } }
+    render(<TrustPageView data={karnataka} />)
+    const complaints = screen.getByRole('region', { name: 'Complaints' })
+    expect(within(complaints).queryByText('No')).not.toBeInTheDocument()  // "No" would wrongly imply this was checked
+    expect(within(complaints).getAllByText(/not tracked/i).length).toBeGreaterThan(0)
+    const breakdown = screen.getByRole('region', { name: 'Score breakdown' })
+    expect(within(breakdown).queryByText(/0 with a request to enforce/)).not.toBeInTheDocument()
+    expect(within(breakdown).getByText(/not tracked for this state/i)).toBeInTheDocument()
+  })
+
   it('says so when no past projects were declared', () => {
     const none = { ...data, declared_history: [], score: { ...data.score!,
       declared: { available: false, reason: 'insufficient_history', score: null, total: 0, on_or_before: 0, later: 0, median_months_later: null } } }
