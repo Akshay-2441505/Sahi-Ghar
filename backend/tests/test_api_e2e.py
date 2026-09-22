@@ -98,6 +98,28 @@ def test_notice_lists_as_of_is_the_older_of_the_two_lists_and_only_when_both_wer
     assert client.get(f"/projects/{pid}").json()["status_lists_as_of"].startswith("2026-09-18")
 
 
+def test_notice_lists_as_of_never_leaks_to_a_different_state(client, session, tmp_path):
+    """MahaRERA's own notice lists must not make a Karnataka project look checked against them."""
+    from sahighar.db.models import SourceDocument
+    from datetime import datetime
+
+    class KaFakeAdapter(FakeAdapter):
+        state = "KA"
+
+    run_ingest(KaFakeAdapter({"ka1": {"promoters": [{"ref": "K1", "name": "Karnataka Co"}],
+                                      "projects": [{"reg_no": "KA-1", "promoter_ref": "K1", "name": "KA One"}]}}),
+               session, LocalRawStore(tmp_path))
+    refresh(session, today=date(2026, 9, 1))
+    for kind in ("status_abeyance", "status_nclt"):
+        session.add(SourceDocument(origin="maharera-web", kind=kind, url=f"https://x.test/{kind}", fetched_at=datetime(2026, 9, 20),
+                                   sha256=kind.ljust(64, "0"), content_type="text/html", store_key=kind, parse_status="ok"))
+    session.commit()
+    ka_project_id = session.scalar(select(Project.id).where(Project.rera_reg_no == "KA-1"))
+    body = client.get(f"/projects/{ka_project_id}").json()
+    assert body["status_lists_as_of"] is None  # MahaRERA's lists say nothing about a Karnataka project
+    assert body["status_notices"] == []
+
+
 def test_search_matches_project_promoter_and_reg_no(client):
     def names(q):
         return {p["name"] for p in client.get("/search", params={"q": q}).json()["projects"]}

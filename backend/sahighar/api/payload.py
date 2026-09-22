@@ -62,8 +62,10 @@ def trust_payload(session: Session, promoter: Promoter) -> dict:
          "kind": f.kind, "detail": f.detail, "in_our_project_list": f.rera_reg_no in names, "source_document_id": f.source_document_id}
         for f in group_notices(session, promoter.state, refs, list(names))
     ]
+    # These two notice lists are MahaRERA's own; they say nothing about a project in any other state.
     listed = dict(session.execute(select(SourceDocument.kind, func.max(SourceDocument.fetched_at)).where(
-        SourceDocument.kind.in_(["status_abeyance", "status_nclt"]), SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all())
+        SourceDocument.origin == "maharera-web", SourceDocument.kind.in_(["status_abeyance", "status_nclt"]),
+        SourceDocument.parse_status == "ok").group_by(SourceDocument.kind)).all()) if promoter.state == "MH" else {}
     possibly_related = [
         {"promoter_id": m.promoter_id, "name": promoters[m.promoter_id].name, "evidence": m.evidence,
          "source_document_id": promoters[m.promoter_id].source_document_id}

@@ -47,6 +47,10 @@ Exit code: 0 finished or stopped at its budget, 1 some page failed to parse (nam
 
 Rough cost at 3 s per request: a pincode of about 100 projects with their builders' portfolios is a few hundred requests (tens of minutes). The complaint index is about 540 requests (about 27 minutes) once. All of Maharashtra is about 4,900 list pages plus about 49,000 certificate requests: about two days of fetching.
 
+## Block on 2026-09-22
+
+Run 2 of the central Pune crawl was blocked (HTTP 403 on a certificate request) after 89 requests, following yesterday's roughly 2,600 requests. The crawler stopped for good, as designed; nothing was retried. Everything fetched before the block is saved (about 25 more certificates, 40 extensions, 2 applications, 17 complaint pages). **Do not run the MahaRERA crawl again before 2026-09-23**, and even then start with a small `--max-requests` to check the site answers normally before resuming the full run.
+
 ## Continuing the central Pune crawl (next run)
 
 State after run 1 (2026-09-21): 2,002 projects from 778 builders; about 1,220 certificates stored; **no applications yet**; complaint index complete. Run 2 finishes central Pune (about 2,200 requests, 2 to 2.5 hours, laptop on and plugged in):
