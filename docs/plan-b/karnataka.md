@@ -46,3 +46,23 @@ block or CAPTCHA). After a parser fix: `reparse --origin karnataka-web` (no netw
 
 `docs/spikes/2026-09-maharera-access.md`, "Follow-up probe, 2026-09-21" — exact table columns and row counts as
 fetched that day (979 approved extensions, 69 rejected, 2,859 expired, 3,527 applied-for-completion).
+
+## Data-quality audit (2026-09-22)
+
+A pure-DB audit (no network) after the full ingestion found and fixed a real integrity bug: 769 of 6,501
+Karnataka projects (12%) had `extended_end_date` not after `registration_end_date` -- almost always because a
+cruder single-date source (the "expired" table's own overlap with "approved extensions", or the completed-list's
+"proposed completion") had overwritten the precise original/extended pair, silently hiding a real extension.
+Fixed in the adapter (see git log); one already-corrupted row needed a manual correction since a fixed parser
+returning `None` cannot un-write a value a plain reparse already stored (see `runner._upsert`'s docstring).//
+One further row had a source-side typo (a dropped digit: "30/11/0019" instead of "2019"), now treated as
+unparseable rather than guessed or stored as-is.
+
+Also found and accepted as a data characteristic, not a bug: some government housing-scheme projects (e.g.
+"PMAY HFA (U)") are genuinely named near-identically across many distinct registration numbers under the same
+promoter -- expected, not a parsing artifact.
+
+A similar (but pre-existing, and much smaller: 16 of 2,002, under 1%) equal-dates pattern exists in Maharashtra
+data too, likely from an old-format extension certificate reporting the same date as the registration
+certificate. Not investigated further today (MahaRERA is off-limits pending the block clearing); its downstream
+effect is benign, since `classify()` already treats equal dates as "not extended", never as a false "extended".

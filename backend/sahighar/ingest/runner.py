@@ -23,6 +23,10 @@ class IngestFailureRateExceeded(Exception):
 
 
 def _upsert(session: Session, model, keys: dict, values: dict, keep_existing_if_none: bool = False):
+    """keep_existing_if_none: a None here means "this document doesn't say", not "clear it" -- so if a parser bug
+    once stored a bad value and a later fix makes it correctly return None for that field, a plain reparse cannot
+    un-write it (None never overwrites). That needs a one-off manual correction of the already-stored row; the
+    fixed parser only stops it from happening to any new row."""
     row = session.scalar(select(model).filter_by(**keys))
     if row is None:
         row = model(**keys)
