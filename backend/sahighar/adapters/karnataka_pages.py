@@ -18,7 +18,12 @@ def _text(fragment: str) -> str:
 
 def _dmy(text: str) -> date | None:
     text = text.strip()
-    return datetime.strptime(text, "%d/%m/%Y").date() if re.fullmatch(r"\d{2}/\d{2}/\d{4}", text) else None
+    if not re.fullmatch(r"\d{2}/\d{2}/\d{4}", text):
+        return None
+    parsed = datetime.strptime(text, "%d/%m/%Y").date()
+    # The site occasionally drops a digit (e.g. "30/11/0019" for "30/11/2019"): an implausible year is unparseable,
+    # not something to guess-correct or store as-is.
+    return parsed if parsed.year >= 1950 else None
 
 
 _REG_NO = re.compile(r"PRM/KA/RERA/\S+")

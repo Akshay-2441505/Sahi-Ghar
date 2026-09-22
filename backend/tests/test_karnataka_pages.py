@@ -43,6 +43,22 @@ def test_completed_list_gives_proposed_and_applied_for_completion_dates():
     assert len(rows) == 5
 
 
+def test_an_implausible_year_is_treated_as_unparseable_never_guessed():
+    """The site itself sometimes drops a digit (e.g. "30/11/0019" instead of "30/11/2019"). Guessing the fix
+    would be a fabrication; storing the literal value would show a nonsensical date on the page. Neither -- it's
+    simply unknown, same as a missing date."""
+    row = (
+        '<tr><td>1</td><td>PRM/KA/RERA/1273/318/PR/180523/001797</td><td>EX/PRM/KA/RERA/X</td><td></td><td></td>'
+        '<td>M.S. Afjal Hussain</td><td>Business Bay Centre</td><td>Udupi</td><td>01/12/2018</td>'
+        '<td>30/11/2018</td><td>30/11/0019</td><td>03/01/2020</td></tr>'
+    )
+    html = ('<table><tr><th>S.No</th><th>OLD REGISTRATION NO</th><th>NEW REGISTRATION NO</th><th>a</th><th>b</th>'
+            '<th>PROMOTER</th><th>PROJECT</th><th>DISTRICT</th><th>APPLICATION DATE</th><th>OLD COMPLETION DATE</th>'
+            '<th>NEW COMPLETION DATE</th><th>APPROVED DATE</th></tr>' + row + '</table>')
+    row_parsed = parse_renewals_page(html).approved[0]
+    assert row_parsed.old_completion == date(2018, 11, 30) and row_parsed.new_completion is None
+
+
 def test_a_page_with_no_matching_rows_yields_nothing():
     assert parse_renewals_page("<div>nothing here</div>").approved == []
     assert parse_completed_list("<div>nothing here</div>") == []
