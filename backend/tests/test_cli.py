@@ -253,3 +253,68 @@ def test_crawl_karnataka_loads_both_pages_and_scores(monkeypatch, tmp_path, caps
     assert code == 0 and "2 requests" in out and "promoter groups scored" in out
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(Project).where(Project.state == "KA")) > 0
+
+
+def test_crawl_karnataka_complaints_reads_index_then_every_promoter_and_marks_coverage(monkeypatch, tmp_path, capsys):
+    from sahighar.adapters.polite import Fetched
+    from tests.test_karnataka_web import COMPLAINT_INDEX, COMPLETED, FIXTURES, RENEWALS
+
+    engine = setup_db(monkeypatch, tmp_path)
+
+    class FakeFetcher:
+        def __init__(self, contact, delay, max_requests):
+            self.requests = 0
+            self.limit = max_requests
+
+        def get(self, url):
+            if self.limit is not None and self.requests >= self.limit:
+                from sahighar.adapters.polite import BudgetExhausted
+                raise BudgetExhausted("limit")
+            self.requests += 1
+            if "promoterComplaintReport" in url:
+                return Fetched(url, COMPLAINT_INDEX.encode(), "text/html")
+            if "complaintReportWiseList" in url:
+                data = (FIXTURES / "complaint_detail_single.html").read_text(encoding="utf-8")
+                return Fetched(url, data.encode(), "text/html")
+            data = RENEWALS if "Renewal" in url else COMPLETED
+            return Fetched(url, data.encode(), "text/html")
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", FakeFetcher)
+    code = main(["crawl-karnataka", "--contact", "me@example.test", "--complaints",
+                "--max-requests", "100", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 0 and "9 requests" in out  # 2 bulk pages + 1 index + 6 promoter details
+    with Session(engine) as session:
+        assert session.get(Coverage, "complaints:KA").complete is True
+        assert session.scalar(select(func.count()).select_from(Project).where(Project.state == "KA")) > 0
+
+
+def test_crawl_karnataka_complaints_can_be_capped_and_resumed(monkeypatch, tmp_path, capsys):
+    from sahighar.adapters.polite import Fetched
+    from tests.test_karnataka_web import COMPLAINT_INDEX, COMPLETED, FIXTURES, RENEWALS
+
+    setup_db(monkeypatch, tmp_path)
+
+    class FakeFetcher:
+        def __init__(self, contact, delay, max_requests):
+            self.requests = 0
+            self.limit = max_requests
+
+        def get(self, url):
+            if self.requests >= self.limit:
+                from sahighar.adapters.polite import BudgetExhausted
+                raise BudgetExhausted("limit")
+            self.requests += 1
+            if "promoterComplaintReport" in url:
+                return Fetched(url, COMPLAINT_INDEX.encode(), "text/html")
+            if "complaintReportWiseList" in url:
+                data = (FIXTURES / "complaint_detail_single.html").read_text(encoding="utf-8")
+                return Fetched(url, data.encode(), "text/html")
+            data = RENEWALS if "Renewal" in url else COMPLETED
+            return Fetched(url, data.encode(), "text/html")
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", FakeFetcher)
+    code = main(["crawl-karnataka", "--contact", "me@example.test", "--complaints",
+                "--max-requests", "5", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 0 and "request budget" in out and "run the same command again" in out

@@ -54,6 +54,10 @@ def main(argv: list[str] | None = None) -> int:
     crawl_ka.add_argument("--contact", default=os.environ.get("SAHIGHAR_CONTACT"),
                           help="email or URL put in the User-Agent so the site can reach you (or set SAHIGHAR_CONTACT)")
     crawl_ka.add_argument("--delay", type=float, default=3.0, help="seconds between requests (default 3, do not go lower)")
+    crawl_ka.add_argument("--complaints", action="store_true", help="also read every promoter's complaint list (about 2,000 more requests)")
+    crawl_ka.add_argument("--max-requests", type=int, default=5, help="stop after this many requests (default 5; raise this with --complaints)")
+    crawl_ka.add_argument("--max-complaint-promoters", type=int, help="cap on promoters whose complaints are read (trial runs)")
+    crawl_ka.add_argument("--refresh-after-days", type=int, default=90, help="skip a promoter's complaint page fetched within this many days")
     crawl_ka.add_argument("--raw-store", default="raw_store", help="where fetched pages are kept (default: ./raw_store)")
     reparse = sub.add_parser("reparse", help="re-run the parsers over stored pages (no network), e.g. after a parser fix")
     reparse.add_argument("--origin", choices=["maharera-web", "karnataka-web", "file-import"], required=True)
@@ -153,23 +157,35 @@ def _crawl_karnataka(args) -> int:
         return 2
     if not _privacy_key_ok():
         return 2
-    fetcher = PoliteFetcher(args.contact, args.delay, 5)
-    adapter = KarnatakaWebAdapter(fetcher)
-    stopped = None
+    fetcher = PoliteFetcher(args.contact, args.delay, args.max_requests)
     with session_scope() as session:
+        cutoff = utcnow() - timedelta(days=args.refresh_after_days)
+        fresh = set(session.scalars(select(SourceDocument.url).where(
+            SourceDocument.origin == KarnatakaWebAdapter.origin, SourceDocument.parse_status == "ok",
+            SourceDocument.fetched_at >= cutoff, SourceDocument.kind == "ka_complaint_detail")))
+        adapter = KarnatakaWebAdapter(fetcher, args.complaints, fresh.__contains__, args.max_complaint_promoters)
+        stopped = None
         try:
-            summary = run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+            run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+        except BudgetExhausted:
+            stopped = "budget"
         except BlockedError as error:
             stopped = f"blocked: {error}"
+        if adapter.complaint_scan_complete:  # only a complete scan lets "no complaints found" mean anything
+            set_coverage(session, "complaints:KA", True)
         print(f"{fetcher.requests} requests")
-        if stopped:
+        if stopped == "budget":
+            print(f"stopped at the request budget ({args.max_requests}). Everything fetched is saved; run the same command again to continue.")
+        elif stopped:
             print(f"BLOCKED: {stopped.removeprefix('blocked: ')}. Stopped for good. Do not retry for at least a day, and do not try to get around it.")
+        for note in adapter.skipped:
+            print(f"  skipped {note}")
         failed = session.scalars(select(SourceDocument).where(
             SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")).all()
         for doc in failed:
             print(f"  FAILED {doc.url}: {doc.parse_error}")
         print(f"{refresh(session)} promoter groups scored")
-    return 3 if stopped else (1 if failed else 0)
+    return 3 if stopped and stopped != "budget" else (1 if failed else 0)
 
 
 def _reparse(args) -> int:
