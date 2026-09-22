@@ -113,6 +113,7 @@ export type ProjectPayload = {
 
 export type SearchResult = {
   id: number
+  state: string
   name: string
   rera_reg_no: string
   city: string | null

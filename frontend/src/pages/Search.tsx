@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { searchProjects, type SearchResult } from '../api'
+import { stateName } from '../format'
 
 export default function Search() {
   const [q, setQ] = useState('')
@@ -39,7 +40,8 @@ export default function Search() {
         <ul className="divide-y divide-stone-200">
           {results.map((r) => (
             <li key={r.id} className="py-3">
-              <Link className="font-medium text-blue-800 underline" to={`/projects/${r.id}`}>{r.name}</Link>
+              <Link className="font-medium text-blue-800 underline" to={`/projects/${r.id}`}>{r.name}</Link>{' '}
+              <span className="rounded bg-stone-200 px-1.5 py-0.5 text-xs font-medium text-stone-700">{stateName(r.state)}</span>
               <p className="text-sm text-stone-600">
                 <span className="font-mono">{r.rera_reg_no}</span> · {r.promoter_name}
                 {r.city ? ` · ${r.city}` : ''}

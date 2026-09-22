@@ -3,6 +3,12 @@ import type { ScheduleItem, StatusNotice } from './api'
 // The API sends naive UTC datetimes (no "Z"); without this the browser reads them as local time.
 const asUtc = (value: string) => (/T[\d:.]+$/.test(value) ? `${value}Z` : value)
 
+const STATE_NAMES: Record<string, string> = { MH: 'Maharashtra', KA: 'Karnataka', TG: 'Telangana' }
+
+export function stateName(state: string): string {
+  return STATE_NAMES[state] ?? state
+}
+
 export function formatDate(value: string | null): string {
   if (!value) return '—'
   return new Date(asUtc(value)).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })

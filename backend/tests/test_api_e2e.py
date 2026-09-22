@@ -129,6 +129,8 @@ def test_search_matches_project_promoter_and_reg_no(client):
     assert names("mh-4") == {"Zenith One"}  # matched via RERA number
     assert names("50%") == set()  # % is literal, not a wildcard
     assert client.get("/search", params={"q": "a"}).status_code == 422
+    shree = client.get("/search", params={"q": "shree"}).json()["projects"]
+    assert {p["state"] for p in shree} == {"MH"}  # state is exposed so the UI can tell builders in different states apart
 
 
 def test_promoter_endpoint_and_404s(client, session):

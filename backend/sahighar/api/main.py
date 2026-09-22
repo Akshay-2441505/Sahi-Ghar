@@ -20,7 +20,7 @@ def search(q: str = Query(min_length=2), session: Session = Depends(get_session)
                    func.lower(Promoter.name).contains(needle, autoescape=True)))
         .order_by(Project.name).limit(25)
     ).all()
-    return {"projects": [{"id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city,
+    return {"projects": [{"id": p.id, "state": p.state, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city,
                           "promoter_id": p.promoter_id, "promoter_name": name}
                          for p, name in rows]}
 
