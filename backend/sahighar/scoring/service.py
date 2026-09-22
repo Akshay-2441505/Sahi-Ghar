@@ -49,18 +49,21 @@ def compute_scores(session: Session, today: date) -> int:
     for m in session.scalars(select(GroupMembership).where(GroupMembership.link_type == "filing_confirmed")):
         members[m.group_id].append(m.promoter_id)
 
-    complaints_collected = bool(session.scalar(select(Coverage.complete).where(Coverage.key == "complaints")))
+    # Coverage is per state ("complaints:MH", "complaints:KA", ...): a full scan in one state must never make
+    # another state's missing complaint data look like a clean record.
+    coverage_by_state = {key.removeprefix("complaints:"): complete for key, complete in session.execute(
+        select(Coverage.key, Coverage.complete)).all() if key.startswith("complaints:")}
     now = utcnow()
     for group_id, promoter_ids in members.items():
         ps = [p for pid in promoter_ids for p in projects[pid]]
         cs = [c for pid in promoter_ids for c in complaints[pid]]
         ds = distinct_declared([d for pid in promoter_ids for d in declared[pid]])
-        notices = group_notices(session, promoter_key[promoter_ids[0]][0], [promoter_key[pid][1] for pid in promoter_ids],
-                                [p.rera_reg_no for p in ps])
+        group_state = promoter_key[promoter_ids[0]][0]
+        notices = group_notices(session, group_state, [promoter_key[pid][1] for pid in promoter_ids], [p.rera_reg_no for p in ps])
         breakdown = score(
             [project_facts(p) for p in ps],
             [ComplaintFacts(c.stage, c.non_execution_applied) for c in cs], today,
-            complaints_known=complaints_collected or bool(cs),  # complaint rows exist only if that builder's page was fetched
+            complaints_known=coverage_by_state.get(group_state, False) or bool(cs),  # or complaint rows exist for this builder
             declared=[DeclaredFacts(d.original_proposed_date, d.actual_completion_date) for d in ds], notices=len(notices),
         )
         sources = {promoter_doc[pid] for pid in promoter_ids} | {r.source_document_id for r in (*ps, *cs, *ds, *notices)}

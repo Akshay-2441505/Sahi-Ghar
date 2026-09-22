@@ -46,11 +46,30 @@ def test_a_builder_with_no_complaint_rows_is_unknown_until_complaints_were_colle
     assert _complaints_reason(session, "P4")["reason"] == "not_collected"  # P4 has no complaint rows and nothing says we looked
     assert _complaints_reason(session, "P1")["available"] is True  # P1's complaints were fetched, so they are known
 
-    session.add(Coverage(key="complaints", complete=True, updated_at=utcnow()))
+    session.add(Coverage(key="complaints:MH", complete=True, updated_at=utcnow()))
     session.commit()
     refresh(session, today=date(2026, 9, 1))
     p4 = _complaints_reason(session, "P4")
     assert p4["available"] is True and p4["score"] == 100  # now "no complaints" is a real finding
+
+
+def test_complaint_coverage_is_scoped_per_state_never_leaks_across_states(session, tmp_path):
+    """MH's complaint index being fully scanned must never make a KA builder's complaints look known."""
+    from sahighar.adapters.base import RawDoc
+    from sahighar.db.models import Coverage
+    run_ingest(FakeAdapter({"u1": DOC_1}), session, LocalRawStore(tmp_path))  # FakeAdapter.state == "MH"
+
+    class KaFakeAdapter(FakeAdapter):
+        state = "KA"
+
+    run_ingest(KaFakeAdapter({"u2": {"promoters": [{"ref": "K1", "name": "Karnataka Co"}],
+                                     "projects": [{"reg_no": "KA-1", "promoter_ref": "K1", "name": "KA One"}]}}),
+               session, LocalRawStore(tmp_path))
+    session.add(Coverage(key="complaints:MH", complete=True, updated_at=utcnow()))
+    session.commit()
+    refresh(session, today=date(2026, 9, 1))
+    assert _complaints_reason(session, "K1")["reason"] == "not_collected"  # MH's coverage must not leak to KA
+    assert _complaints_reason(session, "P1")["available"] is True  # MH's own coverage still applies to MH
 
 
 def test_declared_past_projects_are_deduplicated_across_a_groups_applications(session, tmp_path):

@@ -17,6 +17,7 @@ from sqlalchemy import func, select
 
 from sahighar.adapters.file_import import FileImportAdapter
 from sahighar.adapters.application import CONTENT_TYPE as APPLICATION_CONTENT_TYPE
+from sahighar.adapters.karnataka_web import KarnatakaWebAdapter
 from sahighar.adapters.maharera_web import MahaReraWebAdapter
 from sahighar.adapters.polite import BlockedError, BudgetExhausted, PoliteFetcher
 from sahighar.db.models import SourceDocument
@@ -49,12 +50,19 @@ def main(argv: list[str] | None = None) -> int:
     crawl.add_argument("--max-complaint-pages", type=int, help="cap pages of the complaint index (about 540 exist; trial runs)")
     crawl.add_argument("--refresh-after-days", type=int, default=90, help="skip certificates and complaint pages fetched within this many days")
     crawl.add_argument("--raw-store", default="raw_store", help="where fetched pages are kept (default: ./raw_store)")
+    crawl_ka = sub.add_parser("crawl-karnataka", help="read Karnataka RERA's two bulk public pages (2 requests total)")
+    crawl_ka.add_argument("--contact", default=os.environ.get("SAHIGHAR_CONTACT"),
+                          help="email or URL put in the User-Agent so the site can reach you (or set SAHIGHAR_CONTACT)")
+    crawl_ka.add_argument("--delay", type=float, default=3.0, help="seconds between requests (default 3, do not go lower)")
+    crawl_ka.add_argument("--raw-store", default="raw_store", help="where fetched pages are kept (default: ./raw_store)")
     reparse = sub.add_parser("reparse", help="re-run the parsers over stored pages (no network), e.g. after a parser fix")
-    reparse.add_argument("--origin", choices=["maharera-web", "file-import"], required=True)
+    reparse.add_argument("--origin", choices=["maharera-web", "karnataka-web", "file-import"], required=True)
     reparse.add_argument("--raw-store", default="raw_store")
     args = parser.parse_args(argv)
     if args.command == "crawl":
         return _crawl(args)
+    if args.command == "crawl-karnataka":
+        return _crawl_karnataka(args)
     if args.command == "reparse":
         return _reparse(args)
 
@@ -69,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         summary = run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
         if session.scalar(select(func.count()).select_from(SourceDocument).where(
                 SourceDocument.origin == adapter.origin, SourceDocument.kind == "complaints", SourceDocument.parse_status == "ok")):
-            set_coverage(session, "complaints", True)  # a complaints table means complaints were collected for everyone in it
+            set_coverage(session, f"complaints:{adapter.state}", True)  # a complaints table means complaints were collected for everyone in it
         print(f"{summary.ok} files imported, {summary.failed} failed")
         for doc in session.scalars(select(SourceDocument).where(
                 SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")):
@@ -123,7 +131,7 @@ def _crawl(args) -> int:
         except BlockedError as error:
             stopped = f"blocked: {error}"
         if adapter.complaint_index_complete:  # only a complete scan lets "no complaints found" mean anything
-            set_coverage(session, "complaints", True)
+            set_coverage(session, f"complaints:{adapter.state}", True)
         print(f"{fetcher.requests} requests")
         if stopped == "budget":
             print(f"stopped at the request budget ({args.max_requests}). Everything fetched is saved; run the same command again to continue.")
@@ -139,8 +147,34 @@ def _crawl(args) -> int:
     return 3 if stopped and stopped != "budget" else (1 if failed else 0)
 
 
+def _crawl_karnataka(args) -> int:
+    if not args.contact:
+        print("a contact is required (--contact you@example.com or SAHIGHAR_CONTACT), so the site can reach you if needed")
+        return 2
+    if not _privacy_key_ok():
+        return 2
+    fetcher = PoliteFetcher(args.contact, args.delay, 5)
+    adapter = KarnatakaWebAdapter(fetcher)
+    stopped = None
+    with session_scope() as session:
+        try:
+            summary = run_ingest(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
+        except BlockedError as error:
+            stopped = f"blocked: {error}"
+        print(f"{fetcher.requests} requests")
+        if stopped:
+            print(f"BLOCKED: {stopped.removeprefix('blocked: ')}. Stopped for good. Do not retry for at least a day, and do not try to get around it.")
+        failed = session.scalars(select(SourceDocument).where(
+            SourceDocument.origin == adapter.origin, SourceDocument.parse_status == "failed")).all()
+        for doc in failed:
+            print(f"  FAILED {doc.url}: {doc.parse_error}")
+        print(f"{refresh(session)} promoter groups scored")
+    return 3 if stopped else (1 if failed else 0)
+
+
 def _reparse(args) -> int:
-    adapter = MahaReraWebAdapter(None) if args.origin == "maharera-web" else FileImportAdapter(Path("."))
+    adapter = {"maharera-web": lambda: MahaReraWebAdapter(None), "karnataka-web": lambda: KarnatakaWebAdapter(None),
+              "file-import": lambda: FileImportAdapter(Path("."))}[args.origin]()
     with session_scope() as session:
         summary = reparse_all(adapter, session, LocalRawStore(Path(args.raw_store)), max_failure_rate=1.0)
         print(f"{summary.total} documents re-parsed, {summary.failed} failed")

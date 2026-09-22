@@ -145,9 +145,9 @@ def test_crawl_passes_the_complaint_page_cap_and_reuses_stored_index_pages(monke
 from sahighar.db.models import Coverage
 
 
-def complaints_collected(engine):
+def complaints_collected(engine, state="MH"):
     with Session(engine) as session:
-        row = session.get(Coverage, "complaints")
+        row = session.get(Coverage, f"complaints:{state}")
         return bool(row and row.complete)
 
 
@@ -207,3 +207,49 @@ def test_applications_extracted_by_an_older_extractor_are_fetched_again(monkeypa
         session.commit()
     main([*CRAWL, "--max-requests", "100", "--raw-store", str(tmp_path / "raw")])
     assert "12 requests" in capsys.readouterr().out  # the 10 applications fetched again + the two notice lists, and nothing else
+
+
+def test_crawl_karnataka_needs_a_contact_and_reports_a_block(monkeypatch, tmp_path, capsys):
+    from sahighar.adapters.polite import BlockedError, Fetched
+
+    engine = setup_db(monkeypatch, tmp_path)
+    monkeypatch.delenv("SAHIGHAR_CONTACT", raising=False)
+    assert main(["crawl-karnataka"]) == 2
+    assert "contact" in capsys.readouterr().out
+
+    class BlockedFetcher:
+        def __init__(self, contact, delay, max_requests):
+            self.requests = 0
+
+        def get(self, url):
+            self.requests += 1
+            raise BlockedError("HTTP 403")
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", BlockedFetcher)
+    code = main(["crawl-karnataka", "--contact", "me@example.test", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 3 and "BLOCKED" in out and "Do not retry" in out
+
+
+def test_crawl_karnataka_loads_both_pages_and_scores(monkeypatch, tmp_path, capsys):
+    from sahighar.adapters.polite import Fetched
+    from tests.test_karnataka_web import COMPLETED, RENEWALS
+
+    engine = setup_db(monkeypatch, tmp_path)
+
+    class FakeFetcher:
+        def __init__(self, contact, delay, max_requests):
+            self.requests = 0
+            self.contact = contact
+
+        def get(self, url):
+            self.requests += 1
+            data = RENEWALS if "Renewal" in url else COMPLETED
+            return Fetched(url, data.encode(), "text/html")
+
+    monkeypatch.setattr("sahighar.cli.PoliteFetcher", FakeFetcher)
+    code = main(["crawl-karnataka", "--contact", "me@example.test", "--raw-store", str(tmp_path / "raw")])
+    out = capsys.readouterr().out
+    assert code == 0 and "2 requests" in out and "promoter groups scored" in out
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(Project).where(Project.state == "KA")) > 0
