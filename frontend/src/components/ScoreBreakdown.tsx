@@ -2,7 +2,7 @@ import type { Score } from '../api'
 
 function Section({ title, score, children }: { title: string; score: number | null; children: React.ReactNode }) {
   return (
-    <div className="border border-(--color-border) bg-(--color-surface) p-4">
+    <div className="rise-in rounded-lg border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5">
       <h3 className="text-sm font-medium text-(--color-ink-muted)">{title}</h3>
       <p className="ledger-figure mt-1 text-3xl font-medium">
         {score === null ? <span className="text-(--color-ink-faint)">—</span> : <>{score}<span className="text-lg text-(--color-ink-faint)">/100</span></>}
@@ -18,7 +18,7 @@ export function ScoreBreakdown({ score, state }: { score: Score; state: string }
   const evaluated = schedule.extended + schedule.covid_only + schedule.not_extended
   return (
     <section aria-label="Score breakdown">
-      <div className="grid gap-px overflow-hidden border border-(--color-border) bg-(--color-border) sm:grid-cols-2 lg:grid-cols-4 [&>div]:border-0">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Section title="Registration schedule" score={schedule.score}>
           {schedule.available
             ? `${schedule.extended} of ${evaluated} projects had their registration extended` +
@@ -49,7 +49,7 @@ export function ScoreBreakdown({ score, state }: { score: Score; state: string }
           Not yet available. Quarterly progress reports are not included in this version.
         </Section>
       </div>
-      <p className="mt-px border border-t-0 border-(--color-border) bg-(--color-surface) px-4 py-3 text-sm text-(--color-ink-muted)">
+      <p className="mt-4 rounded-lg border border-(--color-border) bg-(--color-surface) px-4 py-3 text-sm text-(--color-ink-muted)">
         {score.overall === null ? (
           score.notices.count > 0 ? (
             <>Overall: not shown, because the regulator lists {score.notices.count} notice{score.notices.count > 1 ? 's' : ''} about this builder's projects (below). An average cannot speak for those.</>

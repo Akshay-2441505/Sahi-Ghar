@@ -8,7 +8,7 @@ import { formatDate, formatMonthYear, noticeText, outcomeText, stateName } from 
 
 function Table({ head, children }: { head: string[]; children: React.ReactNode }) {
   return (
-    <div className="mt-3 overflow-x-auto border border-(--color-border)">
+    <div className="mt-3 overflow-x-auto rounded-lg border border-(--color-border)">
       <table className="w-full min-w-[42rem] text-left text-sm">
         <thead>
           <tr className="border-b border-(--color-border-strong) text-(--color-ink-muted)">
@@ -26,7 +26,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
   const hasNotices = data.status_notices.length > 0
   return (
     <article className="space-y-10">
-      <header className="border-b border-(--color-border) pb-6">
+      <header className="rise-in border-b border-(--color-border) pb-6">
         <p className="text-sm font-medium text-(--color-accent)">{stateName(project.state)}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{project.name}</h1>
         <p className="mt-2 text-sm text-(--color-ink-muted)">
@@ -94,7 +94,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
 
       <section
         aria-label={project.state === 'MH' ? 'MahaRERA notices' : 'Regulator notices'}
-        className={hasNotices ? 'border border-(--color-alert) bg-(--color-alert-soft) p-4' : undefined}
+        className={hasNotices ? 'rounded-lg border border-(--color-alert) bg-(--color-alert-soft) p-4' : undefined}
       >
         <h2 className="flex items-center gap-2 text-lg font-semibold">
           {hasNotices && <WarningCircle size={20} weight="fill" className="text-(--color-alert)" />}
@@ -152,7 +152,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
       </section>
 
       {data.possibly_related.length > 0 && (
-        <section aria-label="Possibly related entities" className="border border-dashed border-(--color-border-strong) p-4">
+        <section aria-label="Possibly related entities" className="rounded-lg border border-dashed border-(--color-border-strong) p-4">
           <h2 className="text-lg font-semibold">Possibly related entities</h2>
           <p className="mt-1 max-w-3xl text-sm text-(--color-ink-muted)">
             Records of possibly related entities (not counted in this score). They are matched on details such as a shared

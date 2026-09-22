@@ -1,45 +1,44 @@
 @import 'tailwindcss';
 
-/* IBM Plex Sans: UI text, headings, body -- a workhorse civic/institutional face, not a startup default. */
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
-@import '@fontsource/ibm-plex-sans/700.css';
-/* IBM Plex Mono: every number, date, RERA registration number, certificate number -- data, not a costume. */
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
+/* Archivo: UI text, headings, body. Roboto Mono: every number, date, RERA registration number. */
+@import '@fontsource/archivo/500.css';
+@import '@fontsource/archivo/600.css';
+@import '@fontsource/archivo/700.css';
+@import '@fontsource/archivo/800.css';
+@import '@fontsource/roboto-mono/400.css';
+@import '@fontsource/roboto-mono/500.css';
 
 /*
-  Design system: "verification ledger" -- the visual grammar of the documents this product is built from
-  (RERA certificates, official seals) and the documents its audience already trusts for a major financial
-  decision (a credit bureau score report, a court cause-list, a digital-India verification screen). One
-  accent (institutional navy), sharp-cornered ledger tables, a seal mark on every sourced figure.
+  Design system: "Forest and Bone" -- committed with the owner after comparing several directions.
+  Real photography (a city skyline), one accent (a deep forest green used the same way everywhere:
+  buttons, links, the coverage band's figures), sharp-but-soft cards (8px), Archivo for text,
+  Roboto Mono for every figure. Alert red is reserved for real regulator notices, never decoration.
 */
 @theme {
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Ground and ink -- cool off-white paper, not the warm cream/beige "premium" default. */
-  --color-paper: #f6f7f9;
+  --color-paper: #f1eee6;
   --color-surface: #ffffff;
-  --color-ink: #14181f;
-  --color-ink-muted: #565f6d;
-  --color-ink-faint: #8891a0;
-  --color-border: #dde1e8;
-  --color-border-strong: #c3c9d3;
+  --color-ink: #201f1a;
+  --color-ink-muted: #6e6b5f;
+  --color-ink-faint: #a8a493;
+  --color-border: #ddd8c9;
+  --color-border-strong: #c7c2ae;
 
-  /* One accent: institutional navy, the register of an official seal, used identically everywhere. */
-  --color-accent: #1c2f6e;
-  --color-accent-hover: #142253;
-  --color-accent-soft: #ebeef8;
+  --color-accent: #1f5c3f;
+  --color-accent-hover: #163f2c;
+  --color-accent-soft: #e4ece6;
 
-  /* Status meaning only -- never decoration. Muted, not signal-bright. */
-  --color-good: #1c6e4a;
-  --color-good-soft: #e9f3ee;
+  --color-good: #1f5c3f;
+  --color-good-soft: #e4ece6;
   --color-alert: #9c3b2e;
-  --color-alert-soft: #f8ece9;
+  --color-alert-soft: #f3e4e0;
 
-  --radius-ledger: 2px;
+  --color-band: #201f1a;
+  --color-band-ink: #f4f2e9;
+  --color-band-muted: #948f7e;
+  --color-band-border: #3a3830;
 }
 
 :root {
@@ -53,26 +52,30 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-paper: #0f1218;
-    --color-surface: #161a22;
-    --color-ink: #eef0f4;
-    --color-ink-muted: #a3abb8;
-    --color-ink-faint: #6b7381;
-    --color-border: #2a2f3a;
-    --color-border-strong: #3b4150;
+    --color-paper: #1a1815;
+    --color-surface: #221f1a;
+    --color-ink: #f1eee6;
+    --color-ink-muted: #b2ae9e;
+    --color-ink-faint: #746f5f;
+    --color-border: #3a362c;
+    --color-border-strong: #4a4536;
 
-    --color-accent: #6b83d6;
-    --color-accent-hover: #8fa3e6;
-    --color-accent-soft: #1c2338;
+    --color-accent: #4a9970;
+    --color-accent-hover: #6bb389;
+    --color-accent-soft: #1e2b23;
 
-    --color-good: #4caf82;
-    --color-good-soft: #16241d;
+    --color-good: #4a9970;
+    --color-good-soft: #1e2b23;
     --color-alert: #d97a6c;
-    --color-alert-soft: #2a1c1a;
+    --color-alert-soft: #2e1e1a;
+
+    --color-band: #0f0e0c;
+    --color-band-ink: #f1eee6;
+    --color-band-muted: #8a8574;
+    --color-band-border: #2a2822;
   }
 }
 
-/* Browser surfaces carry the design too. */
 ::selection {
   background-color: var(--color-accent-soft);
   color: var(--color-ink);
@@ -83,9 +86,20 @@ body {
   outline-offset: 2px;
 }
 
-/* Tabular figures for every number: dates, scores, counts, registration and certificate numbers. */
 .ledger-figure {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+}
+
+/* One authored moment on load: the hero and the score cards settle in, nothing else animates on a loop. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise-in { animation: none; }
 }
