@@ -133,7 +133,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
                   )}
                 </td>
                 <td>
-                  {c.order_url ? (
+                  {c.order_url?.startsWith('http') ? (
                     <a className="text-(--color-accent) hover:underline" href={c.order_url} target="_blank" rel="noopener noreferrer">
                       Original order
                     </a>
@@ -250,7 +250,13 @@ export default function TrustPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    getProject(id).then(setData).catch((e: Error) => setError(e.message))
+    let stale = false
+    setData(null)
+    setError(null)
+    getProject(id)
+      .then((d) => { if (!stale) setData(d) })
+      .catch((e: Error) => { if (!stale) setError(e.message) })
+    return () => { stale = true }
   }, [id])
 
   if (error) return <p>{error}. <Link className="text-(--color-accent) underline" to="/">Back to search</Link></p>

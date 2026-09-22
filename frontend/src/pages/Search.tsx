@@ -85,6 +85,7 @@ export default function Search() {
   const regionRef = useRef<HTMLDivElement>(null)
   const searchPanelRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const latestSearch = useRef(0)
 
   useEffect(() => {
     if (!error) return
@@ -99,6 +100,7 @@ export default function Search() {
   }, [selected])
 
   function pickState(s: CoverageState) {
+    latestSearch.current++  // invalidate any search still in flight for the previous state
     setQ('')
     setResults(null)
     setError(null)
@@ -106,6 +108,7 @@ export default function Search() {
   }
 
   function changeState() {
+    latestSearch.current++
     setSelected(null)
     setQ('')
     setResults(null)
@@ -113,12 +116,16 @@ export default function Search() {
   }
 
   async function runSearch(query: string) {
+    const requestId = ++latestSearch.current
     setError(null)
     try {
-      setResults(await searchProjects(query))
+      const found = await searchProjects(query)
+      if (requestId === latestSearch.current) setResults(found)
     } catch (e) {
-      setResults(null)
-      setError((e as Error).message)
+      if (requestId === latestSearch.current) {
+        setResults(null)
+        setError((e as Error).message)
+      }
     }
   }
 
