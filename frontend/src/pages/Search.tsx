@@ -4,7 +4,12 @@ import { MagnifyingGlass, CheckCircle, WarningCircle, X } from '@phosphor-icons/
 import { getCoverage, searchProjects, type CoverageState, type SearchResult } from '../api'
 import { stateName } from '../format'
 
-function CoverageBand() {
+const STATE_THUMBNAILS: Record<string, string> = {
+  MH: 'https://images.unsplash.com/photo-1553064483-f10fe837615f?w=200&q=70&auto=format&fit=crop',
+  KA: 'https://images.unsplash.com/photo-1697130383976-38f28c444292?w=200&q=70&auto=format&fit=crop',
+}
+
+function RegionChoice({ onPick }: { onPick: (state: string) => void }) {
   const [states, setStates] = useState<CoverageState[] | null>(null)
 
   useEffect(() => {
@@ -12,46 +17,52 @@ function CoverageBand() {
   }, [])
 
   return (
-    <section aria-label="Coverage" className="-mx-4 bg-(--color-band) px-4 py-16 sm:-mx-[calc((100vw-100%)/2)] sm:px-[calc((100vw-100%)/2)]">
-      <div className="mx-auto flex max-w-5xl flex-col gap-10 sm:flex-row sm:items-start">
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-(--color-band-ink)">Where this has data right now</h2>
-          <p className="mt-3 max-w-md text-(--color-band-muted)">
-            Built one state at a time, straight from each regulator's own public filings. Nothing here is
-            guessed to fill a gap on the map.
-          </p>
-        </div>
-        <div className="flex-1">
-          {states === null ? (
-            <div className="divide-y divide-(--color-band-border) animate-pulse">
-              {[0, 1].map((i) => (
-                <div key={i} className="flex items-baseline justify-between gap-4 py-4">
+    <section aria-label="Coverage" className="max-w-2xl">
+      <p className="text-sm text-(--color-ink-muted)">Pick a state to see projects registered there.</p>
+      <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        {states === null
+          ? [0, 1].map((i) => (
+              <div key={i} className="animate-pulse rounded-lg border border-(--color-border) bg-(--color-surface) p-6">
+                <div className="flex items-center gap-3.5">
+                  <div className="h-16 w-16 shrink-0 rounded-lg bg-(--color-border)" />
                   <div className="space-y-2">
-                    <div className="h-4 w-24 rounded bg-(--color-band-border)" />
-                    <div className="h-3 w-20 rounded bg-(--color-band-border)" />
+                    <div className="h-5 w-24 rounded bg-(--color-border)" />
+                    <div className="h-3 w-16 rounded bg-(--color-border)" />
                   </div>
-                  <div className="h-7 w-14 rounded bg-(--color-band-border)" />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="divide-y divide-(--color-band-border)">
-              {states.map((s) => (
-                <div key={s.state} className="flex items-baseline justify-between gap-4 py-4">
+                <div className="mt-5 h-7 w-20 rounded bg-(--color-border)" />
+              </div>
+            ))
+          : states.map((s) => (
+              <button
+                key={s.state}
+                type="button"
+                onClick={() => onPick(s.state)}
+                className="rise-in group rounded-lg border border-(--color-border) bg-(--color-surface) p-6 text-left transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-[3px] hover:border-(--color-border-strong) hover:shadow-lg hover:shadow-black/5"
+              >
+                <div className="flex items-center gap-3.5">
+                  {STATE_THUMBNAILS[s.state] && (
+                    <img src={STATE_THUMBNAILS[s.state]} alt="" className="h-16 w-16 shrink-0 rounded-lg object-cover" style={{ objectPosition: '50% 40%' }} />
+                  )}
                   <div>
-                    <p className="font-semibold text-(--color-band-ink)">{s.name}</p>
-                    <p className="text-sm text-(--color-band-muted)">{s.area}</p>
+                    <p className="text-lg font-bold text-(--color-ink)">{s.name}</p>
+                    <p className="text-sm text-(--color-ink-faint)">{s.area}</p>
                   </div>
-                  <p className="ledger-figure text-2xl text-(--color-accent)">{s.projects.toLocaleString('en-IN')}</p>
                 </div>
-              ))}
-            </div>
-          )}
-          <p className="mt-4 text-sm text-(--color-band-muted)">
-            Telangana is not yet covered; its records are not accessible without solving a CAPTCHA, which this project will not do.
-          </p>
-        </div>
+                <p className="mt-5 flex items-baseline gap-1.5">
+                  <span className="ledger-figure text-2xl font-medium text-(--color-accent)">{s.projects.toLocaleString('en-IN')}</span>
+                  <span className="text-sm text-(--color-ink-muted)">registered projects</span>
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-accent) group-hover:underline">
+                  Search {s.name} projects
+                  <MagnifyingGlass size={13} weight="bold" />
+                </span>
+              </button>
+            ))}
       </div>
+      <p className="mt-4 text-sm text-(--color-ink-faint)">
+        More states will be added over time, as each one's filings become reachable without solving a CAPTCHA.
+      </p>
     </section>
   )
 }
@@ -60,13 +71,21 @@ export default function Search() {
   const [q, setQ] = useState('')
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [selectedState, setSelectedState] = useState<string | null>(null)
   const resultsRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!error) return
     const timer = setTimeout(() => setError(null), 6000)
     return () => clearTimeout(timer)
   }, [error])
+
+  function pickState(state: string) {
+    setSelectedState(state)
+    inputRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
+    inputRef.current?.focus()
+  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -79,6 +98,8 @@ export default function Search() {
       setError((e as Error).message)
     }
   }
+
+  const visibleResults = results && selectedState ? results.filter((r) => r.state === selectedState) : results
 
   return (
     <div className="-mt-8 space-y-16 sm:-mt-10">
@@ -103,6 +124,7 @@ export default function Search() {
               <label className="sr-only" htmlFor="q">Builder, project name or RERA number</label>
               <input
                 id="q"
+                ref={inputRef}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 minLength={2}
@@ -115,6 +137,16 @@ export default function Search() {
                 Search
               </button>
             </form>
+            {selectedState && (
+              <button
+                type="button"
+                onClick={() => setSelectedState(null)}
+                className="mt-3 inline-flex items-center gap-1.5 rounded bg-white/10 px-2.5 py-1 text-xs font-medium text-(--color-band-ink) hover:bg-white/20"
+              >
+                Showing {stateName(selectedState)} only
+                <X size={12} weight="bold" />
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -128,13 +160,13 @@ export default function Search() {
         </p>
       </section>
 
-      <CoverageBand />
+      <RegionChoice onPick={pickState} />
 
       <div ref={resultsRef}>
-        {results && results.length === 0 && <p className="text-(--color-ink-muted)">No registered projects match "{q}".</p>}
-        {results && results.length > 0 && (
+        {visibleResults && visibleResults.length === 0 && <p className="text-(--color-ink-muted)">No registered projects match "{q}"{selectedState ? ` in ${stateName(selectedState)}` : ''}.</p>}
+        {visibleResults && visibleResults.length > 0 && (
           <ul className="divide-y divide-(--color-border) border-t border-(--color-border)">
-            {results.map((r) => (
+            {visibleResults.map((r) => (
               <li key={r.id} className="py-4">
                 <Link className="font-semibold text-(--color-accent) hover:underline" to={`/projects/${r.id}`}>{r.name}</Link>{' '}
                 <span className="rounded bg-(--color-accent-soft) px-1.5 py-0.5 text-xs font-medium text-(--color-accent)">{stateName(r.state)}</span>
