@@ -57,7 +57,7 @@ describe('TrustPageView', () => {
     expect(within(breakdown).getByText(/1 of 2 projects had their registration extended \(median 12 months\); 1 passed the original end date/)).toBeInTheDocument()
     expect(within(breakdown).getByText(/1 hearing pending, 1 order issued; 1 with a request to enforce/)).toBeInTheDocument()
     expect(within(breakdown).getByText(/Progress vs promise/)).toBeInTheDocument()
-    expect(within(breakdown).getByText(/Overall: 25\/100, the average of the sections above/)).toBeInTheDocument()
+    expect(within(breakdown).getByText((_, node) => node?.textContent === 'Overall: 25/100, the average of the sections above that have data.')).toBeInTheDocument()
   })
 
   it('stamps the data date and states it is not a verdict', () => {

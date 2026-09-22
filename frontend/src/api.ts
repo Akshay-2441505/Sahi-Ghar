@@ -1,5 +1,7 @@
 export type Source = { url: string; origin: string; fetched_at: string }
 
+export type CoverageState = { state: string; name: string; area: string; projects: number }
+
 export type Score = {
   overall: number | null
   schedule: {
@@ -130,3 +132,5 @@ export const searchProjects = (q: string) =>
   get<{ projects: SearchResult[] }>(`/search?q=${encodeURIComponent(q)}`).then((r) => r.projects)
 
 export const getProject = (id: string) => get<ProjectPayload>(`/projects/${encodeURIComponent(id)}`)
+
+export const getCoverage = () => get<{ states: CoverageState[] }>('/coverage').then((r) => r.states)
