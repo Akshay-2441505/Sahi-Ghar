@@ -67,7 +67,7 @@ ordinary browsing of the same site worked normally throughout.
 
 ## Continuing the central Pune crawl (next run)
 
-State after run 1 (2026-09-21): 2,002 projects from 778 builders; about 1,220 certificates stored; **no applications yet**; complaint index complete. Run 2 finishes central Pune (about 2,200 requests, 2 to 2.5 hours, laptop on and plugged in):
+State after runs 1-2 (2026-09-22, run 2 stopped by the block above): 2,002 projects from 778 builders; 1,247 registration + 355 extension certificates stored; 25 applications, 23 complaint pages; complaint index complete. Roughly 2,100 requests remain (certificates for the rest of the projects, applications and complaint pages for the rest of the builders). Run 3 continues central Pune (2 to 2.5 hours, laptop on and plugged in) -- not before 2026-09-23, and start with a small `--max-requests` first:
 
     cd backend
     set -a && . ./.env && set +a
