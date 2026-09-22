@@ -81,13 +81,14 @@ export default function Search() {
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition: '50% 55%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/75" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/50 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
         <div className="relative mx-auto max-w-5xl px-4 pt-24 pb-14 sm:px-[calc((100vw-100%)/2+16px)]">
           <div className="rise-in max-w-xl text-(--color-band-ink)">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <h1 className="hero-text-shadow text-3xl font-extrabold tracking-tight sm:text-4xl">
               Check a builder's real RERA record before you sign anything.
             </h1>
-            <p className="mt-3 text-(--color-band-muted)">
+            <p className="hero-text-shadow mt-3 text-(--color-band-muted)">
               Every figure here comes from an official government filing and links straight to it. No builder pays to be featured.
             </p>
             <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-2 sm:flex-row">
