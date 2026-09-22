@@ -8,6 +8,21 @@ from sahighar.db.session import get_session
 
 app = FastAPI(title="Sahi Ghar")
 
+# Where each state's crawl currently reaches -- a fixed operational fact (which pincodes/pages we've chosen to
+# read so far), not something derivable from the data itself. A state with no rows here is simply not listed.
+STATE_NAMES = {"MH": "Maharashtra", "KA": "Karnataka", "TG": "Telangana"}
+STATE_AREAS = {"MH": "Central Pune", "KA": "Statewide"}
+
+
+@app.get("/coverage")
+def coverage(session: Session = Depends(get_session)):
+    """Real, live counts per state -- never claims a state is covered before it actually has data."""
+    counts = dict(session.execute(select(Project.state, func.count()).group_by(Project.state)).all())
+    return {"states": [
+        {"state": state, "name": STATE_NAMES.get(state, state), "area": STATE_AREAS[state], "projects": n}
+        for state, n in sorted(counts.items()) if state in STATE_AREAS
+    ]}
+
 
 @app.get("/search")
 def search(q: str = Query(min_length=2), session: Session = Depends(get_session)):

@@ -120,6 +120,20 @@ def test_notice_lists_as_of_never_leaks_to_a_different_state(client, session, tm
     assert body["status_notices"] == []
 
 
+def test_coverage_reports_real_counts_only_for_states_with_data(client, session, tmp_path):
+    class KaFakeAdapter(FakeAdapter):
+        state = "KA"
+
+    run_ingest(KaFakeAdapter({"ka1": {"promoters": [{"ref": "K1", "name": "Karnataka Co"}],
+                                      "projects": [{"reg_no": "KA-1", "promoter_ref": "K1", "name": "KA One"}]}}),
+               session, LocalRawStore(tmp_path))
+    body = client.get("/coverage").json()
+    by_state = {s["state"]: s for s in body["states"]}
+    assert by_state["MH"]["projects"] == 4 and by_state["MH"]["area"] == "Central Pune"  # DOC_1 + DOC_2
+    assert by_state["KA"]["projects"] == 1 and by_state["KA"]["area"] == "Statewide"
+    assert "TG" not in by_state  # no data yet: never listed as if it were live
+
+
 def test_search_matches_project_promoter_and_reg_no(client):
     def names(q):
         return {p["name"] for p in client.get("/search", params={"q": q}).json()["projects"]}
