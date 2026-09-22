@@ -78,27 +78,35 @@ class KarnatakaWebAdapter:
         if doc.kind == "ka_renewals":
             page = parse_renewals_page(text)
             promoters: dict[str, str] = {}
-            projects = []
+            projects: dict[str, ProjectRec] = {}  # keyed by reg_no: approved > rejected > expired (see below)
+            # The "expired" table's single completion_date is often just the CURRENT (already-extended) deadline
+            # for a project also listed in "approved extensions" -- letting it win would silently hide a real
+            # extension, exactly what this score exists to surface. Only the approved table gives a genuine
+            # original/extended pair, so a reg_no already placed by a more authoritative table is never replaced.
             for r in page.approved:
                 promoters[promoter_ref(r.promoter_name)] = r.promoter_name
-                projects.append(ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name, city=r.district,
-                                           registration_end=r.old_completion, extended_end=r.new_completion))
+                projects.setdefault(r.reg_no, ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name,
+                                                         city=r.district, registration_end=r.old_completion, extended_end=r.new_completion))
             for r in page.rejected:
                 promoters[promoter_ref(r.promoter_name)] = r.promoter_name
-                projects.append(ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name, city=r.district,
-                                           registration_end=r.proposed_completion))
+                projects.setdefault(r.reg_no, ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name,
+                                                         city=r.district, registration_end=r.proposed_completion))
             for r in page.expired:
                 promoters[promoter_ref(r.promoter_name)] = r.promoter_name
-                projects.append(ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name, city=r.district,
-                                           registration_end=r.completion_date, extended_end=r.further_extension_date))
-            return ParsedRecords(promoters=[PromoterRec(ref, name) for ref, name in promoters.items()], projects=projects)
+                projects.setdefault(r.reg_no, ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name,
+                                                         city=r.district, registration_end=r.completion_date, extended_end=r.further_extension_date))
+            return ParsedRecords(promoters=[PromoterRec(ref, name) for ref, name in promoters.items()],
+                                 projects=list(projects.values()))
         if doc.kind == "ka_completed":
             rows = parse_completed_list(text)
             promoters = {promoter_ref(r.promoter_name): r.promoter_name for r in rows}
             return ParsedRecords(
                 promoters=[PromoterRec(ref, name) for ref, name in promoters.items()],
-                projects=[ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name, city=r.district,
-                                     registration_end=r.proposed_completion) for r in rows],
+                # No registration_end here: "proposed completion" may already be an already-extended date, not
+                # the original -- unlike the renewals tables, this list alone cannot tell the two apart, and
+                # guessing risks the same silently-hidden-extension mistake as above. It still introduces the
+                # project (a name/city, in case this is its only source) even though the schedule stays unknown.
+                projects=[ProjectRec(r.reg_no, promoter_ref(r.promoter_name), r.project_name, city=r.district) for r in rows],
                 # "applied for completion" is the promoter's own request to close the project out, not a verified
                 # finish -- the same honesty level as MahaRERA's self-declared past projects, so it feeds the same field.
                 past_projects=[PastProjectRec(promoter_ref(r.promoter_name), r.project_name, r.proposed_completion,

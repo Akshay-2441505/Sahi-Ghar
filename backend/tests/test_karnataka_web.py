@@ -3,11 +3,13 @@ from pathlib import Path
 
 from sqlalchemy import select
 
+from sahighar.adapters.base import RawDoc
 from sahighar.adapters.karnataka_web import KarnatakaWebAdapter
 from sahighar.adapters.polite import Fetched
 from sahighar.db.models import Complaint, PastProject, Project, Promoter
 from sahighar.ingest.runner import run_ingest
 from sahighar.rawstore import LocalRawStore
+from sahighar.util import utcnow
 
 FIXTURES = Path(__file__).parent / "fixtures" / "karnataka"
 RENEWALS = (
@@ -42,6 +44,32 @@ def test_discover_fetches_the_two_bulk_pages_once_each():
     assert all(d.origin == "karnataka-web" for d in docs)
 
 
+def test_a_project_in_both_the_approved_and_expired_tables_keeps_the_approved_pair():
+    """The two tables can list the same project (an approved extension also shows up as "not yet applied for
+    completion"). The expired table's single completion_date is often just the CURRENT (already-extended)
+    deadline, not the original -- letting it win would silently hide the extension. Approved wins."""
+    expired_overlap = (
+        '<table><tr><th>S.No</th><th>REGISTRATION NO</th><th>PROMOTER</th><th>PROJECT</th><th>DISTRICT</th>'
+        '<th>COMPLETION DATE</th><th>FURTHER EXTENSION DATE</th><th>Applied for Extension / Completion ?</th></tr>'
+        '<tr><td>1</td><td>PRM/KA/RERA/1251/446/PR/181122/005482</td><td>CASA GRANDE GARDEN CITY BUILDERS PVT LTD</td>'
+        '<td>Casagrand Meridian</td><td>Bengaluru Urban</td><td>02/11/2026</td><td></td>'  # the approved table's NEW date, wrongly offered here as "the" completion date
+        '<td>Extension Approved and Not Applied for Completion</td></tr></table>'
+    )
+    page = (FIXTURES / "renewals_approved.html").read_text(encoding="utf-8") + expired_overlap
+    records = KarnatakaWebAdapter(FakeFetcher()).parse(RawDoc("karnataka-web", "ka_renewals", "u", utcnow(), "text/html", page.encode()))
+    matches = [p for p in records.projects if p.reg_no == "PRM/KA/RERA/1251/446/PR/181122/005482"]
+    assert len(matches) == 1
+    assert (matches[0].registration_end, matches[0].extended_end) == (date(2025, 11, 2), date(2026, 11, 2))
+
+
+def test_the_completed_list_never_sets_a_registration_end_only_the_declared_dates():
+    """Its one "proposed completion" date may already be an extended date, not the original -- unlike the
+    renewals tables, it cannot be trusted as registration_end (see the test above for why that matters)."""
+    records = KarnatakaWebAdapter(FakeFetcher()).parse(RawDoc("karnataka-web", "ka_completed", "u", utcnow(), "text/html", COMPLETED.encode()))
+    assert records.projects and all(p.registration_end is None and p.extended_end is None for p in records.projects)
+    assert records.past_projects  # the declared proposed-vs-applied-for-completion signal is unaffected
+
+
 def test_full_import_builds_projects_with_schedule_and_declared_dates(session, tmp_path):
     summary = run_ingest(KarnatakaWebAdapter(FakeFetcher()), session, LocalRawStore(tmp_path))
     assert summary.failed == 0
@@ -57,7 +85,7 @@ def test_full_import_builds_projects_with_schedule_and_declared_dates(session, t
 
     completed = session.scalar(select(Project).where(Project.rera_reg_no == "PRM/KA/RERA/1251/446/PR/281223/006513"))
     assert completed.name == "SLN NIDHI PALMS" and completed.city == "Bengaluru Urban"
-    assert completed.registration_end_date == date(2030, 12, 31)
+    assert completed.registration_end_date is None  # this list alone can't tell an original date from an already-extended one
 
     past = session.scalar(select(PastProject).where(PastProject.name == "SLN NIDHI PALMS"))
     assert (past.original_proposed_date, past.actual_completion_date, past.project_type) == (
