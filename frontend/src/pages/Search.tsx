@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { MagnifyingGlass, CheckCircle } from '@phosphor-icons/react'
+import { MagnifyingGlass, CheckCircle, WarningCircle, X } from '@phosphor-icons/react'
 import { getCoverage, searchProjects, type CoverageState, type SearchResult } from '../api'
 import { stateName } from '../format'
 
@@ -60,12 +60,20 @@ export default function Search() {
   const [q, setQ] = useState('')
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const resultsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!error) return
+    const timer = setTimeout(() => setError(null), 6000)
+    return () => clearTimeout(timer)
+  }, [error])
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     setError(null)
     try {
       setResults(await searchProjects(q.trim()))
+      resultsRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
     } catch (e) {
       setResults(null)
       setError((e as Error).message)
@@ -122,22 +130,36 @@ export default function Search() {
 
       <CoverageBand />
 
-      {error && <p role="alert" className="text-(--color-alert)">{error}</p>}
-      {results && results.length === 0 && <p className="text-(--color-ink-muted)">No registered projects match "{q}".</p>}
-      {results && results.length > 0 && (
-        <ul className="divide-y divide-(--color-border) border-t border-(--color-border)">
-          {results.map((r) => (
-            <li key={r.id} className="py-4">
-              <Link className="font-semibold text-(--color-accent) hover:underline" to={`/projects/${r.id}`}>{r.name}</Link>{' '}
-              <span className="rounded bg-(--color-accent-soft) px-1.5 py-0.5 text-xs font-medium text-(--color-accent)">{stateName(r.state)}</span>
-              <p className="mt-0.5 flex items-center gap-1.5 text-sm text-(--color-ink-muted)">
-                <CheckCircle size={13} weight="bold" className="text-(--color-ink-faint)" />
-                <span className="ledger-figure">{r.rera_reg_no}</span> · {r.promoter_name}
-                {r.city ? ` · ${r.city}` : ''}
-              </p>
-            </li>
-          ))}
-        </ul>
+      <div ref={resultsRef}>
+        {results && results.length === 0 && <p className="text-(--color-ink-muted)">No registered projects match "{q}".</p>}
+        {results && results.length > 0 && (
+          <ul className="divide-y divide-(--color-border) border-t border-(--color-border)">
+            {results.map((r) => (
+              <li key={r.id} className="py-4">
+                <Link className="font-semibold text-(--color-accent) hover:underline" to={`/projects/${r.id}`}>{r.name}</Link>{' '}
+                <span className="rounded bg-(--color-accent-soft) px-1.5 py-0.5 text-xs font-medium text-(--color-accent)">{stateName(r.state)}</span>
+                <p className="mt-0.5 flex items-center gap-1.5 text-sm text-(--color-ink-muted)">
+                  <CheckCircle size={13} weight="bold" className="text-(--color-ink-faint)" />
+                  <span className="ledger-figure">{r.rera_reg_no}</span> · {r.promoter_name}
+                  {r.city ? ` · ${r.city}` : ''}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {error && (
+        <div
+          role="alert"
+          className="rise-in fixed inset-x-4 bottom-6 z-20 mx-auto flex max-w-md items-start gap-2 rounded-lg border border-(--color-alert) bg-(--color-alert-soft) p-4 text-sm text-(--color-alert) shadow-lg sm:inset-x-auto sm:right-6"
+        >
+          <WarningCircle size={18} weight="fill" className="mt-0.5 shrink-0" />
+          <p className="flex-1">{error}</p>
+          <button type="button" onClick={() => setError(null)} aria-label="Dismiss" className="shrink-0 text-(--color-alert) opacity-70 hover:opacity-100">
+            <X size={16} weight="bold" />
+          </button>
+        </div>
       )}
     </div>
   )
