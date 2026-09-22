@@ -69,9 +69,9 @@ export default function Search() {
           src="https://images.unsplash.com/photo-1620372177236-03c33d977675?w=1600&q=75&auto=format&fit=crop"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: '50% 30%' }}
+          style={{ objectPosition: '50% 60%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/75" />
         <div className="relative mx-auto max-w-5xl px-4 pt-24 pb-14 sm:px-[calc((100vw-100%)/2+16px)]">
           <div className="rise-in max-w-xl text-(--color-band-ink)">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
