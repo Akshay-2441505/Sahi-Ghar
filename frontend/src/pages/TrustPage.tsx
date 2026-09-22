@@ -43,9 +43,13 @@ function Table({ head, children }: { head: string[]; children: React.ReactNode }
   )
 }
 
+const ROWS_SHOWN = 10
+
 export function TrustPageView({ data }: { data: ProjectPayload }) {
   const { project, sources } = data
   const hasNotices = data.status_notices.length > 0
+  const [showAllComplaints, setShowAllComplaints] = useState(false)
+  const visibleComplaints = showAllComplaints ? data.complaints : data.complaints.slice(0, ROWS_SHOWN)
   return (
     <article className="space-y-10">
       <header className="rise-in border-b border-(--color-border) pb-6">
@@ -114,7 +118,7 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
           </p>
         ) : (
           <Table head={['Reference', 'Status as published', 'Filed', 'Enforcement requested', 'Order', 'Source']}>
-            {data.complaints.map((c) => (
+            {visibleComplaints.map((c) => (
               <tr key={c.complaint_ref} className="align-top">
                 <td className="ledger-figure">{c.complaint_ref}</td>
                 <td>{c.status}</td>
@@ -139,6 +143,15 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
               </tr>
             ))}
           </Table>
+        )}
+        {data.complaints.length > ROWS_SHOWN && (
+          <button
+            type="button"
+            onClick={() => setShowAllComplaints((v) => !v)}
+            className="mt-2 text-sm font-medium text-(--color-accent) hover:underline"
+          >
+            {showAllComplaints ? 'Show fewer' : `Show all ${data.complaints.length} complaints`}
+          </button>
         )}
       </section>
 
@@ -242,5 +255,5 @@ export default function TrustPage() {
 
   if (error) return <p>{error}. <Link className="text-(--color-accent) underline" to="/">Back to search</Link></p>
   if (!data) return <p className="text-(--color-ink-muted)">Loading…</p>
-  return <TrustPageView data={data} />
+  return <TrustPageView data={data} key={id} />
 }
