@@ -32,7 +32,7 @@ def project(project_id: int, session: Session = Depends(get_session)):
         raise HTTPException(404, "project not found")
     promoter = session.get(Promoter, p.promoter_id)
     return {
-        "project": {"id": p.id, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city, "locality": p.locality,
+        "project": {"id": p.id, "state": p.state, "name": p.name, "rera_reg_no": p.rera_reg_no, "city": p.city, "locality": p.locality,
                     "configurations": p.configurations, "carpet_area_range": p.carpet_area_range,
                     "registration_end_date": p.registration_end_date, "extended_end_date": p.extended_end_date,
                     "promoter_id": promoter.id, "promoter_name": promoter.name,

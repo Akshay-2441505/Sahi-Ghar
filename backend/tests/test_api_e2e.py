@@ -30,7 +30,7 @@ def test_trust_page_payload(client, session):
     r = client.get(f"/projects/{_project_id(session, 'MH-1')}")
     assert r.status_code == 200
     body = r.json()
-    assert body["project"]["name"] == "Shree Heights"
+    assert body["project"]["name"] == "Shree Heights" and body["project"]["state"] == "MH"
     assert {p["name"] for p in body["group_promoters"]} == {"Shree Realty LLP", "Shree Homes LLP"}
     assert body["score"]["schedule"]["score"] == 50
     assert body["score"]["complaints"]["score"] == 50

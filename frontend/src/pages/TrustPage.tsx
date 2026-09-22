@@ -88,8 +88,8 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
         )}
       </section>
 
-      <section aria-label="MahaRERA notices">
-        <h2 className="text-lg font-semibold text-stone-900">MahaRERA notices</h2>
+      <section aria-label={project.state === 'MH' ? 'MahaRERA notices' : 'Regulator notices'}>
+        <h2 className="text-lg font-semibold text-stone-900">{project.state === 'MH' ? 'MahaRERA notices' : 'Regulator notices'}</h2>
         {data.status_notices.length > 0 ? (
           <div className="mt-2 overflow-x-auto">
           <table className="w-full min-w-[40rem] text-left text-sm">
@@ -114,9 +114,11 @@ export function TrustPageView({ data }: { data: ProjectPayload }) {
           </div>
         ) : (
           <p className="text-sm text-stone-600">
-            {data.status_lists_as_of
-              ? `None of these projects appears on the two MahaRERA notice lists checked (projects kept in abeyance, and NCLT projects), as of ${formatDate(data.status_lists_as_of)}.`
-              : 'MahaRERA’s notice lists (projects kept in abeyance, NCLT projects) have not been collected for this data set, so nothing can be said here. This is not the same as having none.'}
+            {project.state !== 'MH'
+              ? 'Regulator notice lists (projects kept in abeyance, revoked or otherwise flagged) are not yet read for this state.'
+              : data.status_lists_as_of
+                ? `None of these projects appears on the two MahaRERA notice lists checked (projects kept in abeyance, and NCLT projects), as of ${formatDate(data.status_lists_as_of)}.`
+                : 'MahaRERA’s notice lists (projects kept in abeyance, NCLT projects) have not been collected for this data set, so nothing can be said here. This is not the same as having none.'}
           </p>
         )}
       </section>

@@ -4,7 +4,7 @@ import type { ProjectPayload } from '../api'
 import { TrustPageView } from './TrustPage'
 
 const data: ProjectPayload = {
-  project: { id: 1, name: 'Shree Heights', rera_reg_no: 'MH-1', city: 'Pune', locality: null,
+  project: { id: 1, state: 'MH', name: 'Shree Heights', rera_reg_no: 'MH-1', city: 'Pune', locality: null,
     registration_end_date: '2022-01-01', extended_end_date: null, promoter_name: 'Shree Realty LLP', source_document_id: 1 },
   data_as_of: '2026-09-01T00:00:00',
   score_computed_at: '2026-09-01T00:00:00',
@@ -194,6 +194,14 @@ describe('TrustPageView', () => {
     const block = screen.getByRole('region', { name: 'MahaRERA notices' })
     expect(within(block).getByText(/have not been collected/)).toBeInTheDocument()
     expect(within(block).queryByText(/None of these projects/)).not.toBeInTheDocument()
+  })
+
+  it('never mentions MahaRERA on a non-Maharashtra project', () => {
+    const karnataka = { ...data, project: { ...data.project, state: 'KA' }, status_lists_as_of: null, status_notices: [] }
+    render(<TrustPageView data={karnataka} />)
+    const block = screen.getByRole('region', { name: /notices/i })
+    expect(within(block).queryByText(/MahaRERA/)).not.toBeInTheDocument()
+    expect(within(block).getByText(/not yet read for this state/)).toBeInTheDocument()
   })
 
   it('says so when no past projects were declared', () => {
