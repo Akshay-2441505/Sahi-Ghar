@@ -51,6 +51,20 @@ Rough cost at 3 s per request: a pincode of about 100 projects with their builde
 
 Run 2 of the central Pune crawl was blocked (HTTP 403 on a certificate request) after 89 requests, following yesterday's roughly 2,600 requests. The crawler stopped for good, as designed; nothing was retried. Everything fetched before the block is saved (about 25 more certificates, 40 extensions, 2 applications, 17 complaint pages). **Do not run the MahaRERA crawl again before 2026-09-23**, and even then start with a small `--max-requests` to check the site answers normally before resuming the full run.
 
+## Manual cross-check against the live site (2026-09-22)
+
+Three spot-checks, by hand in a browser (not the crawler -- ordinary page loads, unaffected by the block):
+- **Gagan Uno** (P52100001400): registration number, project name, promoter, original completion date
+  (31/12/2019), extended completion date (31/12/2027), and the full five-step extension history (including the
+  four steps labelled "Covid Extension") all matched the stored `project` row and `extension_history` exactly.
+- **Windermere Phase 1** (P52100003865): registration number, project, promoter, and completion date
+  (31/12/2018) matched; the site's own "Extension Certificate: N/A" confirms our null `extended_end_date`.
+- **11 Mayur** (P52100009083, abeyance notice): confirmed on the live "Due to Lapse of Completion Date" list,
+  same promoter and project name as stored in `project_flag`.
+
+Also confirms the block on 2026-09-22 is specific to the crawler's request pattern, not a blanket IP ban:
+ordinary browsing of the same site worked normally throughout.
+
 ## Continuing the central Pune crawl (next run)
 
 State after run 1 (2026-09-21): 2,002 projects from 778 builders; about 1,220 certificates stored; **no applications yet**; complaint index complete. Run 2 finishes central Pune (about 2,200 requests, 2 to 2.5 hours, laptop on and plugged in):
