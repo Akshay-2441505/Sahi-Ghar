@@ -18,20 +18,20 @@ function RegionChoice({ onPick, selectedState }: { onPick: (s: CoverageState) =>
   }, [])
 
   return (
-    <section aria-label="Coverage" className="max-w-2xl">
+    <section aria-label="Coverage">
       <p className="text-sm text-(--color-ink-muted)">Choose a state to search the projects registered there.</p>
-      <div className="mt-3 grid gap-4 sm:grid-cols-2">
+      <div className="mt-4 grid gap-6 sm:grid-cols-2">
         {states === null
           ? [0, 1].map((i) => (
-              <div key={i} className="animate-pulse rounded-lg border border-(--color-border) bg-(--color-surface) p-6">
-                <div className="flex items-center gap-3.5">
-                  <div className="h-16 w-16 shrink-0 rounded-lg bg-(--color-border)" />
+              <div key={i} className="animate-pulse rounded-lg border border-(--color-border) bg-(--color-surface) p-8">
+                <div className="flex items-center gap-4">
+                  <div className="h-20 w-20 shrink-0 rounded-lg bg-(--color-border)" />
                   <div className="space-y-2">
-                    <div className="h-5 w-24 rounded bg-(--color-border)" />
+                    <div className="h-6 w-28 rounded bg-(--color-border)" />
                     <div className="h-3 w-16 rounded bg-(--color-border)" />
                   </div>
                 </div>
-                <div className="mt-5 h-7 w-20 rounded bg-(--color-border)" />
+                <div className="mt-6 h-8 w-24 rounded bg-(--color-border)" />
               </div>
             ))
           : states.map((s) => {
@@ -43,23 +43,23 @@ function RegionChoice({ onPick, selectedState }: { onPick: (s: CoverageState) =>
                   onClick={() => onPick(s)}
                   aria-pressed={active}
                   className={
-                    'rise-in group rounded-lg border-2 p-6 text-left transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5 ' +
+                    'rise-in group rounded-lg border-2 p-8 text-left transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-[3px] hover:shadow-lg hover:shadow-black/5 ' +
                     (active
                       ? 'border-(--color-accent) bg-(--color-accent-soft)'
                       : 'border-(--color-border) bg-(--color-surface) hover:border-(--color-border-strong)')
                   }
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-4">
                     {STATE_THUMBNAILS[s.state] && (
-                      <img src={STATE_THUMBNAILS[s.state]} alt="" className="h-16 w-16 shrink-0 rounded-lg object-cover" style={{ objectPosition: '50% 40%' }} />
+                      <img src={STATE_THUMBNAILS[s.state]} alt="" className="h-20 w-20 shrink-0 rounded-lg object-cover" style={{ objectPosition: '50% 40%' }} />
                     )}
                     <div>
-                      <p className="text-lg font-bold text-(--color-ink)">{s.name}</p>
+                      <p className="text-xl font-bold text-(--color-ink)">{s.name}</p>
                       <p className="text-sm text-(--color-ink-faint)">{s.area}</p>
                     </div>
                   </div>
-                  <p className="mt-5 flex items-baseline gap-1.5">
-                    <span className="ledger-figure text-2xl font-medium text-(--color-accent)">{s.projects.toLocaleString('en-IN')}</span>
+                  <p className="mt-6 flex items-baseline gap-1.5">
+                    <span className="ledger-figure text-3xl font-medium text-(--color-accent)">{s.projects.toLocaleString('en-IN')}</span>
                     <span className="text-sm text-(--color-ink-muted)">registered projects</span>
                   </p>
                   <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-(--color-accent) group-hover:underline">
@@ -157,7 +157,7 @@ export default function Search() {
         </div>
       </section>
 
-      <section className="max-w-2xl">
+      <section className="max-w-3xl">
         <h2 className="text-2xl font-bold">A score with nowhere to hide</h2>
         <p className="mt-3 text-(--color-ink-muted)">
           Most builder ratings are a single number with no way to check it. This one is a checklist you can read
@@ -171,7 +171,7 @@ export default function Search() {
       </div>
 
       {selected && (
-        <div ref={searchPanelRef} className="scroll-mt-6 max-w-2xl">
+        <div ref={searchPanelRef} className="scroll-mt-6">
           <div className="flex items-center justify-between gap-4 border-b border-(--color-border) pb-3">
             <p className="text-sm text-(--color-ink-muted)">
               Searching <span className="font-semibold text-(--color-ink)">{selected.name}</span> · {selected.area}
