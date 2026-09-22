@@ -14,6 +14,13 @@ STATE_NAMES = {"MH": "Maharashtra", "KA": "Karnataka", "TG": "Telangana"}
 STATE_AREAS = {"MH": "Central Pune", "KA": "Statewide"}
 
 
+@app.get("/health")
+def health():
+    """Liveness check for the host (Render etc.) -- deliberately no DB hit, so the host can tell "process is up"
+    apart from "database is reachable" instead of conflating the two."""
+    return {"status": "ok"}
+
+
 @app.get("/coverage")
 def coverage(session: Session = Depends(get_session)):
     """Real, live counts per state -- never claims a state is covered before it actually has data.

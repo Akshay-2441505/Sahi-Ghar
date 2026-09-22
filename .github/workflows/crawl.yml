@@ -1,0 +1,40 @@
+name: Weekly RERA refresh
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Mondays 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: '3.12'
+
+      - run: uv sync --frozen
+
+      # --refresh-after-days (default 90) means most runs only touch what's actually gone stale or new --
+      # this is a weekly refresh, not a weekly full re-crawl.
+      - name: Refresh Maharashtra (Central Pune)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SAHIGHAR_PII_KEY: ${{ secrets.SAHIGHAR_PII_KEY }}
+          SAHIGHAR_CONTACT: ${{ secrets.SAHIGHAR_CONTACT }}
+        run: >
+          uv run python -m sahighar.cli crawl --max-requests 3500
+          --pincode 411001 --pincode 411002 --pincode 411004 --pincode 411005 --pincode 411009
+          --pincode 411011 --pincode 411030 --pincode 411037 --pincode 411042 --pincode 411044
+
+      - name: Refresh Karnataka (statewide, incl. complaints)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SAHIGHAR_PII_KEY: ${{ secrets.SAHIGHAR_PII_KEY }}
+          SAHIGHAR_CONTACT: ${{ secrets.SAHIGHAR_CONTACT }}
+        run: uv run python -m sahighar.cli crawl-karnataka --complaints --max-requests 2100

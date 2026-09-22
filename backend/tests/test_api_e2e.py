@@ -26,6 +26,10 @@ def _project_id(session, reg_no):
     return session.scalar(select(Project.id).where(Project.rera_reg_no == reg_no))
 
 
+def test_health_check_does_not_touch_the_database(client):
+    assert client.get("/health").json() == {"status": "ok"}
+
+
 def test_trust_page_payload(client, session):
     r = client.get(f"/projects/{_project_id(session, 'MH-1')}")
     assert r.status_code == 200
